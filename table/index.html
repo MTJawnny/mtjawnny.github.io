@@ -627,8 +627,9 @@
     position: fixed; bottom: 0; left: 0; right: 0;
     height: var(--nav-h);
     background: #0e0b18; border-top: 1px solid #1e1830;
-    display: flex; align-items: stretch; z-index: 40;
+    display: none; align-items: stretch; z-index: 40;
   }
+  #bottom-nav.show { display: flex; }
   .nav-tab {
     flex: 1; display: flex; flex-direction: column;
     align-items: center; justify-content: center; gap: 2px;
@@ -1172,6 +1173,7 @@ function enterGameUI() {
   gs.innerHTML = '';
   buildGrid(gs);
   document.getElementById('pass-wrap').style.display = 'block';
+  document.getElementById('bottom-nav').classList.add('show');
   acquireWake();
   render();
 }
@@ -2048,9 +2050,10 @@ function doReset() {
   S = freshState();
   document.getElementById('game-screen').style.display = 'none';
   document.getElementById('pass-wrap').style.display   = 'none';
+  document.getElementById('bottom-nav').classList.remove('show');
   ['turn-pill-l','turn-pill-r','turn-pill-t','turn-pill-b'].forEach(id =>
     document.getElementById(id).style.display = 'none');
-  document.getElementById('setup-screen').style.display = 'flex';
+  document.getElementById('setup-screen').style.display = 'block';
   // restore setup button highlights
   selP(S.playerCount); selDir(S.dir); selLife(S.startLife);
   buildColorMap();
