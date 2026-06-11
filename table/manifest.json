@@ -1,0 +1,18 @@
+{
+  "name": "MTJawnny Tablekeep",
+  "short_name": "Tablekeep",
+  "description": "Free Commander turn, life, and CMD damage tracker. No login, no install, no ask.",
+  "start_url": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1e1728",
+  "theme_color": "#1e1728",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='96' fill='%231e1728'/%3E%3Ccircle cx='256' cy='256' r='118' fill='%23c0392b' stroke='%23b8935a' stroke-width='16'/%3E%3Ccircle cx='256' cy='256' r='150' fill='none' stroke='%23b8935a' stroke-width='6' opacity='0.45'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
