@@ -10,14 +10,17 @@
 <meta name="apple-mobile-web-app-title" content="Tablekeep">
 <link rel="manifest" href="manifest.json">
 <title>Tablekeep — MTJawnny</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
     --bg:         #1e1728;
+    --surface:    #261d33;
     --bronze:     #b8935a;
     --bronze-dim: #7a5e35;
+    --bronze-glow: rgba(184,147,90,0.15);
+    --text-dim:   #9b8fb0;
     --red:        #c0392b;
     --red-bright: #e74c3c;
     --white:      #f0ece6;
@@ -46,28 +49,251 @@
   }
   .splash-hero {
     min-height: 100dvh;
+    padding: 0.75rem 0 76px;
+    position: relative;
+  }
+  .home-btn {
+    position: absolute;
+    top: 14px; left: 14px;
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    border: 1.5px solid var(--bronze-dim);
+    background: rgba(10,8,18,0.4);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--bronze);
+    text-decoration: none;
+    transition: border-color 0.15s, background 0.15s;
+    z-index: 2;
+  }
+  .home-btn:active { background: rgba(184,147,90,0.18); border-color: var(--bronze); }
+  .home-btn svg { width: 20px; height: 20px; stroke-width: 2; }
+
+  /* ── HEADER (mirrors index.html) ── */
+  .tk-header {
+    text-align: center;
+    padding: 0.75rem 1.5rem 0;
+  }
+  .logo-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 0.3rem;
+  }
+  .logo-pip-ring {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+  }
+  .splash-hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 8vw, 3.6rem);
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  /* ── LINK BUTTONS (tagline slot) ── */
+  .tk-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+    max-width: 400px;
+    margin: 0.6rem auto 0;
+    padding: 0 1.25rem;
+  }
+  .footer-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 10px;
+    padding: 0.6rem 0.5rem;
+    color: var(--bronze);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .footer-btn:hover {
+    border-color: var(--bronze);
+    background: var(--bronze-glow);
+  }
+  .footer-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+    flex-shrink: 0;
+  }
+
+  /* ── SETUP GRID (mirrors nav-grid) ── */
+  .setup-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+    max-width: 480px;
+    margin: 0.85rem auto 0;
+    padding: 0 1.25rem;
+  }
+  .setup-tile {
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 10px;
+    padding: 1.1rem 0.85rem 1rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.7rem;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .setup-tile:hover { border-color: var(--bronze); }
+  .tile-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--bronze);
+  }
+  .tile-desc {
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    line-height: 1.35;
+  }
+  /* Segmented control — one connected bar, equal widths */
+  .seg {
+    display: flex;
+    width: 100%;
+    border: 2px solid var(--bronze-dim);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .seg button {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-left: 1.5px solid var(--bronze-dim);
+    padding: 12px 0;
+    font-size: 16px; font-weight: 700;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    color: var(--white);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .seg button:first-child { border-left: none; }
+  .seg button.sel { background: var(--bronze); color: var(--bg); }
+  /* Vertical variant — stacks options for the square tiles */
+  .seg-v { flex-direction: column; }
+  .seg-v button {
+    border-left: none;
+    border-top: 1.5px solid var(--bronze-dim);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .seg-v button:first-child { border-top: none; }
+  /* 2×2 grid variant — starting life */
+  .seg-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 1fr;
+  }
+  .seg-grid button {
+    border-left: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .seg-grid button:nth-child(2),
+  .seg-grid button:nth-child(4) { border-left: 1.5px solid var(--bronze-dim); }
+  .seg-grid button:nth-child(3),
+  .seg-grid button:nth-child(4) { border-top: 1.5px solid var(--bronze-dim); }
+  /* Shared height — Life & Turn Order boxes mirror the Players box */
+  .setup-tile .seg-v,
+  .setup-tile .seg-grid,
+  .setup-tile .dir-wrap { height: 132px; }
+
+  /* Circular turn-direction toggle */
+  .dir-wrap {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 20px;
-    padding: 24px;
-    position: relative;
+    gap: 4px;
   }
-  .splash-brand {
-    font-size: 13px; font-weight: 800;
-    letter-spacing: 0.32em; text-transform: uppercase;
-    color: var(--bronze-dim);
-  }
-  .splash-hero h1 {
-    font-size: 30px; font-weight: 800;
-    letter-spacing: 0.1em; text-transform: uppercase;
+  .dir-btn {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    border: 2px solid var(--bronze-dim);
+    background: transparent;
     color: var(--bronze);
-    margin-top: -10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
   }
+  .dir-btn:hover { border-color: var(--bronze); background: var(--bronze-glow); }
+  .dir-btn:active { background: rgba(184,147,90,0.28); }
+  .dir-btn svg {
+    width: 62px; height: 62px;
+    transition: transform 0.25s ease;
+  }
+  .dir-btn.ccw svg { transform: scaleX(-1); }
+  .dir-word {
+    font-size: 13px; font-weight: 700;
+    letter-spacing: 0.07em; text-transform: uppercase;
+    color: var(--white);
+    line-height: 1.2;
+  }
+
+  .colors-row #color-map { align-self: center; }
+  .setup-sub {
+    font-family: 'Barlow', sans-serif;
+    font-size: 11px; color: var(--text-dim);
+    letter-spacing: 0.04em;
+    text-align: center;
+  }
+
+  /* ── START BUTTON — original red, centered under the grid ── */
+  #start-btn {
+    display: block;
+    width: min(420px, calc(100% - 2.5rem));
+    margin: 0.85rem auto 0;
+    background: var(--red); border: none; color: var(--white);
+    font-size: 21px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 17px 0; border-radius: 12px; cursor: pointer;
+  }
+  #start-btn:active { background: var(--red-bright); }
+
+  /* ── DESKTOP (mirrors index.html breakpoint) ── */
+  @media (min-width: 640px) {
+    .splash-hero { padding-top: 2rem; }
+    .tk-header { padding: 0 2rem; }
+    .setup-grid { max-width: 560px; gap: 1rem; }
+    .setup-tile { padding: 1.5rem 1.25rem 1.35rem; }
+    .tile-label { font-size: 1.2rem; }
+    .tile-desc { font-size: 0.8rem; }
+    #start-btn { margin-top: 1rem; }
+    .tk-links { max-width: 380px; gap: 1rem; }
+  }
+
   .scroll-hint {
     position: absolute;
-    bottom: 14px; left: 50%;
+    bottom: 16px; left: 50%;
     transform: translateX(-50%);
     font-size: 11px; font-weight: 700;
     letter-spacing: 0.14em; text-transform: uppercase;
@@ -144,13 +370,7 @@
   .cm-cell[data-c="teal"]    { background: linear-gradient(160deg, #1f7a72, #0e423d); }
   .cm-cell[data-c="pink"]    { background: linear-gradient(160deg, #b14b7f, #6b2549); }
   .cm-cell[data-c="skyblue"] { background: linear-gradient(160deg, #4a93c7, #25567a); }
-  .setup-sub {
-    font-size: 11px; color: var(--muted);
-    letter-spacing: 0.06em;
-  }
-  .setup-group { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-  .setup-label { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-  .btn-row { display: flex; gap: 10px; }
+  /* .opt-btn kept — used by the overlay/confirm dialogs */
   .opt-btn {
     background: transparent;
     border: 2px solid var(--bronze-dim);
@@ -161,12 +381,6 @@
     transition: all 0.15s;
   }
   .opt-btn.sel { border-color: var(--bronze); background: var(--bronze); color: var(--bg); }
-  #start-btn {
-    margin-top: 6px; background: var(--red); border: none; color: var(--white);
-    font-size: 22px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
-    padding: 16px 56px; border-radius: 10px; cursor: pointer;
-  }
-  #start-btn:active { background: var(--red-bright); }
 
   /* ══ GAME SCREEN ════════════════════════════════════ */
   #game-screen {
@@ -777,38 +991,88 @@
 <!-- ══ SPLASH / LANDING ═══════════════════════════════ -->
 <div id="setup-screen">
   <section class="splash-hero">
-    <div class="splash-brand">MTJawnny</div>
-    <h1>Tablekeep</h1>
-    <div class="setup-group">
-      <div class="setup-label">Players</div>
-      <div class="btn-row">
-        <button class="opt-btn" id="p2" onclick="selP(2)">1v1</button>
-        <button class="opt-btn" id="p3" onclick="selP(3)">3 Player</button>
-        <button class="opt-btn sel" id="p4" onclick="selP(4)">4 Player</button>
+    <a class="home-btn" href="/" aria-label="MTJawnny home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h5v-6h4v6h5V9.5"/></svg>
+    </a>
+
+    <!-- HEADER — mirrors index.html -->
+    <header class="tk-header">
+      <div class="logo-wrap">
+        <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+          <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+          <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+        </svg>
+        <h1>Tablekeep</h1>
+        <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+          <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+          <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <!-- tagline slot — tips + instagram -->
+      <div class="tk-links">
+        <a class="footer-btn" href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+          Tips Appreciated!
+          <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+        </a>
+        <a class="footer-btn" href="https://instagram.com/mtjawnny" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          MTJawnny
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <!-- SETUP GRID — mirrors nav-grid -->
+    <div class="setup-grid">
+      <div class="setup-tile">
+        <span class="tile-label">Players</span>
+        <div class="seg seg-v">
+          <button id="p2" onclick="selP(2)">1v1</button>
+          <button id="p3" onclick="selP(3)">3 Player</button>
+          <button id="p4" class="sel" onclick="selP(4)">4 Player</button>
+        </div>
+      </div>
+      <div class="setup-tile">
+        <span class="tile-label">Starting Life</span>
+        <div class="seg seg-grid">
+          <button id="l20" onclick="selLife(20)">20</button>
+          <button id="l25" onclick="selLife(25)">25</button>
+          <button id="l30" onclick="selLife(30)">30</button>
+          <button id="l40" class="sel" onclick="selLife(40)">40</button>
+        </div>
+      </div>
+      <div class="setup-tile colors-row">
+        <span class="tile-label">Tile Colors</span>
+        <div id="color-map"></div>
+        <div class="setup-sub">Tap a seat to change its color</div>
+      </div>
+      <div class="setup-tile" id="dir-group">
+        <span class="tile-label">Turn Order</span>
+        <div class="dir-wrap">
+          <button id="dir-toggle" class="dir-btn" onclick="toggleDir()" aria-label="Toggle turn direction">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
+              <path d="M21 3v5h-6"/>
+            </svg>
+          </button>
+          <span class="dir-word" id="dir-word">Clockwise</span>
+        </div>
       </div>
     </div>
-    <div class="setup-group" id="dir-group">
-      <div class="setup-label">Turn Order</div>
-      <div class="btn-row">
-        <button class="opt-btn sel" id="dcw"  onclick="selDir('cw')">↻ Clockwise</button>
-        <button class="opt-btn"     id="dccw" onclick="selDir('ccw')">↺ Counter</button>
-      </div>
-    </div>
-    <div class="setup-group">
-      <div class="setup-label">Starting Life</div>
-      <div class="btn-row">
-        <button class="opt-btn" id="l20" onclick="selLife(20)">20</button>
-        <button class="opt-btn" id="l25" onclick="selLife(25)">25</button>
-        <button class="opt-btn" id="l30" onclick="selLife(30)">30</button>
-        <button class="opt-btn sel" id="l40" onclick="selLife(40)">40</button>
-      </div>
-    </div>
-    <div class="setup-group">
-      <div class="setup-label">Tile Colors</div>
-      <div id="color-map"></div>
-      <div class="setup-sub">Tap a seat to change its color</div>
-    </div>
+
     <button id="start-btn" onclick="startGame()">Start Game</button>
+
     <div class="scroll-hint">More table tools<br>↓</div>
   </section>
 
@@ -1081,8 +1345,13 @@ function selP(n) {
 }
 function selDir(d) {
   S.dir = d;
-  document.getElementById('dcw').classList.toggle('sel', d==='cw');
-  document.getElementById('dccw').classList.toggle('sel', d==='ccw');
+  const t = document.getElementById('dir-toggle');
+  const w = document.getElementById('dir-word');
+  if (t) t.classList.toggle('ccw', d === 'ccw');
+  if (w) w.textContent = d === 'cw' ? 'Clockwise' : 'Counter';
+}
+function toggleDir() {
+  selDir(S.dir === 'cw' ? 'ccw' : 'cw');
 }
 function selLife(n) {
   S.startLife = n;
