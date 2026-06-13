@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1e1728">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cardex">
+<meta name="description" content="Search MTJawnny's card explainers — rulings, interactions and common misconceptions, one card at a time.">
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="https://mtjawnny.com/cards">
+<title>Cardex — MTJawnny</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #1e1728;
+    --surface:     #261d33;
+    --bronze:      #b8935a;
+    --bronze-dim:  #7a5e35;
+    --bronze-glow: rgba(184,147,90,0.15);
+    --text-dim:    #9b8fb0;
+    --red:         #c0392b;
+    --white:       #f0ece6;
+    --muted:       #6b5f7a;
+    --radius:      10px;
+    --panel-r:     20px;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button, input { font-family: inherit; }
+
+  /* Whole page lives in one centred mobile-width column (site-wide pattern) */
+  .page {
+    max-width: 520px;
+    margin: 0 auto;
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+  }
+
+  /* ══ HEADER — mirrors Tablekeep splash-hero ══════════════ */
+  .splash-hero { padding: 0.75rem 0 0; }
+  .tk-header { text-align: center; padding: 0.75rem 1.5rem 0; }
+
+  .logo-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 0.3rem;
+  }
+
+  /* Left & right title pips double as the home/back link (site-wide pattern) */
+  .logo-home {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 6px;
+    margin: -6px;
+    text-decoration: none;
+    transition: background 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .logo-home:hover, .logo-home:active { background: var(--bronze-glow); }
+  .logo-home .logo-pip-ring { display: block; }
+  /* Tiny label floats beneath the ring — absolute so it adds no row height */
+  .logo-home-label {
+    position: absolute;
+    top: calc(100% - 5px);
+    left: calc(50% + 2px);
+    transform: translateX(-50%);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .logo-pip-ring { width: 48px; height: 48px; flex-shrink: 0; }
+
+  .splash-hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 8vw, 3.6rem);
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .tagline {
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    margin-top: 0.15rem;
+    letter-spacing: 0.01em;
+  }
+
+  /* ══ STICKY CONTROLS — search + tier toggle ══════════════ */
+  .controls {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--bg);
+    padding: 0.85rem 1.25rem 0.7rem;
+    border-bottom: 1px solid rgba(122,94,53,0.35);
+    box-shadow: 0 8px 18px -14px rgba(0,0,0,0.9);
+  }
+
+  .search-wrap { position: relative; display: flex; align-items: center; }
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    width: 18px;
+    height: 18px;
+    color: var(--text-dim);
+    pointer-events: none;
+  }
+  .search-icon svg { width: 100%; height: 100%; display: block; }
+
+  #search {
+    width: 100%;
+    background: var(--surface);
+    border: 1.5px solid var(--bronze-dim);
+    border-radius: 12px;
+    color: var(--white);
+    /* 16px keeps iOS from auto-zooming the field on focus */
+    font-size: 16px;
+    padding: 0.7rem 2.6rem 0.7rem 2.6rem;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  #search::placeholder { color: var(--text-dim); }
+  #search:focus { outline: none; border-color: var(--bronze); background: #2c2240; }
+  /* Strip the native search clear so ours is the only one */
+  #search::-webkit-search-decoration,
+  #search::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+
+  .clear-btn {
+    position: absolute;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    border-radius: 50%;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+  }
+  .clear-btn:hover { color: var(--white); background: var(--bronze-glow); }
+  .clear-btn svg { width: 16px; height: 16px; }
+  .clear-btn[hidden] { display: none; }
+
+  /* Segmented tier control — one connected bar, equal widths (Tablekeep .seg) */
+  .seg {
+    display: flex;
+    width: 100%;
+    margin-top: 0.6rem;
+    border: 2px solid var(--bronze-dim);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .seg button {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-left: 1.5px solid var(--bronze-dim);
+    padding: 9px 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--white);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .seg button:first-child { border-left: none; }
+  .seg button.sel { background: var(--bronze); color: var(--bg); }
+
+  /* No-match panel — drops in under the controls (an invitation, not an error) */
+  .suggest-panel {
+    margin-top: 0.7rem;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 14px;
+    padding: 0.9rem 1rem;
+    text-align: center;
+  }
+  .suggest-panel[hidden] { display: none; }
+  .suggest-panel p {
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    margin-bottom: 0.65rem;
+  }
+  .suggest-panel .q { color: var(--white); font-weight: 600; }
+  .suggest-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--bronze);
+    color: var(--bg);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.55rem 1.1rem;
+    border-radius: 10px;
+    transition: filter 0.15s, transform 0.15s;
+  }
+  .suggest-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+
+  /* Tiny note for a genuinely empty bucket (no query) */
+  .empty-note {
+    margin: 2.5rem 1.25rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .empty-note[hidden] { display: none; }
+
+  /* ══ CARD GRID ══════════════════════════════════════════ */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+    padding: 1rem 1.25rem 0;
+  }
+
+  .tile {
+    position: relative;
+    display: block;
+    aspect-ratio: 5 / 7;           /* Magic card ~2.5 : 3.5 */
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 10px;
+    overflow: hidden;
+    text-decoration: none;
+    transition: border-color 0.18s, transform 0.15s, box-shadow 0.18s;
+  }
+  .tile:hover, .tile:active {
+    border-color: var(--bronze);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px -14px rgba(0,0,0,0.95);
+  }
+  .tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  /* Fallback shown if an image is missing (e.g. card added before its art) */
+  .tile-fallback {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    text-align: center;
+  }
+  .tile.noart img { display: none; }
+  .tile.noart .tile-fallback { display: flex; }
+  .tile-fallback .fb-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    color: var(--bronze);
+  }
+  .tile-fallback .fb-pip {
+    width: 20px; height: 20px; opacity: 0.7;
+  }
+
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px; height: 1px;
+    margin: -1px; padding: 0; border: 0;
+    clip: rect(0 0 0 0); clip-path: inset(50%);
+    overflow: hidden; white-space: nowrap;
+  }
+
+  /* ── Quality floor: visible keyboard focus ── */
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid var(--bronze);
+    outline-offset: 2px;
+  }
+  .tile:focus-visible { outline-offset: 3px; }
+
+  /* ── Quality floor: respect reduced motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+    .tile:hover, .tile:active, .suggest-btn:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════════
+     EDIT HERE — the card list. Add one object per card, any time.
+       name  : shown to screen readers + used by the search box
+       file  : the card's page, linked as  /<file>
+       image : tile art, served from /cardimages/
+       tier  : "simple"  → appears under the "Cards" filter
+               "complex" → appears under the "Hard Cards" filter
+     (Image filename matches the page slug, e.g. saga.html → saga.jpg)
+═════════════════════════════════════════════════════════════════════ -->
+<script>
+const CARDS = [
+  { name: "Urza's Saga",        file: "saga.html", image: "/cardimages/saga.jpg", tier: "simple"  },
+  { name: "Sakura-Tribe Elder", file: "ste.html",  image: "/cardimages/ste.jpg",  tier: "complex" },
+  // { name: "Card Name",   file: "slug.html", image: "/cardimages/slug.jpg", tier: "simple" },
+];
+
+// Card-submission tool. Swap the "#" for the real form link when it's ready.
+const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
+</script>
+<!-- ════════════════════════════════════════════════════════════════ -->
+
+<div class="page">
+
+  <section class="splash-hero">
+    <header class="tk-header">
+      <div class="logo-wrap">
+        <a class="logo-home" href="/" aria-label="Back to MTJawnny home">
+          <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+            <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+            <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+          </svg>
+          <span class="logo-home-label">home</span>
+        </a>
+        <h1>Cardex</h1>
+        <a class="logo-home" href="/" aria-label="Back to MTJawnny home">
+          <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+            <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+            <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+          </svg>
+          <span class="logo-home-label">home</span>
+        </a>
+      </div>
+      <p class="tagline">Search the card explainers.</p>
+    </header>
+  </section>
+
+  <div class="controls">
+    <div class="search-wrap">
+      <span class="search-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </span>
+      <input id="search" type="search" inputmode="search" autocomplete="off"
+             autocapitalize="none" spellcheck="false"
+             placeholder="Search cards…" aria-label="Search cards by name">
+      <button class="clear-btn" id="clearBtn" type="button" aria-label="Clear search" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="seg" id="tierToggle" role="group" aria-label="Filter by card type">
+      <button type="button" data-tier="all" class="sel" aria-pressed="true">All</button>
+      <button type="button" data-tier="simple" aria-pressed="false">Cards</button>
+      <button type="button" data-tier="complex" aria-pressed="false">Hard Cards</button>
+    </div>
+
+    <div class="suggest-panel" id="suggestPanel" hidden>
+      <p>No cards match “<span class="q" id="noMatchQ"></span>”.</p>
+      <a class="suggest-btn" id="suggestLink" href="#">
+        Suggest a card
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <main>
+    <p class="empty-note" id="emptyNote" hidden>No cards here yet.</p>
+    <div class="grid" id="grid"></div>
+    <p class="visually-hidden" id="status" role="status" aria-live="polite"></p>
+  </main>
+
+</div>
+
+<script>
+(function () {
+  const grid        = document.getElementById('grid');
+  const searchInput = document.getElementById('search');
+  const clearBtn    = document.getElementById('clearBtn');
+  const toggle      = document.getElementById('tierToggle');
+  const suggestPanel= document.getElementById('suggestPanel');
+  const suggestLink = document.getElementById('suggestLink');
+  const noMatchQ    = document.getElementById('noMatchQ');
+  const emptyNote   = document.getElementById('emptyNote');
+  const statusEl    = document.getElementById('status');
+
+  suggestLink.href = SUBMISSION_URL;
+
+  let currentTier = 'all';
+
+  // Small inline pip-ring for the missing-art fallback
+  const PIP_SVG =
+    '<svg class="fb-pip" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+    '<circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>' +
+    '<circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>' +
+    '<circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>' +
+    '<circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>' +
+    '<circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>' +
+    '<circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/></svg>';
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, c => (
+      { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]
+    ));
+  }
+
+  // ── Fuzzy scoring ──────────────────────────────────────────────
+  // Returns a score (higher = better) or -1 for "no match".
+  // Substring hits always rank above looser subsequence hits.
+  function score(query, text) {
+    const q = query.toLowerCase().trim();
+    const t = text.toLowerCase();
+    if (!q) return 0;
+
+    const idx = t.indexOf(q);
+    if (idx !== -1) {
+      let s = 1000 - idx * 2 - (t.length - q.length) * 0.5;
+      if (idx === 0) s += 60;                                  // matches from the start
+      else if (/\s/.test(t[idx - 1])) s += 30;                 // matches a word start
+      return s;
+    }
+
+    // Subsequence: every query char must appear in order.
+    let ti = 0, s = 0, prev = -1;
+    for (let qi = 0; qi < q.length; qi++) {
+      const c = q[qi];
+      let found = -1;
+      for (let k = ti; k < t.length; k++) { if (t[k] === c) { found = k; break; } }
+      if (found === -1) return -1;
+      if (prev !== -1) {
+        const gap = found - prev - 1;
+        s -= gap;                 // farther apart = weaker
+        if (gap === 0) s += 6;    // adjacent = stronger
+      }
+      if (found === 0 || /\s/.test(t[found - 1] || '')) s += 8; // landed on a word start
+      prev = found; ti = found + 1;
+    }
+    return 200 + s - t.length * 0.3; // capped below any substring score
+  }
+
+  // ── Build the filtered, sorted list ────────────────────────────
+  function compute() {
+    const raw = searchInput.value;
+    const q = raw.trim();
+
+    let list = CARDS.map((c, i) => ({ c, i, s: score(raw, c.name) }));
+    if (q !== '') list = list.filter(o => o.s >= 0);
+    if (currentTier !== 'all') list = list.filter(o => o.c.tier === currentTier);
+
+    list.sort((a, b) => q !== '' ? (b.s - a.s || a.i - b.i) : (a.i - b.i));
+    return { list, q };
+  }
+
+  // ── Render ─────────────────────────────────────────────────────
+  function render() {
+    const { list, q } = compute();
+
+    grid.innerHTML = list.map(({ c }) => {
+      const href = '/' + c.file;          // card pages live at the site root
+      const label = esc(c.name) + ' — view card';
+      return (
+        '<a class="tile" href="' + esc(href) + '" aria-label="' + label + '">' +
+          '<img src="' + esc(c.image) + '" alt="" loading="lazy" ' +
+               'onerror="this.closest(\'.tile\').classList.add(\'noart\')">' +
+          '<span class="tile-fallback" aria-hidden="true">' +
+            PIP_SVG + '<span class="fb-name">' + esc(c.name) + '</span>' +
+          '</span>' +
+        '</a>'
+      );
+    }).join('');
+
+    // No-match panel: a non-empty search that turned up nothing.
+    const noResults = list.length === 0;
+    const showSuggest = noResults && q !== '';
+    suggestPanel.hidden = !showSuggest;
+    if (showSuggest) noMatchQ.textContent = q;
+
+    // Empty bucket with no active search (e.g. a tier with no cards yet).
+    emptyNote.hidden = !(noResults && q === '');
+
+    // A11y: announce the result count.
+    statusEl.textContent = list.length + (list.length === 1 ? ' card' : ' cards');
+  }
+
+  // ── Wiring ─────────────────────────────────────────────────────
+  searchInput.addEventListener('input', () => {
+    clearBtn.hidden = searchInput.value === '';
+    render();
+  });
+
+  clearBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    clearBtn.hidden = true;
+    searchInput.focus();
+    render();
+  });
+
+  // Esc clears the field while it's focused.
+  searchInput.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && searchInput.value !== '') {
+      e.preventDefault();
+      searchInput.value = '';
+      clearBtn.hidden = true;
+      render();
+    }
+  });
+
+  toggle.addEventListener('click', e => {
+    const btn = e.target.closest('button[data-tier]');
+    if (!btn) return;
+    currentTier = btn.dataset.tier;
+    toggle.querySelectorAll('button').forEach(b => {
+      const on = b === btn;
+      b.classList.toggle('sel', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
