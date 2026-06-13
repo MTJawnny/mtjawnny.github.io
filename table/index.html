@@ -52,21 +52,36 @@
     padding: 0.75rem 0 76px;
     position: relative;
   }
-  .home-btn {
-    position: absolute;
-    top: 14px; left: 14px;
-    width: 42px; height: 42px;
-    border-radius: 12px;
-    border: 1.5px solid var(--bronze-dim);
-    background: rgba(10,8,18,0.4);
-    display: flex; align-items: center; justify-content: center;
-    color: var(--bronze);
+  /* ── Left title pip doubles as the home/back link (site-wide pattern) ── */
+  .logo-home {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 6px;
+    margin: -6px;
     text-decoration: none;
-    transition: border-color 0.15s, background 0.15s;
-    z-index: 2;
+    transition: background 0.15s;
+    -webkit-tap-highlight-color: transparent;
   }
-  .home-btn:active { background: rgba(184,147,90,0.18); border-color: var(--bronze); }
-  .home-btn svg { width: 20px; height: 20px; stroke-width: 2; }
+  .logo-home:hover, .logo-home:active { background: var(--bronze-glow); }
+  .logo-home .logo-pip-ring { display: block; }
+  /* Tiny label floats beneath the ring — absolute so it adds no row height */
+  .logo-home-label {
+    position: absolute;
+    top: calc(100% - 5px);
+    left: calc(50% + 2px);
+    transform: translateX(-50%);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    line-height: 1;
+    pointer-events: none;
+  }
 
   /* ── HEADER (mirrors index.html) ── */
   .tk-header {
@@ -991,32 +1006,34 @@
 <!-- ══ SPLASH / LANDING ═══════════════════════════════ -->
 <div id="setup-screen">
   <section class="splash-hero">
-    <a class="home-btn" href="/" aria-label="MTJawnny home">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h5v-6h4v6h5V9.5"/></svg>
-    </a>
-
     <!-- HEADER — mirrors index.html -->
     <header class="tk-header">
       <div class="logo-wrap">
-        <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
-          <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
-          <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
-          <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
-          <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
-          <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
-          <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
-        </svg>
+        <a class="logo-home" href="/" aria-label="Back to MTJawnny home">
+          <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+            <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+            <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+          </svg>
+          <span class="logo-home-label">home</span>
+        </a>
         <h1>Tablekeep</h1>
-        <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
-          <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
-          <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
-          <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
-          <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
-          <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
-          <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
-        </svg>
+        <a class="logo-home" href="/" aria-label="Back to MTJawnny home">
+          <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+            <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+            <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+          </svg>
+          <span class="logo-home-label">home</span>
+        </a>
       </div>
       <!-- tagline slot — tips + instagram -->
       <div class="tk-links">
