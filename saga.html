@@ -156,15 +156,16 @@
      (745:1040) and scaled up, capped so it stays sensible on big
      phones / tablets — same approach Scryfall uses. */
   .card-hero { display: flex; flex-direction: column; gap: 1.1rem; }
-  .card-img-wrap { align-self: center; width: 100%; max-width: 420px; }
+  .card-img-wrap { align-self: center; }
   .card-img {
-    width: 100%;
-    aspect-ratio: 745 / 1040;
     display: block;
+    max-width: 100%;
+    max-height: 70vh;            /* keep it on-screen; never absurdly tall */
+    width: auto; height: auto;   /* honor the image's own ratio */
+    margin: 0 auto;
     border-radius: 4.75% / 3.4%;
     border: 1px solid var(--bronze-dim);
     box-shadow: 0 6px 24px rgba(0,0,0,0.45);
-    object-fit: cover;
   }
   .art-credit { margin-top: 0.4rem; text-align: center; font-size: 0.72rem; color: var(--text-dim); }
 
