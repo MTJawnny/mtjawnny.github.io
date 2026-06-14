@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1e1728">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Stack It Up">
+<meta name="description" content="Stack It Up — step-by-step breakdowns of MTG card interactions, priority, and phase rules for Commander players.">
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="https://mtjawnny.com/stack">
+<title>Stack It Up — MTJawnny</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #1e1728;
+    --surface:     #261d33;
+    --bronze:      #b8935a;
+    --bronze-dim:  #7a5e35;
+    --bronze-glow: rgba(184,147,90,0.15);
+    --text-dim:    #9b8fb0;
+    --red:         #c0392b;
+    --white:       #f0ece6;
+    --muted:       #6b5f7a;
+    --radius:      10px;
+    --panel-r:     20px;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button, input { font-family: inherit; }
+
+  /* Whole page lives in one centred mobile-width column (site-wide pattern) */
+  .page {
+    max-width: 520px;
+    margin: 0 auto;
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+  }
+
+  /* ══ HEADER — standard index-page pattern (header-pattern.md) ══════ */
+  .tk-header { text-align: center; padding: 0.75rem 1.5rem 0; }
+
+  .logo-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1.6rem; /* clears the absolute HOME label + breathes before content */
+  }
+
+  .logo-pip-ring { width: 48px; height: 48px; flex-shrink: 0; }
+
+  /* Both pip-rings are clickable home links */
+  .logo-home {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 6px;
+    margin: -6px;
+    text-decoration: none;
+    transition: background 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .logo-home:hover, .logo-home:active { background: var(--bronze-glow); }
+  .logo-home .logo-pip-ring { display: block; }
+
+  /* "HOME" floats beneath each ring — absolute so it adds no row height */
+  .logo-home-label {
+    position: absolute;
+    top: calc(100% - 5px);
+    left: calc(50% + 2px);
+    transform: translateX(-50%);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    /* "STACK IT UP" fits the pip-ring row at the homepage's native size;
+       nowrap keeps the two spaces from wrapping the title to a second line. */
+    font-size: clamp(2.4rem, 8vw, 3.6rem);
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .tagline {
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    margin-top: 0.5rem;
+    letter-spacing: 0.01em;
+  }
+
+  /* ══ PINNED / QUICK REFERENCE — concept tiles above the search ════ */
+  .pinned { margin-top: 1.2rem; padding: 0 1.25rem 0.5rem; }
+
+  .pinned-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    margin: 0 0 0.75rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .pinned-label::before, .pinned-label::after {
+    content: '';
+    height: 1px;
+    flex: 1;
+    max-width: 46px;
+    background: linear-gradient(to right, transparent, var(--bronze-dim));
+  }
+  .pinned-label::after { background: linear-gradient(to left, transparent, var(--bronze-dim)); }
+
+  /* Anchor row — The Stack, inset narrower than the phase row below it */
+  .pin-stack-row { display: flex; justify-content: center; }
+  .pin-anchor {
+    width: calc(100% - 2.6rem);
+    max-width: 420px;
+    padding: 1.5rem 1.25rem;
+  }
+
+  /* Two phases, equal width, full pinned width */
+  .pin-phase-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+    margin-top: 0.7rem;
+  }
+  .pin-phase-row .pin-tile { padding: 1.15rem 0.75rem; }
+
+  .pin-tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    background: var(--surface);
+    border: 1.5px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    text-decoration: none;
+    text-align: center;
+    overflow: hidden;
+    /* faint always-on top bevel so the surface isn't dead flat */
+    box-shadow: inset 0 1px 0 rgba(240,236,230,0.045);
+    transition: border-color 0.18s, transform 0.15s, box-shadow 0.18s;
+  }
+  /* bronze-glow fill layer fades in on hover */
+  .pin-tile::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--bronze-glow);
+    opacity: 0;
+    transition: opacity 0.18s;
+    pointer-events: none;
+  }
+  .pin-tile:hover, .pin-tile:active {
+    border-color: var(--bronze);
+    transform: translateY(-2px);
+    box-shadow: inset 0 0 26px -6px rgba(184,147,90,0.32),
+                inset 0 1px 0 rgba(240,236,230,0.07),
+                0 10px 24px -16px rgba(0,0,0,0.95);
+  }
+  .pin-tile:hover::after, .pin-tile:active::after { opacity: 1; }
+
+  .pin-icon { color: var(--bronze); line-height: 1; opacity: 0.9; transition: opacity 0.18s; }
+  .pin-tile:hover .pin-icon, .pin-tile:active .pin-icon { opacity: 1; }
+  .pin-icon svg { display: block; }
+  .pin-anchor .pin-icon svg { width: 32px; height: 32px; }
+  .pin-anchor .pin-icon img { height: 38px; width: auto; display: block; }
+  .pin-phase-row .pin-icon svg { width: 26px; height: 26px; }
+
+  .pin-label {
+    position: relative;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--bronze);
+    line-height: 0.95;
+    letter-spacing: 0.03em;
+  }
+  .pin-anchor .pin-label { font-size: 1.6rem; letter-spacing: 0.05em; }
+  .pin-phase-row .pin-label { font-size: 1.28rem; }
+
+  /* ══ STICKY CONTROLS — search only (no tier toggle) ══════════════ */
+  .controls {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--bg);
+    padding: 0.85rem 1.25rem 0.7rem;
+    border-bottom: 1px solid rgba(122,94,53,0.35);
+    box-shadow: 0 8px 18px -14px rgba(0,0,0,0.9);
+  }
+
+  .search-wrap { position: relative; display: flex; align-items: center; }
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    width: 18px;
+    height: 18px;
+    color: var(--text-dim);
+    pointer-events: none;
+  }
+  .search-icon svg { width: 100%; height: 100%; display: block; }
+
+  #search {
+    width: 100%;
+    background: var(--surface);
+    border: 1.5px solid var(--bronze-dim);
+    border-radius: 12px;
+    color: var(--white);
+    /* 16px keeps iOS from auto-zooming the field on focus */
+    font-size: 16px;
+    padding: 0.7rem 2.6rem 0.7rem 2.6rem;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  #search::placeholder { color: var(--text-dim); }
+  #search:focus { outline: none; border-color: var(--bronze); background: #2c2240; }
+  /* Strip the native search clear so ours is the only one */
+  #search::-webkit-search-decoration,
+  #search::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+
+  .clear-btn {
+    position: absolute;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    border-radius: 50%;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+  }
+  .clear-btn:hover { color: var(--white); background: var(--bronze-glow); }
+  .clear-btn svg { width: 16px; height: 16px; }
+  .clear-btn[hidden] { display: none; }
+
+  /* No-match panel — drops in under the controls (an invitation, not an error) */
+  .suggest-panel {
+    margin-top: 0.7rem;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 14px;
+    padding: 0.9rem 1rem;
+    text-align: center;
+  }
+  .suggest-panel[hidden] { display: none; }
+  .suggest-panel p {
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    margin-bottom: 0.65rem;
+  }
+  .suggest-panel .q { color: var(--white); font-weight: 600; }
+  .suggest-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--bronze);
+    color: var(--bg);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.55rem 1.1rem;
+    border-radius: 10px;
+    transition: filter 0.15s, transform 0.15s;
+  }
+  .suggest-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+
+  /* Tiny note for a genuinely empty bucket (no query) */
+  .empty-note {
+    margin: 2.5rem 1.25rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .empty-note[hidden] { display: none; }
+
+  /* ══ ENTRY GRID — text-only interaction tiles ════════════════════ */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+    padding: 1rem 1.25rem 0;
+  }
+
+  .tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 90px;
+    padding: 1rem 0.85rem;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    text-decoration: none;
+    text-align: center;
+    transition: border-color 0.18s, background 0.18s, transform 0.15s, box-shadow 0.18s;
+  }
+  .tile:hover, .tile:active {
+    border-color: var(--bronze);
+    background: var(--bronze-glow);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px -16px rgba(0,0,0,0.95);
+  }
+
+  .entry-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--bronze);
+  }
+  /* The "+" reads as a separator between name lines, not part of a sentence */
+  .plus {
+    display: block;
+    margin: 0.22rem 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    line-height: 1;
+    color: var(--text-dim);
+  }
+
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px; height: 1px;
+    margin: -1px; padding: 0; border: 0;
+    clip: rect(0 0 0 0); clip-path: inset(50%);
+    overflow: hidden; white-space: nowrap;
+  }
+
+  /* ══ FOOTER — mirrors the homepage footer exactly ════════════════ */
+  footer {
+    text-align: center;
+    padding: 0.85rem 1.5rem 1.5rem;
+  }
+
+  .footer-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+
+  .footer-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.5rem;
+    color: var(--bronze);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+
+  .footer-btn:hover {
+    border-color: var(--bronze);
+    color: var(--bronze);
+    background: var(--bronze-glow);
+  }
+
+  .footer-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+    flex-shrink: 0;
+  }
+
+  /* ── Quality floor: visible keyboard focus ── */
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid var(--bronze);
+    outline-offset: 2px;
+  }
+  .tile:focus-visible, .pin-tile:focus-visible { outline-offset: 3px; }
+
+  /* ── Quality floor: respect reduced motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+    .tile:hover, .tile:active,
+    .pin-tile:hover, .pin-tile:active,
+    .suggest-btn:hover { transform: none; }
+  }
+
+  /* ── DESKTOP ── */
+  @media (min-width: 640px) {
+    .tk-header { padding: 2rem 2rem 0; }
+    .footer-buttons { max-width: 380px; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════════
+     EDIT HERE — the interaction list. Add one object per entry.
+       names : every card / keyword in the interaction (drives search
+               + shown on the tile, separated by a "+")
+       slug  : the entry's page, linked as  /stack/<slug>
+═════════════════════════════════════════════════════════════════════ -->
+<script>
+const ENTRIES = [
+  {
+    names: ["Delney, Streetwise Lookout", "Zurgo, Thunder's Decree", "Goldnight Commander"],
+    slug: "delney-zurgo-goldnight"
+  },
+  {
+    names: ["Trample", "Deathtouch"],
+    slug: "trample-deathtouch"
+  }
+];
+
+// Interaction-submission tool. Swap the "#" for the real form link when it's ready.
+const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
+</script>
+<!-- ════════════════════════════════════════════════════════════════ -->
+
+<div class="page">
+
+  <header class="tk-header">
+    <div class="logo-wrap">
+      <a class="logo-home" href="/" aria-label="Back to MTJawnny home">
+        <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+          <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+          <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+        </svg>
+        <span class="logo-home-label">home</span>
+      </a>
+
+      <h1>Stack It Up</h1>
+
+      <a class="logo-home" href="/" aria-label="Back to MTJawnny home">
+        <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+          <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+          <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+        </svg>
+        <span class="logo-home-label">home</span>
+      </a>
+    </div>
+    <p class="tagline">Step-by-step breakdowns of what actually happens when cards collide.</p>
+  </header>
+
+  <!-- PINNED / QUICK REFERENCE -->
+  <section class="pinned" aria-label="Quick reference">
+    <p class="pinned-label">Quick Reference</p>
+
+    <div class="pin-stack-row">
+      <a class="pin-tile pin-anchor" href="/stack/the-stack">
+        <span class="pin-icon" aria-hidden="true">
+          <img src="/icons/stack.png" alt="">
+        </span>
+        <span class="pin-label">The Stack</span>
+      </a>
+    </div>
+
+    <div class="pin-phase-row">
+      <a class="pin-tile" href="/stack/beginning-phase">
+        <span class="pin-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 18a5 5 0 0 0-10 0"/>
+            <line x1="12" y1="2" x2="12" y2="9"/>
+            <line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/>
+            <line x1="1" y1="18" x2="3" y2="18"/>
+            <line x1="21" y1="18" x2="23" y2="18"/>
+            <line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/>
+            <line x1="23" y1="22" x2="1" y2="22"/>
+            <polyline points="8 6 12 2 16 6"/>
+          </svg>
+        </span>
+        <span class="pin-label">Beginning<br>Phase</span>
+      </a>
+
+      <a class="pin-tile" href="/stack/combat-phase">
+        <span class="pin-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="6.5" y1="17.5" x2="18.5" y2="5.5"/>
+            <line x1="17.5" y1="17.5" x2="5.5" y2="5.5"/>
+            <line x1="4.2" y1="15.2" x2="8.8" y2="19.8"/>
+            <line x1="19.8" y1="15.2" x2="15.2" y2="19.8"/>
+            <path d="M18.5 5.5l1.6-1.6"/>
+            <path d="M5.5 5.5l-1.6-1.6"/>
+          </svg>
+        </span>
+        <span class="pin-label">Combat<br>Phase</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- STICKY SEARCH -->
+  <div class="controls">
+    <div class="search-wrap">
+      <span class="search-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </span>
+      <input id="search" type="search" inputmode="search" autocomplete="off"
+             autocapitalize="none" spellcheck="false"
+             placeholder="Search interactions…" aria-label="Search stack interactions by card or keyword name">
+      <button class="clear-btn" id="clearBtn" type="button" aria-label="Clear search" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="suggest-panel" id="suggestPanel" hidden>
+      <p>No interactions match “<span class="q" id="noMatchQ"></span>”.</p>
+      <a class="suggest-btn" id="suggestLink" href="#">
+        Suggest an interaction
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <main>
+    <p class="empty-note" id="emptyNote" hidden>No interactions here yet.</p>
+    <div class="grid" id="grid"></div>
+    <p class="visually-hidden" id="status" role="status" aria-live="polite"></p>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-buttons">
+      <a class="footer-btn" href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+        Tips Appreciated!
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+      </a>
+      <a class="footer-btn" href="https://instagram.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        MTJawnny
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  const grid        = document.getElementById('grid');
+  const searchInput = document.getElementById('search');
+  const clearBtn    = document.getElementById('clearBtn');
+  const suggestPanel= document.getElementById('suggestPanel');
+  const suggestLink = document.getElementById('suggestLink');
+  const noMatchQ    = document.getElementById('noMatchQ');
+  const emptyNote   = document.getElementById('emptyNote');
+  const statusEl    = document.getElementById('status');
+
+  suggestLink.href = SUBMISSION_URL;
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, c => (
+      { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]
+    ));
+  }
+
+  // ── Fuzzy scoring (verbatim from cardex.html) ──────────────────
+  // Returns a score (higher = better) or -1 for "no match".
+  // Substring hits always rank above looser subsequence hits.
+  function score(query, text) {
+    const q = query.toLowerCase().trim();
+    const t = text.toLowerCase();
+    if (!q) return 0;
+
+    const idx = t.indexOf(q);
+    if (idx !== -1) {
+      let s = 1000 - idx * 2 - (t.length - q.length) * 0.5;
+      if (idx === 0) s += 60;                                  // matches from the start
+      else if (/\s/.test(t[idx - 1])) s += 30;                 // matches a word start
+      return s;
+    }
+
+    // Subsequence: every query char must appear in order.
+    let ti = 0, s = 0, prev = -1;
+    for (let qi = 0; qi < q.length; qi++) {
+      const c = q[qi];
+      let found = -1;
+      for (let k = ti; k < t.length; k++) { if (t[k] === c) { found = k; break; } }
+      if (found === -1) return -1;
+      if (prev !== -1) {
+        const gap = found - prev - 1;
+        s -= gap;                 // farther apart = weaker
+        if (gap === 0) s += 6;    // adjacent = stronger
+      }
+      if (found === 0 || /\s/.test(t[found - 1] || '')) s += 8; // landed on a word start
+      prev = found; ti = found + 1;
+    }
+    return 200 + s - t.length * 0.3; // capped below any substring score
+  }
+
+  // ── Build the filtered, sorted list ────────────────────────────
+  // Search target = every name in the entry, concatenated.
+  function compute() {
+    const raw = searchInput.value;
+    const q = raw.trim();
+
+    let list = ENTRIES.map((e, i) => ({ e, i, s: score(raw, e.names.join(' ')) }));
+    if (q !== '') list = list.filter(o => o.s >= 0);
+
+    list.sort((a, b) => q !== '' ? (b.s - a.s || a.i - b.i) : (a.i - b.i));
+    return { list, q };
+  }
+
+  // ── Render ─────────────────────────────────────────────────────
+  function render() {
+    const { list, q } = compute();
+
+    grid.innerHTML = list.map(({ e }) => {
+      const href  = '/stack/' + e.slug;                 // entry pages live under /stack/
+      const label = e.names.join(' plus ') + ' — view interaction';
+      const inner = e.names.map((n, i) =>
+        (i > 0 ? '<span class="plus" aria-hidden="true">+</span>' : '') +
+        '<span class="entry-name">' + esc(n) + '</span>'
+      ).join('');
+      return '<a class="tile" href="' + esc(href) + '" aria-label="' + esc(label) + '">' + inner + '</a>';
+    }).join('');
+
+    // No-match panel: a non-empty search that turned up nothing.
+    const noResults = list.length === 0;
+    const showSuggest = noResults && q !== '';
+    suggestPanel.hidden = !showSuggest;
+    if (showSuggest) noMatchQ.textContent = q;
+
+    // Empty grid with no active search (no entries yet).
+    emptyNote.hidden = !(noResults && q === '');
+
+    // A11y: announce the result count.
+    statusEl.textContent = list.length + (list.length === 1 ? ' interaction' : ' interactions');
+  }
+
+  // ── Wiring ─────────────────────────────────────────────────────
+  searchInput.addEventListener('input', () => {
+    clearBtn.hidden = searchInput.value === '';
+    render();
+  });
+
+  clearBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    clearBtn.hidden = true;
+    searchInput.focus();
+    render();
+  });
+
+  // Esc clears the field while it's focused.
+  searchInput.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && searchInput.value !== '') {
+      e.preventDefault();
+      searchInput.value = '';
+      clearBtn.hidden = true;
+      render();
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
