@@ -198,6 +198,7 @@
   .pin-anchor .pin-icon svg { width: 32px; height: 32px; }
   .pin-anchor .pin-icon img { height: 38px; width: auto; display: block; }
   .pin-phase-row .pin-icon svg { width: 26px; height: 26px; }
+  .pin-phase-row .pin-icon img { height: 30px; width: auto; display: block; }
 
   .pin-label {
     position: relative;
@@ -517,30 +518,14 @@ const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
     <div class="pin-phase-row">
       <a class="pin-tile" href="/stack/beginning-phase">
         <span class="pin-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 18a5 5 0 0 0-10 0"/>
-            <line x1="12" y1="2" x2="12" y2="9"/>
-            <line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/>
-            <line x1="1" y1="18" x2="3" y2="18"/>
-            <line x1="21" y1="18" x2="23" y2="18"/>
-            <line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/>
-            <line x1="23" y1="22" x2="1" y2="22"/>
-            <polyline points="8 6 12 2 16 6"/>
-          </svg>
+          <img src="/icons/begin.png" alt="">
         </span>
         <span class="pin-label">Beginning<br>Phase</span>
       </a>
 
       <a class="pin-tile" href="/stack/combat-phase">
         <span class="pin-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="6.5" y1="17.5" x2="18.5" y2="5.5"/>
-            <line x1="17.5" y1="17.5" x2="5.5" y2="5.5"/>
-            <line x1="4.2" y1="15.2" x2="8.8" y2="19.8"/>
-            <line x1="19.8" y1="15.2" x2="15.2" y2="19.8"/>
-            <path d="M18.5 5.5l1.6-1.6"/>
-            <path d="M5.5 5.5l-1.6-1.6"/>
-          </svg>
+          <img src="/icons/combat.png" alt="">
         </span>
         <span class="pin-label">Combat<br>Phase</span>
       </a>
