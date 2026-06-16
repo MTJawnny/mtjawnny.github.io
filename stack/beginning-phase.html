@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1e1728">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Beginning Phase">
+<meta name="description" content="A rapid-access, mid-game rules guide for the MTG Beginning Phase: the Untap, Upkeep, and Draw steps — priority windows, turn-based actions, and the cards that bend them.">
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="https://mtjawnny.com/stack/beginning-phase">
+<title>Beginning Phase — Stack It Up — MTJawnny</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #1e1728;
+    --surface:     #261d33;
+    --bronze:      #b8935a;
+    --bronze-dim:  #7a5e35;
+    --bronze-glow: rgba(184,147,90,0.15);
+    --text-dim:    #9b8fb0;
+    --white:       #f0ece6;
+    --muted:       #6b5f7a;
+    --green:       #5aab6e;  /* tips / priority open / ✓ */
+    --red:         #e06060;  /* misconceptions / no priority / ✕ */
+    --radius:      10px;
+    --panel-r:     20px;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button { font-family: inherit; }
+
+  /* Whole page lives in one centred mobile-width column (site-wide pattern) */
+  .page {
+    max-width: 520px;
+    margin: 0 auto;
+    padding-bottom: calc(2.5rem + env(safe-area-inset-bottom));
+  }
+
+  /* ══ TOPBAR — card-explainer back pattern (pip-ring + back link → section index) ══ */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem 0;
+  }
+
+  /* pip-ring + label together are the single back link → /stack */
+  .logo-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--bronze);
+    border-radius: 10px;
+    padding: 6px 8px;
+    margin: -6px -8px;
+    transition: background 0.15s;
+  }
+  .logo-back:hover, .logo-back:active { background: var(--bronze-glow); }
+  .logo-back .logo-pip-ring { width: 38px; height: 38px; flex-shrink: 0; display: block; }
+  .logo-back .back-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 10px;
+    padding: 0.4rem 0.7rem;
+    color: var(--bronze);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .share-btn:hover { border-color: var(--bronze); background: var(--bronze-glow); }
+  .share-btn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; flex-shrink: 0; }
+
+  /* ══ HERO — page title (the content-page equivalent of a card read-out) ══ */
+  .hero {
+    text-align: center;
+    padding: 1rem 1.25rem 0;
+  }
+  .hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 8vw, 3.6rem);
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .hero .tagline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 0.4rem;
+  }
+
+  /* ══ MAIN ══ */
+  main { padding: 0 1.25rem; }
+
+  .lede {
+    text-align: center;
+    color: var(--text-dim);
+    margin: 1.4rem 0 0;
+  }
+
+  h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    border-bottom: 1px solid var(--bronze-dim);
+    padding-bottom: 0.3rem;
+    margin: 2.5rem 0 1rem;
+  }
+  h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    margin: 1.5rem 0 0.5rem;
+  }
+  p { margin-bottom: 1rem; }
+
+  /* ══ FLOW TIMELINE ══ */
+  .timeline-container {
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin: 1.5rem 0 2rem;
+  }
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .timeline-step {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 1rem;
+    text-align: center;
+  }
+  .step-number {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1.7rem;
+    color: var(--bronze);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+  .step-name {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .step-summary { font-size: 0.88rem; color: var(--text-dim); }
+
+  /* ══ QUICK PRIORITY CARDS ══ */
+  .quick-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .quick-card {
+    padding: 1rem;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+  }
+  .quick-card.no-priority { background: rgba(224, 96, 96, 0.06); border-color: var(--red); }
+  .quick-card.priority    { background: rgba(90, 171, 110, 0.06); border-color: var(--green); }
+  .quick-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.5rem;
+  }
+  .quick-card.no-priority .quick-title { color: var(--red); }
+  .quick-card.priority .quick-title { color: var(--green); }
+  .quick-card p { font-size: 0.93rem; margin-bottom: 0; }
+
+  /* ══ DETAILS BULLETS ══ */
+  ul.details-list { list-style: none; margin-bottom: 1.25rem; }
+  ul.details-list li {
+    position: relative;
+    padding-left: 1.25rem;
+    margin-bottom: 0.7rem;
+  }
+  ul.details-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--bronze);
+    font-weight: bold;
+  }
+
+  /* ══ GOVERNING-RULES CITATION BOX ══ */
+  .sources-box {
+    background: rgba(184, 147, 90, 0.05);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-top: 1.25rem;
+  }
+  .sources-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    margin-bottom: 0.5rem;
+  }
+  .sources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 0.5rem;
+    font-size: 0.84rem;
+    color: var(--text-dim);
+  }
+
+  /* ══ CARD INTERACTION PANELS ══ */
+  .interaction-panel {
+    background: var(--surface);
+    border-left: 4px solid var(--bronze);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 1.1rem 1.2rem;
+    margin-bottom: 1.25rem;
+  }
+  .interaction-card-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--bronze);
+    margin-bottom: 0.25rem;
+  }
+  .interaction-panel p { font-size: 0.93rem; margin-bottom: 0; }
+  .cr { color: var(--text-dim); font-size: 0.82rem; }
+
+  /* ══ SUGGEST CTA (mirrors the card-page request block) ══ */
+  .suggest-cta {
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 14px;
+    padding: 1.1rem 1rem;
+    margin-top: 2.5rem;
+  }
+  .suggest-cta p { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 0.7rem; }
+  .suggest-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--bronze);
+    color: var(--bg);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.55rem 1.1rem;
+    border-radius: 10px;
+    transition: filter 0.15s, transform 0.15s;
+  }
+  .suggest-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .suggest-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.4; }
+
+  /* ══ FOOTER — mirrors the homepage footer exactly ══ */
+  footer { text-align: center; padding: 2rem 1.5rem 0.5rem; }
+  .footer-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+  .footer-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.5rem;
+    color: var(--bronze);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .footer-btn:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+  .footer-btn svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+
+  /* ══ TOAST (share-link copy fallback) ══ */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    transform: translateX(-50%) translateY(8px);
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 90;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── Quality floor: visible keyboard focus ── */
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--bronze);
+    outline-offset: 2px;
+  }
+
+  /* ── Quality floor: respect reduced motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+    .suggest-btn:hover { transform: none; }
+  }
+
+  /* ── DESKTOP ── */
+  @media (min-width: 640px) {
+    .timeline { flex-direction: row; align-items: stretch; }
+    .quick-grid { grid-template-columns: 1fr 1fr; }
+    .footer-buttons { max-width: 380px; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ══ TOPBAR — pip-ring + "All Interactions" back link → /stack (card-page pattern) ══ -->
+  <div class="topbar">
+    <a class="logo-back" href="/stack" aria-label="Back to all Stack interactions">
+      <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+        <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+        <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+      </svg>
+      <span class="back-label">← All Interactions</span>
+    </a>
+
+    <button class="share-btn" id="shareBtn" type="button" aria-label="Share this page">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/>
+      </svg>
+      Share
+    </button>
+  </div>
+
+  <!-- ══ HERO ══ -->
+  <header class="hero">
+    <h1>Beginning Phase</h1>
+    <p class="tagline">Quick Reference Guide</p>
+  </header>
+
+  <main>
+
+    <p class="lede">The beginning phase is the first phase of an individual turn and consists of three distinct steps executed in order.</p>
+
+    <!-- FLOW TIMELINE -->
+    <section class="timeline-container">
+      <div class="timeline">
+        <div class="timeline-step">
+          <span class="step-number">1</span>
+          <span class="step-name">Untap Step</span>
+          <span class="step-summary">Phase-in/out happens, then the active player untaps all controlled permanents.</span>
+        </div>
+        <div class="timeline-step">
+          <span class="step-number">2</span>
+          <span class="step-name">Upkeep Step</span>
+          <span class="step-summary">Upkeep and delayed untap triggers go on the stack. Active player gains priority.</span>
+        </div>
+        <div class="timeline-step">
+          <span class="step-number">3</span>
+          <span class="step-name">Draw Step</span>
+          <span class="step-summary">Active player draws a card as a turn-based action. A priority window opens before the main phase.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUICK PRIORITY CARDS -->
+    <section class="quick-grid">
+      <div class="quick-card no-priority">
+        <div class="quick-title">✕ No Priority Window</div>
+        <p><strong>Untap Step:</strong> Players cannot cast spells, activate abilities, or use mana abilities. Triggers are held until upkeep.</p>
+      </div>
+      <div class="quick-card priority">
+        <div class="quick-title">✓ Priority Windows Open</div>
+        <p><strong>Upkeep &amp; Draw Steps:</strong> Instants can be cast and abilities activated once the automatic turn steps complete.</p>
+      </div>
+    </section>
+
+    <h2>Technical Breakdown</h2>
+
+    <h3>1. The Untap Step</h3>
+    <ul class="details-list">
+      <li><strong>Phasing actions:</strong> All phased-in permanents with phasing controlled by the active player phase out. Simultaneously, all phased-out permanents that were controlled by the active player when they phased out phase in. This is a turn-based action that does not use the stack.</li>
+      <li><strong>Untapping permanents:</strong> The active player untaps all tapped permanents they control simultaneously. This is a turn-based action that does not use the stack.</li>
+      <li><strong>Static restrictions:</strong> If a static effect specifies that a permanent does not untap during its controller's untap step, that permanent remains tapped.</li>
+      <li><strong>No priority:</strong> No player receives priority during the untap step. Spells cannot be cast, and activated abilities — including mana abilities — cannot be activated.</li>
+      <li><strong>Delayed triggers:</strong> Any abilities that trigger during the untap step are held. They do not enter the stack until the upkeep step begins.</li>
+    </ul>
+
+    <div class="sources-box">
+      <div class="sources-title">Governing Rules</div>
+      <div class="sources-grid">
+        <div>CR 501.1 — Beginning sequence</div>
+        <div>CR 502.1 — Phasing mechanics</div>
+        <div>CR 502.2 — Mandatory untap rules</div>
+        <div>CR 502.3 — Priority restrictions</div>
+      </div>
+    </div>
+
+    <h3>2. The Upkeep Step</h3>
+    <ul class="details-list">
+      <li><strong>Stacking triggers:</strong> Any abilities that triggered during the untap step, along with any abilities that trigger "at the beginning of your upkeep," are placed onto the stack.</li>
+      <li><strong>Priority distribution:</strong> The active player receives priority first once all applicable triggers are on the stack.</li>
+      <li><strong>Permitted actions:</strong> Players may cast instants, cast spells with flash, or activate abilities only after priority has been formally granted.</li>
+      <li><strong>Timing restrictions:</strong> Normal sorceries, creatures, artifacts, enchantments, and planeswalkers cannot be cast, nor can lands be played, unless an effect specifically grants them flash or modifies timing rules.</li>
+    </ul>
+
+    <div class="sources-box">
+      <div class="sources-title">Governing Rules</div>
+      <div class="sources-grid">
+        <div>CR 503.1 — Upkeep trigger sorting</div>
+        <div>CR 117 — Priority frameworks</div>
+      </div>
+    </div>
+
+    <h3>3. The Draw Step</h3>
+    <ul class="details-list">
+      <li><strong>Turn-based card draw:</strong> The active player draws a card from their library. This is a mandatory turn-based action that does not use the stack and cannot be responded to by any player.</li>
+      <li><strong>First-turn exception:</strong> The player or team going first in a standard two-player game or a Two-Headed Giant game completely skips the draw step of their very first turn. The draw step is not skipped by the starting player in other multiplayer formats.</li>
+      <li><strong>Draw triggers:</strong> Any abilities that trigger "at the beginning of the draw step" or "whenever you draw a card" are placed onto the stack immediately following the turn-based draw.</li>
+      <li><strong>Final action window:</strong> The active player receives priority after the card is drawn and any associated triggers are placed on the stack. Instants may be cast and abilities activated before the game automatically transitions to the precombat main phase.</li>
+    </ul>
+
+    <div class="sources-box">
+      <div class="sources-title">Governing Rules</div>
+      <div class="sources-grid">
+        <div>CR 504.1 — Turn draw constraints</div>
+        <div>CR 504.2 — Draw step priority</div>
+        <div>CR 103.7a–c — Starting draw conditions</div>
+      </div>
+    </div>
+
+    <h2>Beginning Phase Card Interactions</h2>
+    <p style="color: var(--text-dim); margin-bottom: 1.5rem;">Various cards modify the structure of these steps, alter turn-based actions, or trigger specifically based on these timing intervals.</p>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Sphinx of the Second Sun</div>
+      <p>Creates an entirely new beginning phase (an untap step, an upkeep step, and a draw step) during the postcombat main phase. This lets a player untap lands and permanents, resolve upkeep triggers, and draw an additional card before their turn ends. <span class="cr">(CR 502.2, 502.3)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Winter Orb / Stasis</div>
+      <p>These permanents alter the static rules of the untap step. Winter Orb restricts players to untapping only one land during their untap step, while Stasis forces players to skip their untap step entirely. <span class="cr">(CR 502.2)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Inspired (e.g., King Macar)</div>
+      <p>Abilities with the "Inspired" keyword trigger when the creature becomes untapped. Because the game forces all controlled permanents to untap simultaneously during the untap step, these abilities trigger immediately but are held until the upkeep step to be put on the stack. <span class="cr">(CR 502.3)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Paradox Haze</div>
+      <p>Targets a player and grants them a second, consecutive upkeep step directly after their first. Any "at the beginning of your upkeep" triggers fire a second time during the turn. <span class="cr">(CR 503.1)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Eon Hub</div>
+      <p>Completely eliminates the upkeep step from the turn structure for all players. The game transitions directly from the untap step to the draw step, bypassing cumulative upkeep costs and detrimental upkeep triggers. <span class="cr">(CR 503.1)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Suspend (e.g., Ancestral Vision)</div>
+      <p>Functions entirely within the upkeep step. At the beginning of the suspended card's owner's upkeep, a time counter is removed. When the last counter comes off, the card is cast as a turn-based trigger during that step. <span class="cr">(CR 702.108)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Necropotence / Maralen of the Mornsong</div>
+      <p>These cards alter or replace the fundamental turn-based action of the draw step. Necropotence states the active player skips their draw step entirely. Maralen stops players from drawing cards at all, replacing the draw step with a library search. <span class="cr">(CR 504.1)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Teferi's Puzzle Box</div>
+      <p>Triggers "at the beginning of each player's draw step." Because it is a triggered ability, it goes on the stack immediately after the active player has already performed their normal turn-based draw, forcing them to cycle their entire hand to the bottom of their library and redraw. <span class="cr">(CR 504.2)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Miracle (e.g., Terminus)</div>
+      <p>Exploits the precise moment a card is drawn. If a card with Miracle is the first card a player draws during a turn, they may reveal it immediately. This triggers a special priority window allowing them to cast the spell for its reduced Miracle cost during the draw step. <span class="cr">(CR 702.102)</span></p>
+    </div>
+
+    <!-- SUGGEST CTA — swap the "#" for the real form link when it's ready -->
+    <section class="suggest-cta">
+      <p>Spot a missing interaction or something we got wrong?</p>
+      <a class="suggest-btn" href="#" target="_blank" rel="noopener"><!-- TODO_SUBMISSION_URL -->
+        Suggest an interaction
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/>
+        </svg>
+      </a>
+    </section>
+
+  </main>
+
+  <!-- ══ FOOTER ══ -->
+  <footer>
+    <div class="footer-buttons">
+      <a class="footer-btn" href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+        Tips Appreciated!
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+      </a>
+      <a class="footer-btn" href="https://instagram.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        MTJawnny
+      </a>
+    </div>
+  </footer>
+
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  var btn = document.getElementById('shareBtn');
+  if (!btn) return;
+  var url = 'https://mtjawnny.com/stack/beginning-phase';
+  var title = 'Beginning Phase — Stack It Up';
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function () { t.classList.remove('show'); }, 1800);
+  }
+
+  btn.addEventListener('click', function () {
+    if (navigator.share) {
+      navigator.share({ title: title, url: url }).catch(function () {});
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url)
+        .then(function () { showToast('Link copied'); })
+        .catch(function () { legacyCopy(); });
+    } else {
+      legacyCopy();
+    }
+  });
+
+  function legacyCopy() {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = url;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'absolute';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Link copied');
+    } catch (e) {
+      showToast('Copy not supported');
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
