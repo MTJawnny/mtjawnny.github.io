@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1e1728">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Protection">
+<meta name="description" content="Protection from a quality stops four things from that quality: Damage, Enchanting and Equipping, Blocking, and Targeting. Remember DEBT. It is not indestructibility, so destroy, sacrifice, and -X/-X still get through.">
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="https://mtjawnny.com/stack/protection">
+<title>Protection — Stack It Up — MTJawnny</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #1e1728;
+    --surface:     #261d33;
+    --bronze:      #b8935a;
+    --bronze-dim:  #7a5e35;
+    --bronze-glow: rgba(184,147,90,0.15);
+    --text-dim:    #9b8fb0;
+    --white:       #f0ece6;
+    --muted:       #6b5f7a;
+    --green:       #5aab6e;  /* tips / priority open / ✓ */
+    --red:         #e06060;  /* misconceptions / no priority / ✕ */
+    --radius:      10px;
+    --panel-r:     20px;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button { font-family: inherit; }
+
+  /* Whole page lives in one centred mobile-width column (site-wide pattern) */
+  .page {
+    max-width: 520px;
+    margin: 0 auto;
+    padding-bottom: calc(2.5rem + env(safe-area-inset-bottom));
+  }
+
+  /* ══ TOPBAR ══ */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem 0;
+  }
+
+  .logo-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--bronze);
+    border-radius: 10px;
+    padding: 6px 8px;
+    margin: -6px -8px;
+    transition: background 0.15s;
+  }
+  .logo-back:hover, .logo-back:active { background: var(--bronze-glow); }
+  .logo-back .logo-pip-ring { width: 38px; height: 38px; flex-shrink: 0; display: block; }
+  .logo-back .back-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 10px;
+    padding: 0.4rem 0.7rem;
+    color: var(--bronze);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .share-btn:hover { border-color: var(--bronze); background: var(--bronze-glow); }
+  .share-btn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; flex-shrink: 0; }
+
+  /* ══ HERO ══ */
+  .hero {
+    text-align: center;
+    padding: 1rem 1.25rem 0;
+  }
+  .hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 8vw, 3.6rem);
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .hero .tagline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 0.4rem;
+  }
+
+  /* ══ MAIN ══ */
+  main { padding: 0 1.25rem; }
+
+  .lede {
+    text-align: center;
+    color: var(--text-dim);
+    margin: 1.4rem 0 0;
+  }
+
+  h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    border-bottom: 1px solid var(--bronze-dim);
+    padding-bottom: 0.3rem;
+    margin: 2.5rem 0 1rem;
+  }
+  h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    margin: 1.5rem 0 0.5rem;
+  }
+  p { margin-bottom: 1rem; }
+
+  /* ══ VISUAL GUIDE (TARGETING PATHS) ══ */
+  .visual-guide-container {
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin: 1.5rem 0 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .guide-header {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--bronze);
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+  .guide-note {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: var(--text-dim);
+    text-align: center;
+    max-width: 44ch;
+  }
+  .guide-note strong { color: var(--white); font-weight: 600; }
+  .stack-item-block {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 0.75rem;
+    text-align: center;
+    position: relative;
+  }
+  .block-badge {
+    display: inline-block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    margin-bottom: 0.25rem;
+  }
+  .block-badge.neutral { background: var(--muted); color: var(--white); }
+  .block-badge.bottom { background: var(--bronze-dim); color: var(--white); }
+
+  .block-title {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+  .block-desc { display: block; font-size: 0.85rem; color: var(--text-dim); }
+  .stack-arrow {
+    font-size: 0.85rem;
+    color: var(--bronze);
+    font-weight: bold;
+    margin: 0.1rem 0;
+    text-align: center;
+  }
+
+  /* Protection-page additions */
+  .debt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; width: 100%; }
+  .debt-grid .stack-item-block { padding: 0.65rem 0.4rem; }
+  .guarded { border-color: var(--bronze); background: var(--bronze-glow); }
+  .guarded .block-badge { background: var(--bronze); color: var(--bg); }
+  .path-row { display: flex; gap: 0.6rem; width: 100%; align-items: stretch; }
+  .path-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.35rem; }
+  .path-col .stack-item-block { width: 100%; padding: 0.65rem 0.4rem; }
+  .path-col .stack-arrow { font-size: 0.72rem; line-height: 1.25; }
+  .stack-item-block.is-blocked { border-color: var(--red); background: rgba(224, 96, 96, 0.06); }
+  .is-blocked .block-badge { background: var(--red); color: var(--bg); }
+  .stack-item-block.is-through { border-color: var(--green); background: rgba(90, 171, 110, 0.06); }
+  .is-through .block-badge { background: var(--green); color: var(--bg); }
+
+  /* ══ QUICK CARDS ══ */
+  .quick-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .quick-card {
+    padding: 1rem;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+  }
+  .quick-card.priority    { background: rgba(90, 171, 110, 0.06); border-color: var(--green); }
+  .quick-card.no-priority { background: rgba(224, 96, 96, 0.06); border-color: var(--red); }
+  .quick-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.5rem;
+  }
+  .quick-card.priority .quick-title { color: var(--green); }
+  .quick-card.no-priority .quick-title { color: var(--red); }
+  .quick-card p { font-size: 0.93rem; margin-bottom: 0; }
+
+  /* ══ DETAILS BULLETS ══ */
+  ul.details-list { list-style: none; margin-bottom: 1.25rem; }
+  ul.details-list li {
+    position: relative;
+    padding-left: 1.25rem;
+    margin-bottom: 0.7rem;
+  }
+  ul.details-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--bronze);
+    font-weight: bold;
+  }
+
+  /* ══ GOVERNING-RULES CITATION BOX ══ */
+  .sources-box {
+    background: rgba(184, 147, 90, 0.05);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-top: 1.25rem;
+  }
+  .sources-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    margin-bottom: 0.5rem;
+  }
+  .sources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 0.5rem;
+    font-size: 0.84rem;
+    color: var(--text-dim);
+  }
+
+  /* ══ SCENARIO PANELS ══ */
+  .interaction-panel {
+    background: var(--surface);
+    border-left: 4px solid var(--bronze);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 1.1rem 1.2rem;
+    margin-bottom: 1.25rem;
+  }
+  .interaction-card-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--bronze);
+    margin-bottom: 0.25rem;
+  }
+  .interaction-panel p { font-size: 0.93rem; margin-bottom: 0; }
+  .cr { color: var(--text-dim); font-size: 0.82rem; }
+
+  /* ══ SUGGEST CTA ══ */
+  .suggest-cta {
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 14px;
+    padding: 1.1rem 1rem;
+    margin-top: 2.5rem;
+  }
+  .suggest-cta p { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 0.7rem; }
+  .suggest-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--bronze);
+    color: var(--bg);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.55rem 1.1rem;
+    border-radius: 10px;
+    transition: filter 0.15s, transform 0.15s;
+  }
+  .suggest-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .suggest-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.4; }
+
+  /* ══ FOOTER ══ */
+  footer { text-align: center; padding: 2rem 1.5rem 0.5rem; }
+  .footer-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+  .footer-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.5rem;
+    color: var(--bronze);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .footer-btn:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+  .footer-btn svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+
+  /* ══ TOAST ══ */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    transform: translateX(-50%) translateY(8px);
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 90;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── Keyboard focus ── */
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--bronze);
+    outline-offset: 2px;
+  }
+
+  /* ── Reduced motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+    .suggest-btn:hover { transform: none; }
+  }
+
+  /* ── DESKTOP ADJUSTMENTS ── */
+  @media (min-width: 640px) {
+    .quick-grid { grid-template-columns: 1fr 1fr; }
+    .footer-buttons { max-width: 380px; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="topbar">
+    <a class="logo-back" href="/stack" aria-label="Back to all Stack interactions">
+      <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+        <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+        <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+      </svg>
+      <span class="back-label">← All Interactions</span>
+    </a>
+
+    <button class="share-btn" id="shareBtn" type="button" aria-label="Share this page">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/>
+      </svg>
+      Share
+    </button>
+  </div>
+
+  <header class="hero">
+    <h1>Protection</h1>
+    <p class="tagline">Static Protection Keyword</p>
+  </header>
+
+  <main>
+
+    <p class="lede">Protection from a quality stops four kinds of interaction from sources with that quality. The shorthand is DEBT: Damage, Enchanting and Equipping, Blocking, and Targeting. It is not the same as indestructible. Effects that destroy, force a sacrifice, or shrink creatures globally still work, because none of those is damage or a target.</p>
+
+    <section class="visual-guide-container">
+      <div class="guide-header">Protection from Black: The DEBT Checklist</div>
+      <p class="guide-note"><strong>Protection stops four interaction types from the named quality.</strong> Here the quality is black. Anything that is not one of these four, from any color, still gets through.</p>
+
+      <div class="stack-item-block guarded">
+        <span class="block-badge">Protection from Black</span>
+        <span class="block-title">Your Creature</span>
+        <span class="block-desc">Stops four things from black sources</span>
+      </div>
+
+      <div class="stack-arrow">▼ blocked from black</div>
+
+      <div class="debt-grid">
+        <div class="stack-item-block is-blocked">
+          <span class="block-badge">D</span>
+          <span class="block-title">Damage</span>
+          <span class="block-desc">Black sources deal 0</span>
+        </div>
+        <div class="stack-item-block is-blocked">
+          <span class="block-badge">E</span>
+          <span class="block-title">Enchant / Equip</span>
+          <span class="block-desc">Black Auras and gear fall off</span>
+        </div>
+        <div class="stack-item-block is-blocked">
+          <span class="block-badge">B</span>
+          <span class="block-title">Block</span>
+          <span class="block-desc">Black creatures can't block it</span>
+        </div>
+        <div class="stack-item-block is-blocked">
+          <span class="block-badge">T</span>
+          <span class="block-title">Target</span>
+          <span class="block-desc">Black spells can't target it</span>
+        </div>
+      </div>
+
+      <div class="stack-arrow">▼ but not these</div>
+
+      <div class="stack-item-block is-through">
+        <span class="block-badge">What Gets Through</span>
+        <span class="block-title">Damnation / Toxic Deluge / Living End</span>
+        <span class="block-desc">Destroy, -X/-X, and sacrifice all get through</span>
+      </div>
+    </section>
+
+    <section class="quick-grid">
+      <div class="quick-card priority">
+        <div class="quick-title">✓ How It Works</div>
+        <p>Pick the quality, usually a color. From sources of that quality, the permanent can't be Damaged, can't be Enchanted or Equipped, can't be Blocked, and can't be Targeted. Auras and Equipment of that quality that are already attached fall off the moment protection applies.</p>
+      </div>
+      <div class="quick-card no-priority">
+        <div class="quick-title">✕ Common Misconception</div>
+        <p>Protection is not indestructibility. A creature with protection from white still dies to a white "destroy all creatures," because that effect deals no damage and targets nothing. Edicts and -X/-X get through the same way.</p>
+      </div>
+    </section>
+
+    <h2>Technical Breakdown</h2>
+
+    <h3>The DEBT Checklist</h3>
+    <ul class="details-list">
+      <li><strong>Damage.</strong> Any damage from a source of the stated quality is prevented, whether combat or noncombat. <span class="cr">(CR 702.16e)</span></li>
+      <li><strong>Enchant and Equip.</strong> The permanent can't be enchanted by Auras of the quality or equipped by Equipment of the quality. Ones already attached fall off as a state-based action. <span class="cr">(CR 702.16c, 702.16d)</span></li>
+      <li><strong>Block.</strong> An attacking creature with protection can't be blocked by creatures of the quality. <span class="cr">(CR 702.16f)</span></li>
+      <li><strong>Target.</strong> Spells of the quality, and abilities from a source of the quality, can't target the permanent. <span class="cr">(CR 702.16b)</span></li>
+    </ul>
+
+    <h3>What Protection Does Not Stop</h3>
+    <ul class="details-list">
+      <li><strong>Destruction.</strong> Protection is not indestructible. A destroy effect that does not target, such as a board wipe, still kills the permanent no matter what color the wipe is, because destruction is not on the DEBT list. <span class="cr">(CR 702.16a)</span></li>
+      <li><strong>Sacrifice and -X/-X.</strong> Edicts make a player sacrifice, and -X/-X lowers toughness to zero. Neither is damage or a target, so protection does nothing against them. <span class="cr">(CR 702.16a)</span></li>
+      <li><strong>The spell on the stack.</strong> Protection is for permanents and players. A creature spell, even one with protection from everything, can still be countered before it resolves, since it isn't a permanent yet. <span class="cr">(CR 702.16a)</span></li>
+      <li><strong>Your own effects of the quality.</strong> You also can't target your own protected permanent with a spell of that quality. Protection doesn't care who controls the source. <span class="cr">(CR 702.16b)</span></li>
+    </ul>
+
+    <h3>Tricks and Variants</h3>
+    <ul class="details-list">
+      <li><strong>Sloughing off an Aura.</strong> Give your creature protection from the right quality to drop a hostile Aura. A creature gaining protection from white sheds a white Pacifism as a state-based action. <span class="cr">(CR 702.16c)</span></li>
+      <li><strong>Blocking and surviving.</strong> A creature with protection from red can still block a red attacker. The block is legal, but the attacker's damage is prevented, so your blocker lives. <span class="cr">(CR 702.16e, 702.16f)</span></li>
+      <li><strong>Protection from everything.</strong> A variant that applies DEBT against every source regardless of quality. It still dies to destroy, sacrifice, and -X/-X. <span class="cr">(CR 702.16j)</span></li>
+    </ul>
+
+    <div class="sources-box">
+      <div class="sources-title">Governing Rules</div>
+      <div class="sources-grid">
+        <div>CR 702.16a — Protection</div>
+        <div>CR 702.16b — Target</div>
+        <div>CR 702.16c — Enchant</div>
+        <div>CR 702.16d — Equip</div>
+        <div>CR 702.16e — Damage</div>
+        <div>CR 702.16f — Block</div>
+        <div>CR 702.16j — From everything</div>
+        <div>CR 702.19b — Trample assignment</div>
+      </div>
+    </div>
+
+    <h2>Worked Scenarios</h2>
+    <p style="color: var(--text-dim); margin-bottom: 1.5rem;">Four boards that test the DEBT list. The first two show what protection stops and what it doesn't, the last two are common tricks.</p>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Protection from Black vs Targeted Removal</div>
+      <p>Your creature has protection from black. Your opponent tries to cast a black removal spell on it, something reading "destroy target creature." The spell is of the stated quality, so it can't choose your creature as a target. If that creature is the only legal target, the spell can't be cast at all. Switching to a non-black removal spell would still be able to target it. <span class="cr">(CR 702.16b)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Wrath Still Kills It</div>
+      <p>Your creature has protection from white. Your opponent casts Wrath of God, a white "destroy all creatures." It deals no damage and targets nothing, so protection from white never applies, and the white color of the spell is irrelevant. The creature is destroyed with the rest of the board. Protection is not indestructibility. <span class="cr">(CR 702.16a)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Dropping a Pacifism</div>
+      <p>Your attacker is stuck under a white Pacifism. You give it protection from white. The Aura is white, so it can no longer legally enchant the creature and goes to the graveyard as a state-based action. Your creature is free to attack again. The same trick pulls off any Aura or Equipment of the chosen quality. <span class="cr">(CR 702.16c)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Blocking a Red Attacker</div>
+      <p>Your blocker has protection from red. A red creature attacks and you block with it. The block is legal, but all damage from the red attacker is prevented, so your blocker survives and deals its own damage normally. Protection from a quality stops damage from that quality, it does not stop your creature from blocking. Trample changes the math. If the red attacker has trample, it still has to assign lethal damage to your blocker first, but that lethal amount is the blocker's full toughness, worked out without regard to your protection. That assigned damage is then prevented, so your blocker lives, while the excess tramples over and hits you. A 5/5 red trampler into your 2/2 protected blocker assigns 2, which are prevented, then sends 3 to you. <span class="cr">(CR 702.16e, 702.16f, 702.19b)</span></p>
+    </div>
+
+    <section class="suggest-cta">
+      <p>Spot a missing interaction or something we got wrong?</p>
+      <a class="suggest-btn" href="https://tally.so" target="_blank" rel="noopener">
+        Suggest an interaction
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/>
+        </svg>
+      </a>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-buttons">
+      <a class="footer-btn" href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+        Tips Appreciated!
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+      </a>
+      <a class="footer-btn" href="https://instagram.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        MTJawnny
+      </a>
+    </div>
+  </footer>
+
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  var btn = document.getElementById('shareBtn');
+  if (!btn) return;
+  var url = 'https://mtjawnny.com/stack/protection';
+  var title = 'Protection — Stack It Up';
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function () { t.classList.remove('show'); }, 1800);
+  }
+
+  btn.addEventListener('click', function () {
+    if (navigator.share) {
+      navigator.share({ title: title, url: url }).catch(function () {});
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url)
+        .then(function () { showToast('Link copied'); })
+        .catch(function () { legacyCopy(); });
+    } else {
+      legacyCopy();
+    }
+  });
+
+  function legacyCopy() {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = url;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'absolute';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Link copied');
+    } catch (e) {
+      showToast('Copy not supported');
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
