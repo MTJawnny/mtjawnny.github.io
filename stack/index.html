@@ -362,6 +362,18 @@
     line-height: 1;
     color: var(--text-dim);
   }
+  /* "VS" separator — for oppositional interactions (which beats which) */
+  .vs {
+    display: block;
+    margin: 0.26rem 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    line-height: 1;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
 
   .visually-hidden {
     position: absolute !important;
@@ -453,12 +465,30 @@
 <script>
 const ENTRIES = [
   {
-    names: ["Delney, Streetwise Lookout", "Zurgo, Thunder's Decree", "Goldnight Commander"],
-    slug: "delney-zurgo-goldnight"
+    names: ["Protection"],
+    slug: "protection"
+  },
+  {
+    names: ["Ward"],
+    slug: "ward"
+  },
+  {
+    names: ["Hexproof/Shroud", "Nontargeting"],
+    slug: "hexproof-shroud-nontargeting",
+    sep: "vs"
+  },
+  {
+    names: ["Indestructible", "-X/-X"],
+    slug: "indestructible-minus-toughness",
+    sep: "vs"
   },
   {
     names: ["Trample", "Deathtouch"],
     slug: "trample-deathtouch"
+  },
+  {
+    names: ["Losing Player's Permanents"],
+    slug: "losing-player-permanents"
   }
 ];
 
@@ -657,9 +687,14 @@ const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
 
     grid.innerHTML = list.map(({ e }) => {
       const href  = '/stack/' + e.slug;                 // entry pages live under /stack/
-      const label = e.names.join(' plus ') + ' — view interaction';
+      // sep: "vs" = oppositional interaction (which beats which); default = combo ("+")
+      const isVs  = e.sep === 'vs';
+      const sepWord = isVs ? 'vs' : 'plus';             // spoken form for the aria-label
+      const sepCls  = isVs ? 'vs'  : 'plus';            // visible marker class
+      const sepSym  = isVs ? 'vs'  : '+';               // visible marker text (.vs upper-cases it)
+      const label = e.names.join(' ' + sepWord + ' ') + ' — view interaction';
       const inner = e.names.map((n, i) =>
-        (i > 0 ? '<span class="plus" aria-hidden="true">+</span>' : '') +
+        (i > 0 ? '<span class="' + sepCls + '" aria-hidden="true">' + sepSym + '</span>' : '') +
         '<span class="entry-name">' + esc(n) + '</span>'
       ).join('');
       return '<a class="tile" href="' + esc(href) + '" aria-label="' + esc(label) + '">' + inner + '</a>';
