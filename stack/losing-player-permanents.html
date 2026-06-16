@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1e1728">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Player Leaves">
+<meta name="description" content="What happens to permanents an opponent controls but does not own when they lose or leave a multiplayer game: stolen cards revert, reanimated cards are exiled, and commanders can return to the command zone.">
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="https://mtjawnny.com/stack/losing-player-permanents">
+<title>When a Player Leaves — Stack It Up — MTJawnny</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #1e1728;
+    --surface:     #261d33;
+    --bronze:      #b8935a;
+    --bronze-dim:  #7a5e35;
+    --bronze-glow: rgba(184,147,90,0.15);
+    --text-dim:    #9b8fb0;
+    --white:       #f0ece6;
+    --muted:       #6b5f7a;
+    --green:       #5aab6e;  /* tips / priority open / ✓ */
+    --red:         #e06060;  /* misconceptions / no priority / ✕ */
+    --radius:      10px;
+    --panel-r:     20px;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button { font-family: inherit; }
+
+  /* Whole page lives in one centred mobile-width column (site-wide pattern) */
+  .page {
+    max-width: 520px;
+    margin: 0 auto;
+    padding-bottom: calc(2.5rem + env(safe-area-inset-bottom));
+  }
+
+  /* ══ TOPBAR ══ */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem 0;
+  }
+
+  .logo-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--bronze);
+    border-radius: 10px;
+    padding: 6px 8px;
+    margin: -6px -8px;
+    transition: background 0.15s;
+  }
+  .logo-back:hover, .logo-back:active { background: var(--bronze-glow); }
+  .logo-back .logo-pip-ring { width: 38px; height: 38px; flex-shrink: 0; display: block; }
+  .logo-back .back-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 10px;
+    padding: 0.4rem 0.7rem;
+    color: var(--bronze);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .share-btn:hover { border-color: var(--bronze); background: var(--bronze-glow); }
+  .share-btn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; flex-shrink: 0; }
+
+  /* ══ HERO ══ */
+  .hero {
+    text-align: center;
+    padding: 1rem 1.25rem 0;
+  }
+  .hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 8vw, 3.6rem);
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .hero .tagline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 0.4rem;
+  }
+
+  /* ══ MAIN ══ */
+  main { padding: 0 1.25rem; }
+
+  .lede {
+    text-align: center;
+    color: var(--text-dim);
+    margin: 1.4rem 0 0;
+  }
+
+  h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    border-bottom: 1px solid var(--bronze-dim);
+    padding-bottom: 0.3rem;
+    margin: 2.5rem 0 1rem;
+  }
+  h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    margin: 1.5rem 0 0.5rem;
+  }
+  p { margin-bottom: 1rem; }
+
+  /* ══ VISUAL GUIDE (DAMAGE ASSIGNMENT) ══ */
+  .visual-guide-container {
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin: 1.5rem 0 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .guide-header {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--bronze);
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+  .guide-note {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: var(--text-dim);
+    text-align: center;
+    max-width: 44ch;
+  }
+  .guide-note strong { color: var(--white); font-weight: 600; }
+  .stack-item-block {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 0.75rem;
+    text-align: center;
+    position: relative;
+  }
+  .block-badge {
+    display: inline-block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    margin-bottom: 0.25rem;
+  }
+  .block-badge.neutral { background: var(--muted); color: var(--white); }
+  .block-badge.bottom { background: var(--bronze-dim); color: var(--white); }
+
+  .block-title {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+  .block-desc { display: block; font-size: 0.85rem; color: var(--text-dim); }
+  .stack-arrow {
+    font-size: 0.85rem;
+    color: var(--bronze);
+    font-weight: bold;
+    margin: 0.1rem 0;
+    text-align: center;
+  }
+
+  /* Outcome blocks (this page) */
+  .stack-item-block.reverts { border-color: var(--green); }
+  .stack-item-block.exiled  { border-color: var(--red); }
+  .stack-item-block.to-zone { border-color: var(--bronze); background: var(--bronze-glow); }
+  .block-badge.revert { background: var(--green);  color: var(--bg); }
+  .block-badge.exile  { background: var(--red);    color: var(--bg); }
+  .block-badge.zone   { background: var(--bronze); color: var(--bg); }
+
+  /* ══ QUICK CARDS ══ */
+  .quick-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .quick-card {
+    padding: 1rem;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+  }
+  .quick-card.priority    { background: rgba(90, 171, 110, 0.06); border-color: var(--green); }
+  .quick-card.no-priority { background: rgba(224, 96, 96, 0.06); border-color: var(--red); }
+  .quick-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.5rem;
+  }
+  .quick-card.priority .quick-title { color: var(--green); }
+  .quick-card.no-priority .quick-title { color: var(--red); }
+  .quick-card p { font-size: 0.93rem; margin-bottom: 0; }
+
+  /* ══ DETAILS BULLETS ══ */
+  ul.details-list { list-style: none; margin-bottom: 1.25rem; }
+  ul.details-list li {
+    position: relative;
+    padding-left: 1.25rem;
+    margin-bottom: 0.7rem;
+  }
+  ul.details-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--bronze);
+    font-weight: bold;
+  }
+
+  /* ══ GOVERNING-RULES CITATION BOX ══ */
+  .sources-box {
+    background: rgba(184, 147, 90, 0.05);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-top: 1.25rem;
+  }
+  .sources-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    margin-bottom: 0.5rem;
+  }
+  .sources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 0.5rem;
+    font-size: 0.84rem;
+    color: var(--text-dim);
+  }
+
+  /* ══ SCENARIO PANELS ══ */
+  .interaction-panel {
+    background: var(--surface);
+    border-left: 4px solid var(--bronze);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 1.1rem 1.2rem;
+    margin-bottom: 1.25rem;
+  }
+  .interaction-card-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--bronze);
+    margin-bottom: 0.25rem;
+  }
+  .interaction-panel p { font-size: 0.93rem; margin-bottom: 0; }
+  .cr { color: var(--text-dim); font-size: 0.82rem; }
+
+  /* ══ SUGGEST CTA ══ */
+  .suggest-cta {
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 14px;
+    padding: 1.1rem 1rem;
+    margin-top: 2.5rem;
+  }
+  .suggest-cta p { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 0.7rem; }
+  .suggest-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--bronze);
+    color: var(--bg);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.55rem 1.1rem;
+    border-radius: 10px;
+    transition: filter 0.15s, transform 0.15s;
+  }
+  .suggest-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .suggest-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.4; }
+
+  /* ══ FOOTER ══ */
+  footer { text-align: center; padding: 2rem 1.5rem 0.5rem; }
+  .footer-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+  .footer-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.5rem;
+    color: var(--bronze);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .footer-btn:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+  .footer-btn svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+
+  /* ══ TOAST ══ */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    transform: translateX(-50%) translateY(8px);
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 90;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── Keyboard focus ── */
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--bronze);
+    outline-offset: 2px;
+  }
+
+  /* ── Reduced motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+    .suggest-btn:hover { transform: none; }
+  }
+
+  /* ── DESKTOP ADJUSTMENTS ── */
+  @media (min-width: 640px) {
+    .quick-grid { grid-template-columns: 1fr 1fr; }
+    .footer-buttons { max-width: 380px; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="topbar">
+    <a class="logo-back" href="/stack" aria-label="Back to all Stack interactions">
+      <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+        <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+        <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+      </svg>
+      <span class="back-label">← All Interactions</span>
+    </a>
+
+    <button class="share-btn" id="shareBtn" type="button" aria-label="Share this page">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/>
+      </svg>
+      Share
+    </button>
+  </div>
+
+  <header class="hero">
+    <h1>When a Player Leaves</h1>
+    <p class="tagline">Control, Theft &amp; Elimination</p>
+  </header>
+
+  <main>
+
+    <p class="lede">When a player loses or leaves a multiplayer game, every card and permanent they own leaves with them. Permanents they controlled but did not own behave differently depending on how they got control. A stolen permanent reverts to its previous controller, while a permanent reanimated or pulled from another player's graveyard or library is exiled. Commanders follow these same rules, then their owner may send them to the command zone.</p>
+
+    <section class="visual-guide-container">
+      <div class="guide-header">Where Each Permanent Goes When They Leave</div>
+      <p class="guide-note"><strong>Sort every permanent the leaving player controlled by how they got it.</strong> What they own leaves with them. What they stole snaps back. What they pulled from a graveyard or library is exiled.</p>
+
+      <div class="stack-item-block">
+        <span class="block-badge bottom">Trigger</span>
+        <span class="block-title">Opponent Leaves the Game</span>
+        <span class="block-desc">Loses or concedes in a pod of three or more</span>
+      </div>
+
+      <div class="stack-arrow">▼ Sort each permanent by how this player got it</div>
+
+      <div class="stack-item-block">
+        <span class="block-badge neutral">Leaves Game</span>
+        <span class="block-title">Cards They Own</span>
+        <span class="block-desc">Their own creatures, lands, and commander, removed from the game with them</span>
+      </div>
+
+      <div class="stack-item-block reverts">
+        <span class="block-badge revert">Reverts to Owner</span>
+        <span class="block-title">Stolen by a Control Effect</span>
+        <span class="block-desc">Control Magic, Agent of Treachery, Act of Treason: control snaps back</span>
+      </div>
+
+      <div class="stack-item-block exiled">
+        <span class="block-badge exile">Exiled</span>
+        <span class="block-title">Reanimated or Bribery'd</span>
+        <span class="block-desc">Put onto the battlefield from a graveyard or library, no control effect to end</span>
+      </div>
+
+      <div class="stack-item-block to-zone">
+        <span class="block-badge zone">→ Command Zone</span>
+        <span class="block-title">Your Commander They Held</span>
+        <span class="block-desc">Reverts or is exiled first, then its owner may move it to the command zone</span>
+      </div>
+    </section>
+
+    <section class="quick-grid">
+      <div class="quick-card priority">
+        <div class="quick-title">✓ How It Works</div>
+        <p>Look at how the leaving player got each permanent. If they own it, it leaves the game. If they took it with a lasting control effect like Control Magic, control snaps back to whoever held it before. If they put it onto the battlefield from a graveyard or library, no control effect is involved, so it is exiled.</p>
+      </div>
+      <div class="quick-card no-priority">
+        <div class="quick-title">✕ Common Misconception</div>
+        <p>An opponent leaving does not hand you their board, and it does not destroy everything they controlled. Stolen cards go back to their owners rather than dying, and the creatures they reanimated out of your graveyard are exiled, not given to you.</p>
+      </div>
+    </section>
+
+    <h2>Technical Breakdown</h2>
+
+    <h3>Sorting the Permanents</h3>
+    <ul class="details-list">
+      <li><strong>Owned cards leave.</strong> Every object the departing player owns is removed from the game, in every zone. This is not destruction or exile; the cards are simply gone. <span class="cr">(CR 800.4a)</span></li>
+      <li><strong>Control effects end.</strong> Any effect that gave that player control of an object ends. A creature taken with an aura or a lasting "gain control" effect reverts to whoever controlled it before. <span class="cr">(CR 800.4a)</span></li>
+      <li><strong>Reanimated and library-stolen cards are exiled.</strong> A permanent they put onto the battlefield from a graveyard or library was never under a control effect, so after they leave it is still controlled by them and is exiled. <span class="cr">(CR 800.4a)</span></li>
+      <li><strong>Stack objects vanish.</strong> Spells and abilities they controlled that are not represented by cards cease to exist, such as a copy on the stack or an activated ability. <span class="cr">(CR 800.4a)</span></li>
+      <li><strong>It happens at once.</strong> All of this resolves the instant the player leaves, not as a state-based action, so it finishes before anyone receives priority. <span class="cr">(CR 800.4a)</span></li>
+    </ul>
+
+    <h3>Borrowed Permanents and Departed Controllers</h3>
+    <ul class="details-list">
+      <li><strong>Borrowed now, exiled later.</strong> If a player still in the game is holding that permanent through their own control effect, it stays for now. Once that effect ends, the permanent is exiled, because the player it would return to has left. <span class="cr">(CR 800.4c)</span></li>
+      <li><strong>Nothing moves to a departed player.</strong> Control cannot pass to someone who has left. Pending control changes, tokens, and triggered abilities that would be theirs simply do not happen. <span class="cr">(CR 800.4b, 800.4d)</span></li>
+      <li><strong>The default controller matters.</strong> A permanent's home controller is the player it entered under. When that player is gone, there is no one for it to revert to, which is why it is exiled rather than handed off. <span class="cr">(CR 110.2)</span></li>
+    </ul>
+
+    <h3>Commanders</h3>
+    <ul class="details-list">
+      <li><strong>Their own commander leaves with them.</strong> A player's commander is owned by that player, so it is removed from the game on elimination. Leaving the game is not a move to exile or a graveyard, so the command zone option does not apply to it. <span class="cr">(CR 800.4a, 903.9a)</span></li>
+      <li><strong>Your stolen commander comes back.</strong> If they held your commander with a control effect, it reverts to you on the battlefield. If they reanimated or cast it from your graveyard or library, it is exiled first, and then you may move it from exile to the command zone. <span class="cr">(CR 800.4a, 903.9a)</span></li>
+    </ul>
+
+    <div class="sources-box">
+      <div class="sources-title">Governing Rules</div>
+      <div class="sources-grid">
+        <div>CR 800.4a — Player leaves the game</div>
+        <div>CR 800.4b — Control to a departed player</div>
+        <div>CR 800.4c — Borrowed permanent exiled</div>
+        <div>CR 110.2 — Default controller</div>
+        <div>CR 903.9a — Commander to command zone</div>
+      </div>
+    </div>
+
+    <h2>Worked Scenarios</h2>
+    <p style="color: var(--text-dim); margin-bottom: 1.5rem;">Three boards that all run on the same rule. The first is the table that prompted this page. The second is the clean teaching pair. The third is the commander payoff.</p>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Geth, Equipment, and a Stolen Creature</div>
+      <p>You use Geth, Lord of the Vault to pull two Equipment from an opponent's graveyard onto the battlefield under your control, attaching both to Geth. A second opponent then steals Geth with Agent of Treachery, which gains control of Geth only. A third opponent then eliminates you. Geth is owned by you, so it leaves the game, and the player who stole it loses it. The two Equipment are owned by the player whose graveyard they came from, but they entered under your control with no control effect attached, and the Agent of Treachery player never controlled them. So when you leave, the Equipment is still controlled by you, and both are exiled. They do not return to the player who owned them, even though that player is still in the game. <span class="cr">(CR 800.4a)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Control Magic vs Bribery</div>
+      <p>An opponent steals one of your creatures with Control Magic, and uses Bribery to put another of your creatures onto the battlefield straight from your library, both under their control. When they are eliminated, the Control Magic creature reverts to you, because the aura leaves with its owner and the control effect ends. The Bribery creature is exiled, because it entered under their control with no control effect to end. You own both cards, yet only one comes back. The difference is the lasting control effect. <span class="cr">(CR 800.4a)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Getting Your Commander Back</div>
+      <p>An opponent controls your commander and then loses the game. If they took it with a control effect such as Agent of Treachery, it reverts to your control and stays on the battlefield. If instead they reanimated it from your graveyard or cast it from your library, the elimination exiles it, and then a state-based action lets you move it from exile to the command zone. Either way your commander comes back to you; only the route changes. Their own commander, meanwhile, leaves the game with them. <span class="cr">(CR 800.4a, 903.9a)</span></p>
+    </div>
+
+    <section class="suggest-cta">
+      <p>Spot a missing interaction or something we got wrong?</p>
+      <a class="suggest-btn" href="https://tally.so" target="_blank" rel="noopener">
+        Suggest an interaction
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/>
+        </svg>
+      </a>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-buttons">
+      <a class="footer-btn" href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+        Tips Appreciated!
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+      </a>
+      <a class="footer-btn" href="https://instagram.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        MTJawnny
+      </a>
+    </div>
+  </footer>
+
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  var btn = document.getElementById('shareBtn');
+  if (!btn) return;
+  var url = 'https://mtjawnny.com/stack/losing-player-permanents';
+  var title = 'When a Player Leaves — Stack It Up';
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function () { t.classList.remove('show'); }, 1800);
+  }
+
+  btn.addEventListener('click', function () {
+    if (navigator.share) {
+      navigator.share({ title: title, url: url }).catch(function () {});
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url)
+        .then(function () { showToast('Link copied'); })
+        .catch(function () { legacyCopy(); });
+    } else {
+      legacyCopy();
+    }
+  });
+
+  function legacyCopy() {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = url;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'absolute';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Link copied');
+    } catch (e) {
+      showToast('Copy not supported');
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
