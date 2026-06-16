@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1e1728">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Combat Phase">
+<meta name="description" content="A rapid-access, mid-game rules guide for the MTG Combat Phase: declaring attackers, declaring blockers, damage assignment orders, and priority windows.">
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="https://mtjawnny.com/stack/combat-phase">
+<title>Combat Phase — Stack It Up — MTJawnny</title>
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="MTJawnny">
+<meta property="og:title" content="Combat Phase — Stack It Up">
+<meta property="og:description" content="A rapid-access, mid-game rules guide for the MTG Combat Phase: declaring attackers, declaring blockers, damage assignment orders, and priority windows.">
+<meta property="og:url" content="https://mtjawnny.com/stack/combat-phase">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Combat Phase — Stack It Up">
+<meta name="twitter:description" content="A rapid-access, mid-game rules guide for the MTG Combat Phase: declaring attackers, declaring blockers, damage assignment orders, and priority windows.">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #1e1728;
+    --surface:     #261d33;
+    --bronze:      #b8935a;
+    --bronze-dim:  #7a5e35;
+    --bronze-glow: rgba(184,147,90,0.15);
+    --text-dim:    #9b8fb0;
+    --white:       #f0ece6;
+    --muted:       #6b5f7a;
+    --green:       #5aab6e;  /* tips / priority open / ✓ */
+    --red:         #e06060;  /* misconceptions / no priority / ✕ */
+    --radius:      10px;
+    --panel-r:     20px;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button { font-family: inherit; }
+
+  /* Whole page lives in one centred mobile-width column (site-wide pattern) */
+  .page {
+    max-width: 520px;
+    margin: 0 auto;
+    padding-bottom: calc(2.5rem + env(safe-area-inset-bottom));
+  }
+
+  /* ══ TOPBAR — card-explainer back pattern (pip-ring + back link → section index) ══ */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem 0;
+  }
+
+  /* pip-ring + label together are the single back link → /stack */
+  .logo-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--bronze);
+    border-radius: 10px;
+    padding: 6px 8px;
+    margin: -6px -8px;
+    transition: background 0.15s;
+  }
+  .logo-back:hover, .logo-back:active { background: var(--bronze-glow); }
+  .logo-back .logo-pip-ring { width: 38px; height: 38px; flex-shrink: 0; display: block; }
+  .logo-back .back-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 10px;
+    padding: 0.4rem 0.7rem;
+    color: var(--bronze);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .share-btn:hover { border-color: var(--bronze); background: var(--bronze-glow); }
+  .share-btn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; flex-shrink: 0; }
+
+  /* ══ HERO — page title (the content-page equivalent of a card read-out) ══ */
+  .hero {
+    text-align: center;
+    padding: 1rem 1.25rem 0;
+  }
+  .hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 8vw, 3.6rem);
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .hero .tagline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 0.4rem;
+  }
+
+  /* ══ MAIN ══ */
+  main { padding: 0 1.25rem; }
+
+  .lede {
+    text-align: center;
+    color: var(--text-dim);
+    margin: 1.4rem 0 0;
+  }
+
+  h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    border-bottom: 1px solid var(--bronze-dim);
+    padding-bottom: 0.3rem;
+    margin: 2.5rem 0 1rem;
+  }
+  h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    margin: 1.5rem 0 0.5rem;
+  }
+  p { margin-bottom: 1rem; }
+
+  /* ══ FLOW TIMELINE ══ */
+  .timeline-container {
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin: 1.5rem 0 2rem;
+  }
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .timeline-step {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 1rem;
+    text-align: center;
+  }
+  .step-number {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1.7rem;
+    color: var(--bronze);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+  .step-name {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .step-summary { font-size: 0.88rem; color: var(--text-dim); }
+
+  /* ══ QUICK PRIORITY CARDS ══ */
+  .quick-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .quick-card {
+    padding: 1rem;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+  }
+  .quick-card.no-priority { background: rgba(224, 96, 96, 0.06); border-color: var(--red); }
+  .quick-card.priority    { background: rgba(90, 171, 110, 0.06); border-color: var(--green); }
+  .quick-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.5rem;
+  }
+  .quick-card.no-priority .quick-title { color: var(--red); }
+  .quick-card.priority .quick-title { color: var(--green); }
+  .quick-card p { font-size: 0.93rem; margin-bottom: 0; }
+
+  /* ══ DETAILS BULLETS ══ */
+  ul.details-list { list-style: none; margin-bottom: 1.25rem; }
+  ul.details-list li {
+    position: relative;
+    padding-left: 1.25rem;
+    margin-bottom: 0.7rem;
+  }
+  ul.details-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--bronze);
+    font-weight: bold;
+  }
+
+  /* ══ GOVERNING-RULES CITATION BOX ══ */
+  .sources-box {
+    background: rgba(184, 147, 90, 0.05);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-top: 1.25rem;
+  }
+  .sources-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    margin-bottom: 0.5rem;
+  }
+  .sources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 0.5rem;
+    font-size: 0.84rem;
+    color: var(--text-dim);
+  }
+
+  /* ══ CARD INTERACTION PANELS ══ */
+  .interaction-panel {
+    background: var(--surface);
+    border-left: 4px solid var(--bronze);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 1.1rem 1.2rem;
+    margin-bottom: 1.25rem;
+  }
+  .interaction-card-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--bronze);
+    margin-bottom: 0.25rem;
+  }
+  .interaction-panel p { font-size: 0.93rem; margin-bottom: 0; }
+  .cr { color: var(--text-dim); font-size: 0.82rem; }
+
+  /* ══ SUGGEST CTA ══ */
+  .suggest-cta {
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 14px;
+    padding: 1.1rem 1rem;
+    margin-top: 2.5rem;
+  }
+  .suggest-cta p { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 0.7rem; }
+  .suggest-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--bronze);
+    color: var(--bg);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.55rem 1.1rem;
+    border-radius: 10px;
+    transition: filter 0.15s, transform 0.15s;
+  }
+  .suggest-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .suggest-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.4; }
+
+  /* ══ FOOTER ══ */
+  footer { text-align: center; padding: 2rem 1.5rem 0.5rem; }
+  .footer-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+  .footer-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.5rem;
+    color: var(--bronze);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .footer-btn:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+  .footer-btn svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+
+  /* ══ TOAST ══ */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    transform: translateX(-50%) translateY(8px);
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 90;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── Keyboard focus ── */
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--bronze);
+    outline-offset: 2px;
+  }
+
+  /* ── Reduced motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+    .suggest-btn:hover { transform: none; }
+  }
+
+  /* ── DESKTOP ADJUSTMENTS ── */
+  @media (min-width: 640px) {
+    .timeline { gap: 0.5rem; }
+    .timeline-step { padding: 0.6rem 0.4rem; }
+    .step-number { font-size: 1.4rem; }
+    .step-name { font-size: 0.9rem; margin-bottom: 0.2rem; }
+    .step-summary { font-size: 0.78rem; display: none; }
+    .quick-grid { grid-template-columns: 1fr 1fr; }
+    .footer-buttons { max-width: 380px; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="topbar">
+    <a class="logo-back" href="/stack" aria-label="Back to all Stack interactions">
+      <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+        <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+        <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+      </svg>
+      <span class="back-label">← All Interactions</span>
+    </a>
+
+    <button class="share-btn" id="shareBtn" type="button" aria-label="Share this page">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/>
+      </svg>
+      Share
+    </button>
+  </div>
+
+  <header class="hero">
+    <h1>Combat Phase</h1>
+    <p class="tagline">Quick Reference Guide</p>
+  </header>
+
+  <main>
+
+    <p class="lede">The combat phase is the third phase of an individual turn. It occurs after the precombat main phase and consists of five distinct steps executed in chronological order.</p>
+
+    <section class="timeline-container">
+      <div class="timeline">
+        <div class="timeline-step">
+          <span class="step-number">1</span>
+          <span class="step-name">The Beginning of Combat Step</span>
+          <span class="step-summary">Beginning of combat triggers enter the stack. Last window to tap potential attackers.</span>
+        </div>
+        <div class="timeline-step">
+          <span class="step-number">2</span>
+          <span class="step-name">The Declare Attackers Step</span>
+          <span class="step-summary">Active player declares attackers and pays costs. Attack triggers enter the stack.</span>
+        </div>
+        <div class="timeline-step">
+          <span class="step-number">3</span>
+          <span class="step-name">The Declare Blockers Step</span>
+          <span class="step-summary">Defending player assigns blockers. Attackers sort multi-blocker damage orders.</span>
+        </div>
+        <div class="timeline-step">
+          <span class="step-number">4</span>
+          <span class="step-name">The Combat Damage Step</span>
+          <span class="step-summary">Combat damage is assigned and dealt simultaneously. Extra step added for First/Double strike.</span>
+        </div>
+        <div class="timeline-step">
+          <span class="step-number">5</span>
+          <span class="step-name">The End of Combat Step</span>
+          <span class="step-summary">End of combat triggers resolve. Status conditions are cleared as step concludes.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="quick-grid">
+      <div class="quick-card priority">
+        <div class="quick-title">✓ Priority Windows</div>
+        <p>Players receive priority to cast instants and activate abilities during every single step after turn-based actions or step triggers are completed.</p>
+      </div>
+      <div class="quick-card no-priority">
+        <div class="quick-title">✕ No Response Allowed</div>
+        <p><strong>Declaring attackers, declaring blockers, and dealing damage are mandatory turn-based structural milestones.</strong> They do not use the stack and cannot be responded to.</p>
+      </div>
+    </section>
+
+    <h2>Technical Breakdown</h2>
+
+    <h3>1. The Beginning of Combat Step</h3>
+    <ul class="details-list">
+      <li><strong>Stacking triggers:</strong> Any abilities that trigger at the beginning of combat are placed onto the stack.</li>
+      <li><strong>Priority distribution:</strong> The active player receives priority first once all applicable triggers are on the stack.</li>
+      <li><strong>Permitted actions:</strong> Players may cast instants, cast spells with flash, or activate abilities. This is the final opportunity for a defending player to alter the state of permanents (such as tapping potential attackers) before attackers are declared.</li>
+    </ul>
+
+    <div class="sources-box">
+      <div class="sources-title">Governing Rules</div>
+      <div class="sources-grid">
+        <div>CR 506.1: Combat sequence</div>
+        <div>CR 507.1: Beginning triggers</div>
+      </div>
+    </div>
+
+    <h3>2. The Declare Attackers Step</h3>
+    <ul class="details-list">
+      <li><strong>Declaring attackers:</strong> The active player declares which eligible creatures they control are attacking, and which player, planeswalker, or battle each creature is attacking. This is a turn-based action that does not use the stack.</li>
+      <li><strong>Tapping attackers:</strong> All declared attacking creatures are tapped simultaneously as they are declared, unless they possess the vigilance mechanic.</li>
+      <li><strong>Checking legality and costs:</strong> The game checks for combat restrictions and requirements. Any costs required to attack (such as paying mana) must be determined and paid at this time.</li>
+      <li><strong>Attack triggers:</strong> Any abilities that trigger whenever a creature attacks or whenever you attack with one or more creatures are placed onto the stack.</li>
+      <li><strong>Action window:</strong> The active player receives priority after all triggers are placed on the stack. Players may cast instants and activate abilities.</li>
+    </ul>
+
+    <div class="sources-box">
+      <div class="sources-title">Governing Rules</div>
+      <div class="sources-grid">
+        <div>CR 508.1: Declaration process</div>
+        <div>CR 508.2: Attack trigger windows</div>
+      </div>
+    </div>
+
+    <h3>3. The Declare Blockers Step</h3>
+    <ul class="details-list">
+      <li><strong>Declaring blockers:</strong> The defending player declares which eligible creatures they control are blocking which attacking creatures. This is a turn-based action that does not use the stack. Creatures do not tap to block.</li>
+      <li><strong>Checking legality:</strong> The game checks for blocking restrictions (such as flying or menace) and requirements. If any blocks are illegal, the defense must be modified to legal parameters.</li>
+      <li><strong>Damage assignment order:</strong> If an attacking creature is blocked by multiple blockers, the active player announces the damage assignment order for those blockers. If a blocking creature is blocking multiple attackers, the defending player announces the damage assignment order for those attackers.</li>
+      <li><strong>Block triggers:</strong> Any abilities that trigger whenever a creature blocks or whenever a creature becomes blocked are placed onto the stack.</li>
+      <li><strong>Action window:</strong> The active player receives priority after all triggers are placed on the stack. This is the final opportunity for players to cast instants (such as combat tricks) or activate abilities before damage is dealt.</li>
+    </ul>
+
+    <div class="sources-box">
+      <div class="sources-title">Governing Rules</div>
+      <div class="sources-grid">
+        <div>CR 509.1: Blocker declaration</div>
+        <div>CR 509.2: Multi-blocker order</div>
+        <div>CR 509.3: Multi-attacker order</div>
+        <div>CR 509.4: Blocker trigger windows</div>
+      </div>
+    </div>
+
+    <h3>4. The Combat Damage Step</h3>
+    <ul class="details-list">
+      <li><strong>Damage assignment:</strong> Players assign combat damage. The active player assigns damage for attacking creatures, and the defending player assigns damage for blocking creatures. Damage must be assigned equal to or greater than lethal damage to the first creature in the damage assignment order before any damage can be assigned to the next creature.</li>
+      <li><strong>Dealing damage:</strong> All assigned combat damage is dealt simultaneously. This is a turn-based action that does not use the stack and cannot be responded to.</li>
+      <li><strong>Damage triggers:</strong> Any abilities that trigger whenever a creature deals damage or whenever a creature is dealt damage are placed onto the stack.</li>
+      <li><strong>Action window:</strong> The active player receives priority after damage is dealt and triggers are placed on the stack. Instants may be cast and abilities may be activated.</li>
+      <li><strong>First Strike / Double Strike exception:</strong> If any attacking or blocking creatures have first strike or double strike, an additional combat damage step is created. The first combat damage step handles only creatures with first strike and double strike. The second combat damage step handles the remaining creatures that did not deal damage, plus creatures with double strike.</li>
+    </ul>
+
+    <div class="sources-box">
+      <div class="sources-title">Governing Rules</div>
+      <div class="sources-grid">
+        <div>CR 510.1: Damage assignment</div>
+        <div>CR 510.2: Simultaneous execution</div>
+        <div>CR 510.3: Damage priority steps</div>
+        <div>CR 510.4: Split strike mechanics</div>
+      </div>
+    </div>
+
+    <h3>5. The End of Combat Step</h3>
+    <ul class="details-list">
+      <li><strong>End of combat triggers:</strong> Any abilities that trigger at end of combat or at the end of the combat phase are placed onto the stack.</li>
+      <li><strong>Action window:</strong> The active player receives priority after triggers are placed on the stack. Players may cast instants and activate abilities.</li>
+      <li><strong>Removal from combat:</strong> Once this step ends and priority is passed by all players, all surviving creatures and planeswalkers are officially removed from combat. Tapped creatures do not untap: they simply lose their status as attacking or blocking units.</li>
+    </ul>
+
+    <div class="sources-box">
+      <div class="sources-title">Governing Rules</div>
+      <div class="sources-grid">
+        <div>CR 511.1: End step allocation</div>
+        <div>CR 511.2: Status clear mandates</div>
+      </div>
+    </div>
+
+    <h2>Combat Phase Card Interactions</h2>
+    <p style="color: var(--text-dim); margin-bottom: 1.5rem;">Various cards modify the structure of these steps, alter turn-based actions, or trigger specifically based on these timing intervals.</p>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Goblin Rabblemaster / Legion Warboss</div>
+      <p>These cards possess triggers that occur at the beginning of combat on your turn. They create a creature token that is forced to attack. Because this happens in the first step of combat, the freshly created token is on the battlefield in time to be legally declared as an attacker in the next step. <span class="cr">(CR 507.1)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Xenagos, God of Revels / Luminarch Aspirant</div>
+      <p>These cards use the beginning of combat step to target and buff a creature. This allows a player to wait until the main phase ends to choose which creature receives the bonus, preventing opponents from using sorcery-speed removal to blow out the buffed target. <span class="cr">(CR 507.1)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Berserk</div>
+      <p>This card dictates that it must be cast only before the combat damage step. By casting it during the declare attackers step or declare blockers step, you double a creature's power and grant it trample. Because the card tracks whether the creature attacked, it triggers a delayed destruction effect at the beginning of the next end step. <span class="cr">(CR 508.1)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Kaalia of the Vast / Winota, Joiner of Forces</div>
+      <p>These cards put creatures directly onto the battlefield tapped and attacking. Because these tokens or cards enter after the turn-based action of declaring attackers has already concluded, they bypass any restrictions or costs required to attack (such as Propaganda). Crucially, they also do not trigger their own attack abilities, as they were never formally declared as attackers. <span class="cr">(CR 508.1)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Master of Cruelties</div>
+      <p>This creature has a trigger that checks if it attacks and is not blocked. This trigger fires immediately during the declare blockers step. It sets the defending player's life total to 1 before damage is assigned. If another unblocked creature is attacking that same player, that creature will deal its damage in the next step and instantly win the game. <span class="cr">(CR 509.1)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Ninjutsu (e.g., Yuriko, the Tiger's Shadow)</div>
+      <p>The ninjutsu ability requires an unblocked attacking creature. A creature does not officially become unblocked until the defending player declares their blocks. Therefore, the declare blockers step is the very first window where a player can activate ninjutsu to swap a creature out before damage is dealt. <span class="cr">(CR 509.1)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Fireshrieker / Rafiq of the Many</div>
+      <p>Keywords like first strike and double strike alter the fundamental structure of the phase. If any creature has these keywords, the game creates a second, entirely distinct combat damage step to handle damage values separately. <span class="cr">(CR 510.4)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Ninjutsu (Post-Damage Trick)</div>
+      <p>Because a creature remains an unblocked attacking creature even after damage is dealt, you can actually activate Ninjutsu during the combat damage step after your initial creature has already dealt its damage. This allows you to deal damage with a cheap creature, swap it for a Ninja, and still get the Ninja's combat damage trigger. <span class="cr">(CR 510.4)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Reconnaissance</div>
+      <p>This card allows you to untap an attacking creature and remove it from combat. Because a creature retains its attacking status through the entire end of combat step, you can let combat damage resolve normally, enter the end of combat step, and then activate Reconnaissance to untap all surviving attackers. This grants your entire army pseudo-vigilance for zero mana. <span class="cr">(CR 511.1, 511.3)</span></p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Desert</div>
+      <p>This land features an activated ability causing 1 damage to a target attacking creature, restricted exclusively to the end of combat step. This limitation ensures that the land can only punish an attacking creature after that creature has already had the opportunity to assign and deal its combat damage. <span class="cr">(CR 511.1, 511.3)</span></p>
+    </div>
+
+    <section class="suggest-cta">
+      <p>Spot a missing interaction or something we got wrong?</p>
+      <a class="suggest-btn" href="https://tally.so" target="_blank" rel="noopener">
+        Suggest an interaction
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/>
+        </svg>
+      </a>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-buttons">
+      <a class="footer-btn" href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+        Tips Appreciated!
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+      </a>
+      <a class="footer-btn" href="https://instagram.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        MTJawnny
+      </a>
+    </div>
+  </footer>
+
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  var btn = document.getElementById('shareBtn');
+  if (!btn) return;
+  var url = 'https://mtjawnny.com/stack/combat-phase';
+  var title = 'Combat Phase — Stack It Up';
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function () { t.classList.remove('show'); }, 1800);
+  }
+
+  btn.addEventListener('click', function () {
+    if (navigator.share) {
+      navigator.share({ title: title, url: url }).catch(function () {});
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url)
+        .then(function () { showToast('Link copied'); })
+        .catch(function () { legacyCopy(); });
+    } else {
+      legacyCopy();
+    }
+  });
+
+  function legacyCopy() {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = url;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'absolute';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Link copied');
+    } catch (e) {
+      showToast('Copy not supported');
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
