@@ -745,6 +745,58 @@ const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
     }
   });
 
+// ── Google Analytics Button Tracking ─────────────────────────────
+  document.addEventListener('click', function(e) {
+    if (typeof gtag !== 'function') return;
+
+    // 1. Pinned Quick Reference Clicks
+    const pinTile = e.target.closest('.pin-tile');
+    if (pinTile) {
+      const label = pinTile.querySelector('.pin-label').innerText.replace(/\n/g, ' ');
+      gtag('event', 'click_pinned_tile', { 
+        'event_category': 'quick_reference', 
+        'item_name': label 
+      });
+    }
+
+    // 2. Search Result Clicks (Dynamically generated)
+    const searchTile = e.target.closest('.tile');
+    if (searchTile) {
+      const label = searchTile.getAttribute('aria-label');
+      gtag('event', 'click_interaction_result', { 
+        'event_category': 'search', 
+        'item_name': label,
+        'search_term': searchInput.value 
+      });
+    }
+
+    // 3. Footer Links (Ko-fi & Insta)
+    const footerBtn = e.target.closest('.footer-btn');
+    if (footerBtn) {
+      const link = footerBtn.getAttribute('href');
+      gtag('event', 'click_outbound_footer', { 
+        'event_category': 'engagement', 
+        'link_url': link 
+      });
+    }
+
+    // 4. Suggestion Button
+    const suggestBtn = e.target.closest('#suggestLink');
+    if (suggestBtn) {
+      gtag('event', 'click_suggest_interaction', { 
+        'event_category': 'feedback' 
+      });
+    }
+    
+    // 5. Logo / Home Clicks
+    const homeBtn = e.target.closest('.logo-home');
+    if (homeBtn) {
+      gtag('event', 'click_home_logo', { 
+        'event_category': 'navigation' 
+      });
+    }
+  });
+  
   render();
 })();
 </script>
