@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1e1728">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Teferi's Protection">
+<meta name="description" content="How Teferi's Protection works in Commander: until your next turn your life total can't change, you gain protection from everything, and your whole board phases out. What it stops, what slips through, the combos, and full rulings.">
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="https://mtjawnny.com/tef">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="MTJawnny">
+<meta property="og:title" content="Teferi's Protection — How It Works">
+<meta property="og:description" content="Frozen life, protection from everything, and your whole board phased out until your next turn. What it stops, what slips through, the combos, and full rulings.">
+<meta property="og:url" content="https://mtjawnny.com/tef">
+<meta property="og:image" content="https://mtjawnny.com/cardimages/tef.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Teferi's Protection — How It Works">
+<meta name="twitter:description" content="Frozen life, protection from everything, and your whole board phased out until your next turn. What it stops, what slips through, and the combos.">
+<meta name="twitter:image" content="https://mtjawnny.com/cardimages/tef.jpg">
+
+<title>Teferi's Protection — How It Works — MTJawnny</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Teferi's Protection — How It Works",
+  "description": "How Teferi's Protection works in Commander: until your next turn your life total can't change, you gain protection from everything, and your whole board phases out.",
+  "author": { "@type": "Organization", "name": "MTJawnny" },
+  "publisher": { "@type": "Organization", "name": "MTJawnny" },
+  "mainEntityOfPage": "https://mtjawnny.com/tef",
+  "datePublished": "2026-06-17",
+  "dateModified": "2026-06-17"
+}
+</script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #1e1728;
+    --surface:     #261d33;
+    --bronze:      #b8935a;
+    --bronze-dim:  #7a5e35;
+    --bronze-glow: rgba(184,147,90,0.15);
+    --text-dim:    #9b8fb0;
+    --white:       #f0ece6;
+    --muted:       #6b5f7a;
+    --green:       #5aab6e;  /* tips / ✓ */
+    --red:         #e06060;  /* misconceptions / ✗ */
+    --orange:      #d6953f;  /* partial / half-through */
+    --radius:      10px;
+    --panel-r:     20px;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button { font-family: inherit; }
+
+  /* Whole page lives in one centred mobile-width column (site-wide pattern) */
+  .page {
+    max-width: 520px;
+    margin: 0 auto;
+    padding-bottom: calc(2.5rem + env(safe-area-inset-bottom));
+  }
+
+  /* ══ TOPBAR ══ */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem 0;
+  }
+  .logo-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--bronze);
+    border-radius: 10px;
+    padding: 6px 8px;
+    margin: -6px -8px;
+    transition: background 0.15s;
+  }
+  .logo-back:hover, .logo-back:active { background: var(--bronze-glow); }
+  .logo-back .logo-pip-ring { width: 38px; height: 38px; flex-shrink: 0; display: block; }
+  .logo-back .back-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 10px;
+    padding: 0.4rem 0.7rem;
+    color: var(--bronze);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .share-btn:hover { border-color: var(--bronze); background: var(--bronze-glow); }
+  .share-btn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; flex-shrink: 0; }
+
+  /* ══ MAIN ══ */
+  main { padding: 0 1.25rem; }
+
+  h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    border-bottom: 1px solid var(--bronze-dim);
+    padding-bottom: 0.3rem;
+    margin: 2.5rem 0 1rem;
+  }
+  h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    margin: 1.5rem 0 0.5rem;
+  }
+  p { margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  /* ══ CARD READ-OUT (saga pattern) ══ */
+  .card-hero { display: flex; flex-direction: column; gap: 1.1rem; margin-top: 1.5rem; }
+  .card-img-wrap { align-self: center; display: flex; flex-direction: column; align-items: center; }
+  .card-img {
+    display: block;
+    max-width: 100%;
+    max-height: 70vh;
+    width: auto; height: auto;
+    margin: 0 auto;
+    border-radius: 4.75% / 3.4%;
+    border: 1px solid var(--bronze-dim);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.45);
+  }
+  .card-img-wrap.noart .card-img { display: none; }
+  .card-fallback {
+    display: none;
+    width: 100%; max-width: 340px;
+    aspect-ratio: 745 / 1040;
+    flex-direction: column; align-items: center; justify-content: center;
+    gap: 0.7rem; padding: 1.5rem; text-align: center;
+    border-radius: 4.75% / 3.4%;
+    border: 1px solid var(--bronze-dim);
+    background: var(--surface);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.45);
+  }
+  .card-img-wrap.noart .card-fallback { display: flex; }
+  .card-fallback svg { width: 56px; height: 56px; opacity: 0.85; }
+  .card-fallback .fb-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800; font-size: 1.45rem; line-height: 1.05;
+    text-transform: uppercase; letter-spacing: 0.03em; color: var(--bronze);
+  }
+  .card-fallback .fb-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600; font-size: 0.78rem; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--text-dim);
+  }
+  .art-credit { margin-top: 0.4rem; text-align: center; font-size: 0.72rem; color: var(--text-dim); }
+  .fan-note { margin-top: 0.2rem; text-align: center; font-size: 0.66rem; color: var(--muted); line-height: 1.4; }
+
+  .readout {
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.2rem 1rem;
+  }
+  .card-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.9rem, 7vw, 2.5rem);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--bronze);
+    line-height: 1.05;
+  }
+  .cost-line { display: flex; align-items: center; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.45rem; }
+  .type-line {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  /* ══ MANA SYMBOLS (self-hosted Scryfall SVGs, /manasymbols/<SYM>.svg) ══ */
+  .ms {
+    display: inline-block;
+    width: 1em; height: 1em;
+    vertical-align: -0.085em;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+  }
+  .ms[data-s="2"] { background-image: url('/manasymbols/2.svg'); }
+  .ms[data-s="W"] { background-image: url('/manasymbols/W.svg'); }
+  .mana-cost { display: inline-flex; align-items: center; gap: 0.2rem; }
+  .cost-line .ms { font-size: 1.3rem; }
+
+  .oracle {
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid rgba(184,147,90,0.25);
+    font-size: 0.95rem;
+  }
+  .oracle p + p { margin-top: 0.55rem; }
+  .oracle .reminder { font-style: italic; color: var(--text-dim); }
+  .oracle-source {
+    text-align: center;
+    margin: 0.55rem 0 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600; font-size: 0.95rem;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--bronze);
+  }
+  .oracle-source + h2 { margin-top: 1.3rem; }
+
+  .legality { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.85rem; }
+  .leg-chip {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 6px;
+    border: 1.5px solid var(--bronze-dim);
+    color: var(--bronze);
+  }
+  .leg-chip.not { border-color: rgba(155,143,176,0.35); color: var(--text-dim); opacity: 0.8; }
+
+  .verified { margin-top: 0.9rem; font-size: 0.72rem; color: var(--text-dim); }
+
+  /* ══ HOW-IT-WORKS VISUAL (custom, brand-colored — no copyrighted art) ══ */
+  .visual-slot {
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.1rem;
+    margin: 1.25rem 0 0;
+  }
+  .visual-head {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800; font-size: 1.05rem;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    color: var(--bronze); text-align: center; margin-bottom: 0.3rem;
+  }
+  .visual-sub {
+    font-size: 0.82rem; color: var(--text-dim); text-align: center;
+    max-width: 42ch; margin: 0 auto 1rem;
+  }
+  .outcome {
+    display: flex; align-items: stretch; gap: 0.75rem;
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    background: var(--bg);
+    padding: 0.7rem 0.8rem;
+    margin-bottom: 0.7rem;
+  }
+  .outcome:last-of-type { margin-bottom: 0; }
+  .outcome.high { border-color: var(--red); background: rgba(224,96,96,0.07); }
+  .outcome.partial { border-color: var(--orange); background: rgba(214,149,63,0.08); }
+  .outcome-bid {
+    flex-shrink: 0; width: 3.1rem;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    border-right: 1px solid var(--bronze-dim); padding-right: 0.7rem;
+  }
+  .outcome-bid .num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 1.7rem; line-height: 1; color: var(--white);
+  }
+  .outcome.high .outcome-bid .num { color: var(--red); }
+  .outcome.partial .outcome-bid .num { color: var(--orange); }
+  .outcome-bid .tier {
+    font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-dim); margin-top: 0.25rem; font-weight: 700;
+  }
+  .outcome-body { flex: 1; min-width: 0; }
+  .outcome-who {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 0.95rem;
+    text-transform: uppercase; letter-spacing: 0.02em;
+    color: var(--bronze); margin-bottom: 0.35rem;
+  }
+  .outcome-stats { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .stat {
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em;
+    padding: 0.18rem 0.45rem; border-radius: 5px;
+    background: var(--surface); color: var(--text-dim);
+    border: 1px solid var(--bronze-dim);
+  }
+  .stat.dmg  { color: #f3b3aa; border-color: var(--red); }
+  .stat.warn { color: #e6bd84; border-color: var(--orange); }
+  .stat.good { color: #a3d6ae; border-color: rgba(90,171,110,0.55); }
+  .visual-foot {
+    font-size: 0.8rem; color: var(--text-dim);
+    margin-top: 1rem; padding-top: 0.85rem;
+    border-top: 1px solid var(--bronze-dim); line-height: 1.5;
+  }
+  .visual-foot strong { color: var(--white); font-weight: 600; }
+
+  /* ══ CALLOUTS (tips / misplays) ══ */
+  .callout {
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    padding: 1rem 1.1rem;
+    margin-bottom: 1rem;
+  }
+  .callout:last-child { margin-bottom: 0; }
+  .callout.tip     { background: rgba(90,171,110,0.06); border-color: var(--green); }
+  .callout.misplay { background: rgba(224,96,96,0.06); border-color: var(--red); }
+  .callout-title {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 1.08rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+    margin-bottom: 0.4rem;
+  }
+  .callout.tip .callout-title     { color: var(--green); }
+  .callout.misplay .callout-title { color: var(--red); }
+  .callout .mark {
+    flex-shrink: 0; width: 1.3rem; height: 1.3rem; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 800;
+  }
+  .callout.tip .mark     { background: var(--green); color: var(--bg); }
+  .callout.misplay .mark { background: var(--red); color: var(--bg); }
+  .callout p { font-size: 0.93rem; }
+
+  /* ══ COMBO / INTERACTION PANELS ══ */
+  .interaction-panel {
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 1rem 1.1rem;
+    margin-bottom: 1rem;
+  }
+  .interaction-panel:last-child { margin-bottom: 0; }
+  .interaction-card-name {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800; font-size: 1.1rem;
+    text-transform: uppercase; letter-spacing: 0.02em;
+    color: var(--bronze); margin-bottom: 0.45rem;
+  }
+  .interaction-card-name .combo-tag {
+    font-size: 0.6rem; font-weight: 700; letter-spacing: 0.07em;
+    text-transform: uppercase; color: var(--bg);
+    background: var(--bronze); border-radius: 4px;
+    padding: 0.14rem 0.42rem; line-height: 1;
+  }
+  .interaction-panel p { font-size: 0.93rem; }
+
+  /* ══ DETAILS BULLETS ══ */
+  ul.details-list { list-style: none; margin-bottom: 0; }
+  ul.details-list li {
+    position: relative; padding-left: 1.25rem; margin-bottom: 0.85rem;
+  }
+  ul.details-list li:last-child { margin-bottom: 0; }
+  ul.details-list li::before {
+    content: "•"; position: absolute; left: 0; top: 0;
+    color: var(--bronze); font-weight: bold;
+  }
+  ul.details-list strong { color: var(--white); font-weight: 600; }
+
+  /* ══ GOVERNING-RULES CITATION BOX ══ */
+  .sources-box {
+    background: rgba(184, 147, 90, 0.05);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 1rem;
+  }
+  .sources-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 0.9rem;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--bronze); margin-bottom: 0.6rem;
+  }
+  .sources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 0.5rem; font-size: 0.84rem; color: var(--text-dim);
+  }
+
+  /* ══ OFFICIAL RULINGS ══ */
+  .ruling {
+    background: var(--surface);
+    border-left: 4px solid var(--bronze);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 0.95rem 1.1rem;
+    margin-bottom: 1rem;
+  }
+  .ruling:last-child { margin-bottom: 0; }
+  .ruling-date {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 0.78rem;
+    letter-spacing: 0.05em; color: var(--bronze); margin-bottom: 0.3rem;
+  }
+  .ruling p { font-size: 0.92rem; }
+
+  /* ══ SEE-ALSO CHIPS ══ */
+  .chip-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .chip {
+    display: inline-flex; align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 999px;
+    padding: 0.4rem 0.85rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 0.85rem;
+    letter-spacing: 0.02em; text-transform: uppercase;
+    color: var(--bronze); text-decoration: none;
+    transition: border-color 0.18s, background 0.18s, transform 0.15s;
+  }
+  .chip:hover { border-color: var(--bronze); background: var(--bronze-glow); transform: translateY(-1px); }
+
+  /* ══ STACK CROSS-LINK BANNER ══ */
+  .stack-banner {
+    display: flex; align-items: center; gap: 0.9rem;
+    background: linear-gradient(135deg, rgba(184,147,90,0.12), rgba(184,147,90,0.03));
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 1rem 1.1rem;
+    margin-top: 2.5rem;
+    text-decoration: none;
+    transition: border-color 0.18s, background 0.18s;
+  }
+  .stack-banner:hover { border-color: var(--bronze); background: rgba(184,147,90,0.16); }
+  .stack-banner .sb-icon { flex-shrink: 0; width: 40px; height: 40px; }
+  .stack-banner .sb-text { flex: 1; min-width: 0; }
+  .stack-banner .sb-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800; font-size: 1.05rem;
+    text-transform: uppercase; letter-spacing: 0.03em; color: var(--bronze);
+  }
+  .stack-banner .sb-desc { font-size: 0.85rem; color: var(--text-dim); }
+  .stack-banner .sb-arrow { color: var(--bronze); font-size: 1.3rem; flex-shrink: 0; }
+
+  /* ══ REQUEST / SUGGEST CTA ══ */
+  .suggest-cta {
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 14px;
+    padding: 1.1rem 1rem;
+    margin-top: 2.5rem;
+  }
+  .suggest-cta p { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 0.7rem; }
+  .suggest-btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: var(--bronze); color: var(--bg);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 1rem;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    text-decoration: none; padding: 0.55rem 1.1rem;
+    border-radius: 10px; transition: filter 0.15s, transform 0.15s;
+  }
+  .suggest-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .suggest-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.4; }
+
+  /* ══ SOURCES LINKS ══ */
+  .source-links { list-style: none; }
+  .source-links li { margin-bottom: 0.5rem; font-size: 0.85rem; line-height: 1.4; }
+  .source-links li:last-child { margin-bottom: 0; }
+  .source-links a { color: var(--bronze); text-decoration: none; word-break: break-word; }
+  .source-links a:hover { text-decoration: underline; }
+
+  /* ══ FOOTER ══ */
+  footer { text-align: center; padding: 2rem 1.5rem 0.5rem; }
+  .footer-buttons {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;
+    max-width: 400px; margin: 0 auto; padding: 0 1.25rem;
+  }
+  .footer-btn {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0.4rem; white-space: nowrap;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.5rem;
+    color: var(--bronze);
+    font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 0.8rem;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .footer-btn:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+  .footer-btn svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+  .back-to-top {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    margin-top: 1.5rem;
+    background: transparent;
+    border: 1px solid var(--bronze-dim);
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    color: var(--text-dim);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 0.8rem;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    text-decoration: none;
+    transition: border-color 0.18s, color 0.18s, background 0.18s;
+  }
+  .back-to-top:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+
+  /* ══ TOAST ══ */
+  .toast {
+    position: fixed; left: 50%;
+    bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    transform: translateX(-50%) translateY(8px);
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif; font-size: 0.9rem;
+    padding: 0.6rem 1rem; border-radius: 10px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s; z-index: 90;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── Keyboard focus ── */
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--bronze); outline-offset: 2px;
+  }
+
+  /* ── Reduced motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important; animation-duration: 0.01ms !important;
+    }
+    .chip:hover, .suggest-btn:hover { transform: none; }
+  }
+
+  /* ── Desktop ── */
+  @media (min-width: 640px) {
+    .footer-buttons { max-width: 380px; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page" id="top">
+
+  <!-- ══ TOPBAR (card pages: single pip + "All Cards" → /cards) ══ -->
+  <div class="topbar">
+    <a class="logo-back" href="/cards" aria-label="Back to all cards">
+      <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+        <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+        <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+      </svg>
+      <span class="back-label">← All Cards</span>
+    </a>
+
+    <button class="share-btn" id="shareBtn" type="button" aria-label="Share this page">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/>
+      </svg>
+      Share
+    </button>
+  </div>
+
+  <main>
+
+    <!-- ══ CARD DATA: READ-OUT (saga pattern) ══ -->
+    <div class="card-hero">
+      <div class="card-img-wrap" id="cardWrap">
+        <img class="card-img"
+             src="/cardimages/tef.jpg"
+             alt="Teferi's Protection — Magic: The Gathering card"
+             loading="eager" width="745" height="1040"
+             onerror="document.getElementById('cardWrap').classList.add('noart')">
+        <div class="card-fallback" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+            <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+            <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+          </svg>
+          <div class="fb-name">Teferi's<br>Protection</div>
+          <div class="fb-sub">Missing image file</div>
+        </div>
+        <div class="art-credit">Commander 2017 · Illustrated by Chase Stone</div>
+        <div class="fan-note">Card text and rulings © Wizards of the Coast. Unofficial Fan Content under the WotC Fan Content Policy.</div>
+      </div>
+
+      <div class="readout">
+        <h1 class="card-name">Teferi's Protection</h1>
+        <div class="cost-line">
+          <span class="mana-cost">
+            <span class="ms" data-s="2"></span>
+            <span class="ms" data-s="W"></span>
+          </span>
+          <span class="type-line">Instant</span>
+        </div>
+
+        <div class="oracle">
+          <p>Until your next turn, your life total can't change and you gain protection from everything. All permanents you control phase out. <span class="reminder">(While they're phased out, they're treated as though they don't exist. They phase in before you untap during your untap step.)</span></p>
+          <p>Exile Teferi's Protection.</p>
+        </div>
+
+        <div class="legality">
+          <span class="leg-chip">Legacy</span>
+          <span class="leg-chip">Vintage</span>
+          <span class="leg-chip">Commander</span>
+          <span class="leg-chip not">Not Modern</span>
+          <span class="leg-chip not">Not Pioneer</span>
+          <span class="leg-chip not">Not Standard</span>
+        </div>
+      </div>
+    </div>
+    <!-- ══ END READ-OUT ══ -->
+
+    <div class="oracle-source">Current Oracle Text · From Gatherer</div>
+
+    <!-- ════════ HOW IT WORKS (complex template visual) ════════ -->
+    <h2>How It Works</h2>
+
+    <section class="visual-slot" aria-label="What Teferi's Protection stops and what still gets through">
+      <div class="visual-head">Teferi's Protection Resolved. What Still Gets Through?</div>
+      <p class="visual-sub">Each row is aimed at you or your board on the turn after you cast it. Prevention stops damage, your frozen life total stops the rest, and your phased-out board cannot be touched. A few things still slip past.</p>
+
+      <div class="outcome">
+        <div class="outcome-bid"><span class="num">3</span><span class="tier">Target</span></div>
+        <div class="outcome-body">
+          <div class="outcome-who">Lightning Bolt aimed at you</div>
+          <div class="outcome-stats">
+            <span class="stat">Targets you</span>
+            <span class="stat good">No legal target, fizzles</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="outcome">
+        <div class="outcome-bid"><span class="num">9</span><span class="tier">Combat</span></div>
+        <div class="outcome-body">
+          <div class="outcome-who">A 9/9 commander swings in</div>
+          <div class="outcome-stats">
+            <span class="stat">Combat damage</span>
+            <span class="stat good">Prevented, 0 toward 21</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="outcome">
+        <div class="outcome-bid"><span class="num">8</span><span class="tier">Drain</span></div>
+        <div class="outcome-body">
+          <div class="outcome-who">Exsanguinate for 8</div>
+          <div class="outcome-stats">
+            <span class="stat">Life loss</span>
+            <span class="stat good">Life frozen, no effect</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="outcome partial">
+        <div class="outcome-bid"><span class="num">4</span><span class="tier">Combat</span></div>
+        <div class="outcome-body">
+          <div class="outcome-who">Questing Beast attacks you</div>
+          <div class="outcome-stats">
+            <span class="stat warn">Can't be prevented</span>
+            <span class="stat good">Dealt, life frozen</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="outcome high">
+        <div class="outcome-bid"><span class="num">0</span><span class="tier">Library</span></div>
+        <div class="outcome-body">
+          <div class="outcome-who">Drawing from an empty library</div>
+          <div class="outcome-stats">
+            <span class="stat dmg">Loss condition</span>
+            <span class="stat">You still lose</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="visual-foot"><strong>The only damage that reaches you doesn't target you.</strong> A targeted spell like a burn spell can't be aimed at you at all while protection is up. Non-targeted damage, like combat, is prevented, unless an effect such as Questing Beast makes it unpreventable. Then your frozen life total means the number never drops, but infect poison counters, lifelink, and commander damage toward 21 still land.</p>
+    </section>
+
+    <h3>Reading The Result</h3>
+    <ul class="details-list">
+      <li><strong>It stacks three layers of defense.</strong> You can't be targeted, damage to you is prevented, and your life total can't change. A targeted spell can't be aimed at you, untargeted damage is prevented, and anything that would otherwise change your life, like a drain or a "loses X life" line, simply can't.</li>
+      <li><strong>Your whole board phases out.</strong> Phased-out permanents are treated as though they do not exist, so targeted removal, board wipes, and "each player sacrifices" effects find nothing of yours to hit. The board comes back untouched on your next untap.</li>
+      <li><strong>The shield is not total.</strong> Damage that says it can't be prevented still registers its side effects, and a "you lose the game" line goes through. Neither protection nor a frozen life total answers a loss condition.</li>
+    </ul>
+
+    <!-- ════════ TIPS ════════ -->
+    <h2>Tips</h2>
+
+    <div class="callout tip">
+      <div class="callout-title"><span class="mark">✓</span> Hold it for a board wipe or a lethal swing</div>
+      <p>It is an instant. Cast it in response to a Wrath of God already on the stack, or after attackers are declared with a lethal attack incoming. Your permanents phase out and your life freezes before the wipe or the combat damage resolves, so both miss you entirely.</p>
+    </div>
+
+    <div class="callout tip">
+      <div class="callout-title"><span class="mark">✓</span> Blank a Torment of Hailfire or a mass edict</div>
+      <p>A non-targeted punisher like Torment of Hailfire asks you to lose life, discard, or sacrifice. With your life frozen, an empty hand, and your whole board phased out, you have nothing to lose and nothing to give. The spell resolves and does nothing to you.</p>
+    </div>
+
+    <div class="callout tip">
+      <div class="callout-title"><span class="mark">✓</span> Phase a permanent out of a removal spell</div>
+      <p>In response to a removal spell targeting one of your creatures, cast Teferi's Protection. That creature phases out, the removal loses its only legal target, and it does nothing. You save the permanent and protect the rest of your board at the same time.</p>
+    </div>
+
+    <!-- ════════ MISPLAYS ════════ -->
+    <h2>Misplays</h2>
+
+    <div class="callout misplay">
+      <div class="callout-title"><span class="mark">✗</span> Unpreventable damage is not fully blanked</div>
+      <p>A spell that targets you can't be aimed at you while protection is up, but damage that doesn't target you can still reach you if it can't be prevented. Combat damage made unpreventable by an effect like Questing Beast is the main case. Your life total stays frozen, so the number never drops, but infect poison counters, lifelink, and commander damage toward 21 all still register. A commander clock keeps ticking even while you look untouchable.</p>
+    </div>
+
+    <div class="callout misplay">
+      <div class="callout-title"><span class="mark">✗</span> You still lose to a loss condition</div>
+      <p>Protection and a frozen life total do not stop a "you lose the game" effect. A Thassa's Oracle trigger, drawing from an empty library, a failed Pact upkeep, or an opponent assembling Mechanized Production all still end the game on schedule. This card buys a turn, not immunity.</p>
+    </div>
+
+    <div class="callout misplay">
+      <div class="callout-title"><span class="mark">✗</span> You can't pay or gain life while it's up</div>
+      <p>Your life total can't change, so you can't pay a cost that includes losing life. No cracking a fetch land for one life, no paying Force of Will's life cost, and no life gain at all. Sequence those payments before Teferi's Protection resolves, not after.</p>
+    </div>
+
+    <!-- ════════ COMBOS ════════ -->
+    <h2>Combos</h2>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Armageddon / Obliterate / Balance <span class="combo-tag">One-Sided Wipe</span></div>
+      <p>Float your mana, cast a symmetrical wipe, then hold priority and cast Teferi's Protection. Your board phases out and is treated as not existing, so the wipe finds nothing of yours to destroy. Balance even reads your board as zero and forces opponents to match it. The wipe shreds every other board, and your permanents phase back in on your next untap.</p>
+    </div>
+
+    <div class="interaction-panel">
+      <div class="interaction-card-name">Lethal Vapors <span class="combo-tag">Turn-Skip Lock</span></div>
+      <p>Lethal Vapors has a {0} ability that destroys it and makes you skip your next turn, and you can activate it as many times as you want by holding priority. Stack thousands of activations, then cast Teferi's Protection in response. You skip thousands of turns, and because the protection lasts until your next turn, it never wears off. Note that any player can activate Lethal Vapors, and opponents keep taking their own turns, so you still need a plan for how they lose.</p>
+    </div>
+
+    <!-- ════════ FINE PRINT ════════ -->
+    <h2>Fine Print</h2>
+    <ul class="details-list">
+      <li><strong>Phasing is not exiling.</strong> Your permanents never change zones, so phasing out and back in triggers no "enters" or "leaves the battlefield" abilities. Nothing re-enters, so nothing re-triggers.</li>
+      <li><strong>Attachments and counters come back intact.</strong> Auras, Equipment, and counters phase out with the permanent they are on and return still attached, with every counter exactly as it was.</li>
+      <li><strong>Tokens survive now.</strong> Under current rules tokens phase out and phase back in like any other permanent. They no longer cease to exist while phased out, which changed in 2017.</li>
+      <li><strong>Non-targeted, non-damage effects still reach you.</strong> Protection only stops targeting, damage, and being enchanted or equipped. An effect that says "each player discards a card" still makes you discard from your hand.</li>
+      <li><strong>The shield ends exactly as you phase in.</strong> Your permanents phase in at the start of your untap step, before you untap, and the protection ends at the same moment. There is no window where you are untapping and still protected.</li>
+    </ul>
+
+    <!-- ════════ GOVERNING RULES ════════ -->
+    <h2>Governing Rules</h2>
+    <div class="sources-box">
+      <div class="sources-title">Comprehensive Rules</div>
+      <div class="sources-grid">
+        <div>CR 702.16 — Protection</div>
+        <div>CR 702.16e — Protection from everything prevents all damage to you</div>
+        <div>CR 702.26 — Phasing</div>
+        <div>CR 702.26b — Phased-out permanents are treated as not existing</div>
+        <div>CR 702.26d — Tokens and counters stay; no zone-change triggers</div>
+        <div>CR 702.26e — Continuous effects skip phased-out permanents</div>
+        <div>CR 615.6 — Prevented damage is never dealt</div>
+        <div>CR 615.12 — Damage that can't be prevented</div>
+        <div>CR 120.3 — Loss of life is not damage</div>
+        <div>CR 119.4 — Paying life as a cost</div>
+        <div>CR 104.3 — Ways to lose the game</div>
+        <div>CR 903.10 — Commander damage loss</div>
+        <div>CR 117.1 — Holding priority</div>
+        <div>CR 502.1 — Untap step (phasing happens first)</div>
+      </div>
+    </div>
+    <p class="verified">Rulings last verified: June 2026</p>
+
+    <!-- ════════ OFFICIAL RULINGS (full Scryfall set, dated) ════════ -->
+    <h2>Official Rulings</h2>
+
+    <div class="ruling">
+      <span class="ruling-date">2017-08-25</span>
+      <p>If a player has protection from everything, it means three things: 1) All damage that would be dealt to that player is prevented. 2) Auras can't be attached to that player. 3) That player can't be the target of spells or abilities.</p>
+    </div>
+
+    <div class="ruling">
+      <span class="ruling-date">2017-08-25</span>
+      <p>Nothing other than the specified events are prevented or illegal. An effect that doesn't target you could still cause you to discard cards, for example. Creatures can still attack you while you have protection from everything, although combat damage that they would deal to you will be prevented.</p>
+    </div>
+
+    <div class="ruling">
+      <span class="ruling-date">2017-08-25</span>
+      <p>Gaining protection from everything causes a spell or ability on the stack to have an illegal target if it targets you.</p>
+    </div>
+
+    <div class="ruling">
+      <span class="ruling-date">2017-08-25</span>
+      <p>Protection from everything will usually prevent damage if it would be dealt to you, but some damage can't be prevented. In this case, because your life total also can't change, that damage has any other effects that it may have aside from causing you to lose that much life (such as effects from lifelink or infect) and triggers and effects can see that damage was dealt even though your life total didn't change.</p>
+    </div>
+
+    <div class="ruling">
+      <span class="ruling-date">2017-08-25</span>
+      <p>You can't pay a cost that includes the payment of any amount of life other than 0 life.</p>
+    </div>
+
+    <div class="ruling">
+      <span class="ruling-date">2017-08-25</span>
+      <p>If a cost includes causing you to gain life (like the alternative cost of an opponent's Invigorate does), that cost can't be paid.</p>
+    </div>
+
+    <div class="ruling">
+      <span class="ruling-date">2017-08-25</span>
+      <p>Effects that would replace having you gain life with some other event won't be able to be applied because it's impossible for you to gain life. The same is true for effects that would replace having you lose life with some other event.</p>
+    </div>
+
+    <div class="ruling">
+      <span class="ruling-date">2017-08-25</span>
+      <p>A permanent phasing out causes a spell or ability on the stack to have an illegal target if it targets that permanent. As a spell or ability tries to resolve, if all its targets are illegal, that spell or ability doesn't resolve and none of its effects happen, including effects unrelated to the target. If at least one target is still legal, the spell or ability does as much as it can to the remaining legal targets, and its other effects still happen.</p>
+    </div>
+
+    <div class="ruling">
+      <span class="ruling-date">2017-08-25</span>
+      <p>If a token is phased out, it will phase in as your next untap step begins. This is a change from previous rules.</p>
+    </div>
+
+    <div class="ruling">
+      <span class="ruling-date">2017-08-25</span>
+      <p>If your untap step is somehow skipped as your next turn begins, your phased-out permanents won't phase in until the next untap step you actually have, but you'll no longer have protection from everything and your life total can change again.</p>
+    </div>
+
+    <div class="ruling">
+      <span class="ruling-date">2017-08-25</span>
+      <p>Any creatures that phase in under your control as your next untap step begins will be able to attack and pay a cost of {T} during that turn.</p>
+    </div>
+
+    <!-- ════════ SEE ALSO ════════ -->
+    <h2>See Also</h2>
+    <div class="chip-row">
+      <a class="chip" href="/glacialchasm">Glacial Chasm</a>
+      <a class="chip" href="/humility">Humility</a>
+    </div>
+
+    <!-- ════════ STACK CROSS-LINK ════════ -->
+    <a class="stack-banner" href="/stack" aria-label="See related stack interactions">
+      <svg class="sb-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+        <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+        <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+      </svg>
+      <div class="sb-text">
+        <div class="sb-title">See It On The Stack</div>
+        <div class="sb-desc">Why the protection, the frozen life total, and the phasing all come from one resolution, and why the shield ends the instant you phase back in.</div>
+      </div>
+      <span class="sb-arrow" aria-hidden="true">→</span>
+    </a>
+
+    <!-- ════════ REQUEST A CARD ════════ -->
+    <section class="suggest-cta">
+      <p>Reading the card still not explaining the card? Tell us which one to break down next.</p>
+      <a class="suggest-btn" href="https://tally.so/r/b5AQB2" target="_blank" rel="noopener">
+        Request a card
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/>
+        </svg>
+      </a>
+    </section>
+
+    <!-- ════════ SOURCES ════════ -->
+    <h2>Sources</h2>
+    <ul class="source-links">
+      <li>Scryfall: <a href="https://scryfall.com/card/c17/8/teferis-protection" target="_blank" rel="noopener">Teferi's Protection (Commander 2017 #8)</a> — oracle text, legality, and the official rulings dated 2017-08-25.</li>
+      <li>EDHREC: <a href="https://edhrec.com/cards/teferis-protection" target="_blank" rel="noopener">Teferi's Protection</a> — synergy partners and deck inclusion data.</li>
+      <li>Wizards of the Coast: <a href="https://magic.wizards.com/en/rules" target="_blank" rel="noopener">Magic Comprehensive Rules</a> — the CR references listed under Governing Rules.</li>
+    </ul>
+
+  </main>
+
+  <footer>
+    <div class="footer-buttons">
+      <a class="footer-btn" href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+        Tips Appreciated!
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+      </a>
+      <a class="footer-btn" href="https://instagram.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        MTJawnny
+      </a>
+    </div>
+    <a class="back-to-top" href="#top">↑ Back to top</a>
+  </footer>
+
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  var btn = document.getElementById('shareBtn');
+  if (!btn) return;
+  var url = 'https://mtjawnny.com/tef';
+  var title = "Teferi's Protection — How It Works";
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function () { t.classList.remove('show'); }, 1800);
+  }
+
+  btn.addEventListener('click', function () {
+    if (navigator.share) {
+      navigator.share({ title: title, url: url }).catch(function () {});
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url)
+        .then(function () { showToast('Link copied'); })
+        .catch(function () { legacyCopy(); });
+    } else {
+      legacyCopy();
+    }
+  });
+
+  function legacyCopy() {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = url;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'absolute';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Link copied');
+    } catch (e) {
+      showToast('Copy not supported');
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
