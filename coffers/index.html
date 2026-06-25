@@ -64,8 +64,8 @@
   }
 
   /* ══ HEADER — mirrors Cardex / Tablekeep splash-hero ══════ */
-  .splash-hero { padding: 0.75rem 0 0; }
-  .tk-header { text-align: center; padding: 0.75rem 1.5rem 0; }
+  .splash-hero { padding: 0.2rem 0 0; }
+  .tk-header { text-align: center; padding: -1rem 0rem 0; }
 
   .logo-wrap {
     display: flex;
@@ -83,7 +83,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    padding: 6px;
+    padding: 8px;
     margin: -6px;
     text-decoration: none;
     transition: background 0.15s;
@@ -97,7 +97,7 @@
     left: calc(50% + 2px);
     transform: translateX(-50%);
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.55rem;
+    font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -111,10 +111,10 @@
   .splash-hero h1 {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 900;
-    font-size: clamp(2.4rem, 8vw, 3.6rem);
+    font-size: clamp(2.4rem, 14vw, 3.6rem);
     letter-spacing: 0.04em;
     color: var(--bronze);
-    line-height: 1;
+    line-height: .5;
     text-transform: uppercase;
   }
 
@@ -133,7 +133,7 @@
     display: inline-block;
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
-    font-size: 0.72rem;
+    font-size: 0.90rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     padding: 0.2rem 0.6rem;
@@ -146,7 +146,7 @@
   .section-head h2 {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 800;
-    font-size: clamp(1.5rem, 5.5vw, 2rem);
+    font-size: clamp(1.5rem, 7vw, 2rem);
     text-align: center;
     letter-spacing: 0.02em;
     color: var(--white);
@@ -155,7 +155,7 @@
   }
   .section-head .sub {
     color: var(--text-dim);
-    font-size: 0.92rem;
+    font-size: 1.02rem;
     text-align: center;
     margin-top: 0.45rem;
     line-height: 1.4;
@@ -287,7 +287,7 @@
   .asset-name {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
-    font-size: 0.82rem;
+    font-size: 0.95rem;
     letter-spacing: 0.03em;
     text-transform: uppercase;
     color: var(--white);
@@ -305,17 +305,17 @@
     background: var(--bg);
     border: 1px solid var(--bronze-dim);
     border-radius: 7px;
-    padding: 0.32rem 0.2rem;
+    padding: 0.45rem 0.4rem;
     color: var(--bronze);
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
-    font-size: 0.72rem;
+    font-size: 0.92rem;
     letter-spacing: 0.06em;
     text-decoration: none;
     transition: border-color 0.15s, color 0.15s, background 0.15s;
   }
   .fmt-btn:hover { border-color: var(--bronze); color: var(--white); background: var(--bronze-glow); }
-  .fmt-btn svg { width: 11px; height: 11px; }
+  .fmt-btn svg { width: 13px; height: 13px; }
 
   .coming-note {
     margin-top: 0.85rem;
@@ -327,15 +327,15 @@
   /* ── Card back (wide asset) ── */
   .back-card {
     display: flex;
-    gap: 0.9rem;
+    gap: 1.3rem;
     background: var(--surface);
     border: 1px solid var(--bronze-dim);
     border-radius: 14px;
-    padding: 0.85rem;
+    padding: 1.15rem;
     align-items: center;
   }
   .back-thumb {
-    width: 96px;
+    width: 175px;
     aspect-ratio: 745 / 1040;
     flex-shrink: 0;
     border-radius: 8px;
@@ -348,37 +348,46 @@
     justify-content: center;
     border: 1px dashed var(--bronze-dim);
     color: var(--muted);
-    font-size: 0.7rem;
+    font-size: 0.85rem;
     text-align: center;
     padding: 0.3rem;
   }
   .back-meta { flex: 1; min-width: 0; }
-  .back-meta .asset-name { text-align: left; font-size: 0.95rem; }
-  .back-meta .fmt-row { justify-content: flex-start; max-width: 220px; }
-  .back-meta .fmt-btn { flex: 0 1 auto; padding: 0.34rem 0.7rem; }
+  .back-meta .asset-name { text-align: left; font-size: 1.55rem; }
+  .back-meta .fmt-row { justify-content: flex-start; max-width: 300px; }
+  .back-meta .fmt-btn { flex: 0 1 auto; padding: 0.55rem 1.15rem; }
   .maxres-link {
     display: inline-block;
     margin-top: 0.55rem;
     color: var(--text-dim);
-    font-size: 0.78rem;
+    font-size: 1.08rem;
     text-decoration: underline;
     text-underline-offset: 2px;
   }
   .maxres-link:hover { color: var(--bronze); }
 
   /* ── Frame gallery ── */
-  .frame-style { margin-top: 1.6rem; }
+  .frame-style { margin-top: 0.6rem; }
+  .frame-style[open] { margin-top: 0.9rem; }
   .style-name {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 1.1rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--white);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    padding: 0.5rem 0.3rem;
+    border-radius: 8px;
+    transition: background 0.15s ease;
   }
+  .style-name::-webkit-details-marker { display: none; }
+  .style-name:hover { background: rgba(184,147,90,0.08); }
   .style-name::before {
     content: "";
     width: 14px;
@@ -386,7 +395,23 @@
     background: var(--bronze);
     flex-shrink: 0;
   }
-  .style-note { color: var(--text-dim); font-size: 0.82rem; margin: 0.15rem 0 0.7rem; }
+  .style-chevron {
+    width: 16px;
+    height: 16px;
+    margin-left: auto;
+    color: var(--bronze);
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+  .frame-style[open] .style-chevron { transform: rotate(180deg); }
+  .style-text { flex: 1 1 auto; min-width: 0; }
+  .style-desc {
+    text-transform: none;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 500;
+    letter-spacing: normal;
+    color: var(--text-dim);
+  }
 
   .frame-grid {
     display: grid;
@@ -767,7 +792,7 @@ const ASSETS = {
   frameStyles: [
     {
       name: "Style One", slug: "style-one",
-      note: "Borderless for full art cards!",
+      note: "Borderless full art cards!",
       variants: [
         { color: "White",    code: "white" },
         { color: "Blue",     code: "blue" },
@@ -779,7 +804,7 @@ const ASSETS = {
     },
     {
       name: "Style Two", slug: "style-two",
-      note: "Minimalist blocky design! I weirdly like this kind of design a lot.",
+      note: "Minimalist blocky design!",
       variants: [
         { color: "White",    code: "white" },
         { color: "Blue",     code: "blue" },
@@ -1048,7 +1073,7 @@ const BUNDLE_SAMPLES = [
   })();
 
   // ── Frames ──
-  document.getElementById('frameSlot').innerHTML = ASSETS.frameStyles.map(st => {
+  document.getElementById('frameSlot').innerHTML = ASSETS.frameStyles.map((st, i) => {
     const cards = st.variants.map(v => {
       const base = FRAME_BASE + st.slug + '/' + v.code;
       const png = base + '.png';
@@ -1069,11 +1094,17 @@ const BUNDLE_SAMPLES = [
       );
     }).join('');
     return (
-      '<div class="frame-style">' +
-        '<div class="style-name">' + esc(st.name) + '</div>' +
-        (st.note ? '<p class="style-note">' + esc(st.note) + '</p>' : '') +
+      '<details class="frame-style"' + (i === 0 ? ' open' : '') + '>' +
+        '<summary class="style-name">' +
+          '<span class="style-text">' + esc(st.name) +
+            (st.note ? '<span class="style-desc"> - ' + esc(st.note) + '</span>' : '') +
+          '</span>' +
+          '<svg class="style-chevron" viewBox="0 0 16 16" aria-hidden="true">' +
+            '<path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+          '</svg>' +
+        '</summary>' +
         '<div class="frame-grid">' + cards + '</div>' +
-      '</div>'
+      '</details>'
     );
   }).join('');
 
