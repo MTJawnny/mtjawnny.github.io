@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1e1728">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Coffers">
+<meta name="description" content="Free custom Magic: The Gathering mana symbols, card frames, and card backs for proxies. SVG and PNG, free to download and use as a base for your own designs.">
+<meta property="og:title" content="Coffers — Free MTG Proxy Assets">
+<meta property="og:description" content="Free custom mana symbols, card frames, and card backs for Magic proxies. SVG + PNG, use freely.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mtjawnny.com/coffers">
+<meta name="twitter:card" content="summary">
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="https://mtjawnny.com/coffers">
+<title>Coffers — Free MTG Proxy Assets — MTJawnny</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WKH3Y62H5H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-WKH3Y62H5H');
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #1e1728;
+    --surface:     #261d33;
+    --surface-2:   #2c2240;
+    --bronze:      #b8935a;
+    --bronze-dim:  #7a5e35;
+    --bronze-glow: rgba(184,147,90,0.15);
+    --text-dim:    #9b8fb0;
+    --green:       #5aab6e;
+    --red:         #c0392b;
+    --white:       #f0ece6;
+    --muted:       #6b5f7a;
+    --radius:      10px;
+    --panel-r:     20px;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button, input { font-family: inherit; }
+
+  /* Whole page lives in one centred mobile-width column (site-wide pattern) */
+  .page {
+    max-width: 560px;
+    margin: 0 auto;
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+  }
+
+  /* ══ HEADER — mirrors Cardex / Tablekeep splash-hero ══════ */
+  .splash-hero { padding: 0.75rem 0 0; }
+  .tk-header { text-align: center; padding: 0.75rem 1.5rem 0; }
+
+  .logo-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 0.3rem;
+  }
+
+  /* Left & right title pips double as the home link (site-wide pattern) */
+  .logo-home {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 6px;
+    margin: -6px;
+    text-decoration: none;
+    transition: background 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .logo-home:hover, .logo-home:active { background: var(--bronze-glow); }
+  .logo-home .logo-pip-ring { display: block; }
+  .logo-home-label {
+    position: absolute;
+    top: calc(100% - 5px);
+    left: calc(50% + 2px);
+    transform: translateX(-50%);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .logo-pip-ring { width: 48px; height: 48px; flex-shrink: 0; }
+
+  .splash-hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 8vw, 3.6rem);
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .tagline {
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    margin-top: 0.5rem;
+    letter-spacing: 0.01em;
+  }
+
+  /* ══ SECTIONS ════════════════════════════════════════════ */
+  .section { padding: 1.6rem 1.25rem 0; }
+
+  .section-head { margin-bottom: 1rem; }
+  .eyebrow {
+    display: inline-block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    margin-bottom: 0.55rem;
+  }
+  .eyebrow.free    { color: var(--green);  border: 1px solid rgba(90,171,110,0.5); }
+  .eyebrow.support { color: var(--bronze); border: 1px solid var(--bronze-dim); }
+
+  .section-head h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.5rem, 5.5vw, 2rem);
+    text-align: center;
+    letter-spacing: 0.02em;
+    color: var(--white);
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+  .section-head .sub {
+    color: var(--text-dim);
+    font-size: 0.92rem;
+    text-align: center;
+    margin-top: 0.45rem;
+    line-height: 1.4;
+  }
+
+  /* ── Free banner: license + credit + download-all ── */
+  .free-banner {
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 14px;
+    padding: 0.95rem 1rem;
+    margin-top: 0.8rem;
+    margin-bottom: 1.2rem;
+  }
+  .free-count {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    color: var(--green);
+    text-transform: uppercase;
+  }
+  .license-line {
+    color: var(--white);
+    font-size: 0.92rem;
+    margin-top: 0.2rem;
+  }
+  .license-line span { color: var(--text-dim); }
+
+  .credit-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.7rem;
+  }
+  .credit-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: var(--bg);
+    border: 1px dashed var(--bronze-dim);
+    border-radius: 8px;
+    padding: 0.4rem 0.65rem;
+    color: var(--text-dim);
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .credit-chip:hover { border-color: var(--bronze); color: var(--white); }
+  .credit-chip code {
+    font-family: 'Barlow', sans-serif;
+    color: var(--white);
+  }
+  .credit-chip svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  .dl-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 0.85rem;
+    background: var(--green);
+    color: #14241a;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.6rem 1.05rem;
+    border-radius: 10px;
+    transition: filter 0.15s, transform 0.15s;
+  }
+  .dl-all:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .dl-all svg { width: 16px; height: 16px; }
+
+  /* ── Asset group sub-heading ── */
+  .group-head {
+    margin: 1.6rem 0 0.7rem;
+  }
+  .group-head h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--bronze);
+  }
+  .what-you-get {
+    display: block;
+    color: var(--muted);
+    font-size: 0.8rem;
+    line-height: 1.3;
+    margin-top: 0.15rem;
+  }
+
+  /* ── Pip grid ── */
+  .pip-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+    gap: 0.7rem;
+  }
+  .asset-tile {
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 12px;
+    padding: 0.6rem 0.5rem 0.55rem;
+    text-align: center;
+  }
+  .pip-thumb {
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 0.45rem;
+    border-radius: 50%;
+    display: block;
+    object-fit: contain;
+  }
+  .pip-thumb.ph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.55);
+    border: 2px solid rgba(255,255,255,0.12);
+  }
+  .asset-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 0.45rem;
+  }
+
+  /* ── Format buttons (SVG / PNG) ── */
+  .fmt-row { display: flex; gap: 0.35rem; justify-content: center; }
+  .fmt-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    background: var(--bg);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 7px;
+    padding: 0.32rem 0.2rem;
+    color: var(--bronze);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+  }
+  .fmt-btn:hover { border-color: var(--bronze); color: var(--white); background: var(--bronze-glow); }
+  .fmt-btn svg { width: 11px; height: 11px; }
+
+  .coming-note {
+    margin-top: 0.85rem;
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-style: italic;
+  }
+
+  /* ── Card back (wide asset) ── */
+  .back-card {
+    display: flex;
+    gap: 0.9rem;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 14px;
+    padding: 0.85rem;
+    align-items: center;
+  }
+  .back-thumb {
+    width: 96px;
+    aspect-ratio: 745 / 1040;
+    flex-shrink: 0;
+    border-radius: 8px;
+    object-fit: cover;
+    background: var(--bg);
+  }
+  .back-thumb.ph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed var(--bronze-dim);
+    color: var(--muted);
+    font-size: 0.7rem;
+    text-align: center;
+    padding: 0.3rem;
+  }
+  .back-meta { flex: 1; min-width: 0; }
+  .back-meta .asset-name { text-align: left; font-size: 0.95rem; }
+  .back-meta .fmt-row { justify-content: flex-start; max-width: 220px; }
+  .back-meta .fmt-btn { flex: 0 1 auto; padding: 0.34rem 0.7rem; }
+  .maxres-link {
+    display: inline-block;
+    margin-top: 0.55rem;
+    color: var(--text-dim);
+    font-size: 0.78rem;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .maxres-link:hover { color: var(--bronze); }
+
+  /* ── Frame gallery ── */
+  .frame-style { margin-top: 1.6rem; }
+  .style-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+  .style-name::before {
+    content: "";
+    width: 14px;
+    height: 2px;
+    background: var(--bronze);
+    flex-shrink: 0;
+  }
+  .style-note { color: var(--text-dim); font-size: 0.82rem; margin: 0.15rem 0 0.7rem; }
+
+  .frame-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.7rem;
+  }
+  .frame-card {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 12px;
+    padding: 0.55rem;
+  }
+  .frame-thumb {
+    width: 100%;
+    aspect-ratio: 745 / 1040;
+    border-radius: 8px;
+    object-fit: cover;
+    background: var(--bg);
+    display: block;
+    margin-bottom: 0.45rem;
+  }
+  .frame-thumb.ph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px dashed rgba(255,255,255,0.14);
+  }
+  .frame-thumb.ph span {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+    color: rgba(255,255,255,0.65);
+  }
+  .frame-color {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-align: center;
+    margin-bottom: 0.4rem;
+  }
+  .badge-new {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    background: var(--green);
+    color: #14241a;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.12rem 0.4rem;
+    border-radius: 5px;
+  }
+
+  /* ── Cross-links ── */
+  .crosslinks {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: 1.6rem;
+  }
+  .crosslink {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--bronze);
+    color: var(--bg);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.55rem 1.1rem;
+    border-radius: 10px;
+    transition: filter 0.15s, transform 0.15s;
+  }
+  .crosslink:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .crosslink b { color: var(--bg); font-weight: 700; }
+  .crosslink svg { width: 16px; height: 16px; color: var(--bg); }
+
+  /* ══ SUPPORT SECTION ═════════════════════════════════════ */
+  .support {
+    margin-top: 1rem;
+  }
+  .merch-list { display: flex; flex-direction: column; gap: 0.8rem; }
+  .merch-card {
+    display: flex;
+    gap: 0.85rem;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 14px;
+    padding: 0.85rem;
+    align-items: center;
+  }
+  .merch-card.soon { opacity: 0.72; }
+  .merch-thumb {
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    object-fit: cover;
+    background: var(--bg);
+  }
+  .merch-thumb.ph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed var(--bronze-dim);
+    color: var(--muted);
+    font-size: 0.62rem;
+    text-align: center;
+    padding: 0.25rem;
+  }
+  .merch-body { flex: 1; min-width: 0; }
+
+  /* Bundle "feature" card: full-width body, no left thumbnail */
+  .merch-card.feature { align-items: stretch; }
+
+  /* Sample-card preview strip inside the bundle card */
+  .bundle-preview {
+    margin-top: 0.75rem;
+    border-top: 1px solid rgba(122,94,53,0.25);
+    padding-top: 0.7rem;
+  }
+  .bundle-preview-head {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.74rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+  }
+  .bundle-strip {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+  .bundle-ig {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 0.7rem;
+    color: var(--bronze);
+    font-size: 0.84rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    line-height: 1.3;
+  }
+  .bundle-ig:hover { border-bottom-color: var(--bronze); }
+  .bundle-ig svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .bundle-card {
+    aspect-ratio: 745 / 1040;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--bg);
+    border: 1px solid var(--bronze-dim);
+  }
+  .bundle-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .bundle-card.ph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px dashed var(--bronze-dim);
+    color: var(--muted);
+    font-size: 0.6rem;
+    padding: 0.2rem;
+  }
+
+  .merch-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.02rem;
+    letter-spacing: 0.02em;
+    color: var(--white);
+  }
+  .merch-desc { color: var(--text-dim); font-size: 0.84rem; margin-top: 0.15rem; line-height: 1.35; }
+  .merch-foot {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-top: 0.55rem;
+  }
+  .price {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: var(--bronze);
+    letter-spacing: 0.02em;
+  }
+  .buy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--bronze);
+    color: var(--bg);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.45rem 0.9rem;
+    border-radius: 8px;
+    transition: filter 0.15s, transform 0.15s;
+  }
+  .buy-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .buy-btn svg { width: 13px; height: 13px; }
+  .soon-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--muted);
+    border-radius: 6px;
+    padding: 0.25rem 0.55rem;
+  }
+
+  .tip-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.7rem;
+    margin-top: 1rem;
+    background: var(--surface-2);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 12px;
+    padding: 0.8rem 0.95rem;
+  }
+  .tip-text { flex: 1; min-width: 160px; }
+  .tip-text strong { color: var(--white); font-weight: 600; font-size: 0.92rem; }
+  .tip-text span { display: block; color: var(--text-dim); font-size: 0.8rem; margin-top: 0.1rem; }
+  .tip-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: transparent;
+    border: 1.5px solid var(--bronze);
+    color: var(--bronze);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.45rem 0.95rem;
+    border-radius: 8px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .tip-btn:hover { background: var(--bronze); color: var(--bg); }
+  .tip-btn svg { width: 14px; height: 14px; }
+
+  /* ══ FOOTER ══ */
+  footer { text-align: center; padding: 2.2rem 1.5rem 0.5rem; }
+  .footer-buttons {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;
+    max-width: 400px; margin: 0 auto; padding: 0 1.25rem;
+  }
+  .footer-btn {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0.4rem; white-space: nowrap;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.5rem;
+    color: var(--bronze);
+    font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 0.8rem;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .footer-btn:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+  .footer-btn svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+  .back-to-top {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    margin-top: 1.5rem;
+    background: transparent;
+    border: 1px solid var(--bronze-dim);
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    color: var(--text-dim);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 0.8rem;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    text-decoration: none;
+    transition: border-color 0.18s, color 0.18s, background 0.18s;
+  }
+  .back-to-top:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+
+  /* ── Toast (credit copied) ── */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    transform: translateX(-50%) translateY(20px);
+    background: var(--bronze);
+    color: var(--bg);
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 999px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 50;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px; height: 1px;
+    margin: -1px; padding: 0; border: 0;
+    clip: rect(0 0 0 0); clip-path: inset(50%);
+    overflow: hidden; white-space: nowrap;
+  }
+
+  /* ── Quality floor ── */
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid var(--bronze);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+    .dl-all:hover, .buy-btn:hover { transform: none; }
+  }
+
+  /* ── Desktop ── */
+  @media (min-width: 640px) {
+    .frame-grid { grid-template-columns: repeat(3, 1fr); }
+    .footer-buttons { max-width: 380px; gap: 1rem; }
+  }
+</style>
+</head>
+<body id="top">
+
+<!-- ════════════════════════════════════════════════════════════════
+     EDIT HERE — free asset manifest. The free section builds itself
+     from this. Drop matching files at the paths below, then they go live.
+
+       PIPS  : /coffers/assets/pips/<code>.svg  +  .png
+       BACK  : /coffers/assets/back/cardback.svg + cardback.png (print-res)
+               + cardback-maxres.png (the full-size original, optional)
+       FRAMES: /coffers/assets/frames/<style-slug>/<color>.svg + .png
+
+     Set  isNew: true  on any freshly added frame variant to flag it.
+═════════════════════════════════════════════════════════════════════ -->
+<script>
+const ASSETS = {
+  // The five custom colour pips. fill = preview placeholder colour
+  // (shown only until the real image file loads).
+  pips: [
+    { name: "White", code: "white", fill: "#d8cfa8" },
+    { name: "Blue",  code: "blue",  fill: "#2a6fa8" },
+    { name: "Black", code: "black", fill: "#3a3247" },
+    { name: "Red",   code: "red",   fill: "#b03325" },
+    { name: "Green", code: "green", fill: "#2c7045" },
+  ],
+
+  back: { name: "MTJawnny Card Back" }, // files: cardback.svg / cardback.png / cardback-maxres.png
+
+  // Each style ships in all five colours plus an artifact version.
+  // Add a style by copying a block; add/remove colours inside variants.
+  frameStyles: [
+    {
+      name: "Style One", slug: "style-one",
+      note: "Borderless for full art cards!",
+      variants: [
+        { color: "White",    code: "white" },
+        { color: "Blue",     code: "blue" },
+        { color: "Black",    code: "black" },
+        { color: "Red",      code: "red" },
+        { color: "Green",    code: "green" },
+        { color: "Artifact", code: "artifact" },
+      ],
+    },
+    {
+      name: "Style Two", slug: "style-two",
+      note: "Minimalist blocky design! I weirdly like this kind of design a lot.",
+      variants: [
+        { color: "White",    code: "white" },
+        { color: "Blue",     code: "blue" },
+        { color: "Black",    code: "black" },
+        { color: "Red",      code: "red" },
+        { color: "Green",    code: "green" },
+        { color: "Artifact", code: "artifact" },
+      ],
+    },
+  ],
+};
+
+// Outbound links — swap the "#" placeholders for the real URLs.
+const KOFI_TIP_URL    = "https://ko-fi.com/mtjawnny";   // tip jar (set unit price to $1 in Ko-fi settings)
+const KOFI_BUNDLE_URL = "#"; /* TODO_KOFI_SHOP_BUNDLE_URL — the $3 PDF + image bundle shop item */
+const PROXY_GUIDE_URL = "#"; /* TODO_PROXY_GUIDE_URL — link once the proxy gear guide is live */
+const CREDIT_TEXT     = "Assets by MTJawnny · mtjawnny.com";
+
+// Sample cards shown in the paid bundle preview strip.
+// Two shown side by side — pick your two best / funniest pieces.
+// Drop matching images at /coffers/assets/bundle/<file>.png and edit this list.
+const BUNDLE_SAMPLES = [
+  { name: "Sample 1", file: "sample-1" },
+  { name: "Sample 2", file: "sample-2" },
+];
+</script>
+<!-- ════════════════════════════════════════════════════════════════ -->
+
+<div class="page">
+
+  <section class="splash-hero">
+    <header class="tk-header">
+      <div class="logo-wrap">
+        <a class="logo-home" href="/" aria-label="Back to MTJawnny home">
+          <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+            <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+            <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+          </svg>
+          <span class="logo-home-label">home</span>
+        </a>
+        <h1>Coffers</h1>
+        <a class="logo-home" href="/" aria-label="Back to MTJawnny home">
+          <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+            <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+            <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+          </svg>
+          <span class="logo-home-label">home</span>
+        </a>
+      </div>
+    </header>
+  </section>
+
+  <!-- ══ FREE SECTION ══ -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Free stuff from me to you!</h2>
+      <p class="sub">Custom mana symbols, card backs, and card frames I made for the proxy community! SVG and PNG, crack open and use as a base for your own designs!</p>
+    </div>
+
+    <!-- Pips -->
+    <div class="group-head">
+      <h3>Mana Symbols</h3>
+      <span class="what-you-get">Editable SVG + transparent PNG</span>
+    </div>
+    <div class="pip-grid" id="pipGrid"></div>
+    <p class="coming-note">Colorless, hybrid, and X symbols coming soon.</p>
+
+    <!-- Card back -->
+    <div class="group-head">
+      <h3>Card Back</h3>
+      <span class="what-you-get">Print-res PNG + vector SVG</span>
+    </div>
+    <div id="backSlot"></div>
+
+    <!-- Frames -->
+    <div class="group-head">
+      <h3>Card Frames</h3>
+      <span class="what-you-get">Multiple styles, all colors + artifact</span>
+    </div>
+    <div id="frameSlot"></div>
+
+    <div class="free-banner">
+      <div class="free-count" id="freeCount"></div>
+      <p class="license-line">Use freely! <span>Credit appreciated but not required!</span></p>
+      <div class="credit-row">
+        <button type="button" class="credit-chip" id="creditChip" aria-label="Copy credit line to clipboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          <code id="creditText"></code>
+        </button>
+      </div>
+      <a class="dl-all" id="dlAll" href="/coffers/assets/mtjawnny-assets.zip" download
+         data-ga-event="download_all" aria-label="Download all free assets as a zip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download all
+      </a>
+    </div>
+
+    <!-- Cross-links -->
+    <div class="crosslinks">
+      <a class="crosslink" id="proxyGuideLink" href="#">
+        Making proxies with these? <b>Proxy gear guide</b>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+      </a>
+      <a class="crosslink" href="/tools">
+        Build print pages in Deck Tech
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ══ SUPPORT SECTION ══ -->
+  <section class="section support">
+    <div class="section-head">
+      <h2>Want to support?</h2>
+      <h2>Grab my custom merch!</h2>
+    </div>
+
+    <div class="merch-list">
+      <div class="merch-card feature">
+        <div class="merch-body">
+          <div class="merch-title">My Card Art + Proxy Guide</div>
+          <p class="merch-desc">Proxy-ready cards featuring my own original art! ( Hand-drawn in MS Paint :') ), plus a PDF guide on the paper, printer settings, and cutting tricks I learned the hard way.</p>
+          <div class="bundle-preview">
+            <div class="bundle-preview-head">A peek at the art inside</div>
+            <div class="bundle-strip" id="bundleStrip"></div>
+            <a class="bundle-ig" href="https://instagram.com/mtjawnny" target="_blank" rel="noopener"
+               data-ga-event="support_click" data-ga-item="bundle_instagram">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.64.07 4.81 0 3.18-.01 3.55-.07 4.81-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92C2.16 15.55 2.15 15.18 2.15 12s.01-3.54.07-4.81C2.38 3.96 3.9 2.42 7.15 2.27 8.42 2.21 8.8 2.2 12 2.2zm0 3.65A6.15 6.15 0 1 0 18.15 12 6.15 6.15 0 0 0 12 5.85zm0 10.15A4 4 0 1 1 16 12a4 4 0 0 1-4 4zm6.4-10.4a1.44 1.44 0 1 0 1.44 1.44A1.44 1.44 0 0 0 18.4 5.6z"/></svg>
+              See them printed and in real decks on Instagram
+            </a>
+          </div>
+          <div class="merch-foot">
+            <span class="price">$3</span>
+            <a class="buy-btn" id="bundleBtn" href="#" target="_blank" rel="noopener"
+               data-ga-event="support_click" data-ga-item="pdf_bundle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+              Get it on Ko-fi
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="merch-card soon">
+        <div class="merch-thumb ph">deck box preview</div>
+        <div class="merch-body">
+          <div class="merch-title">Tylenol Deck Box</div>
+          <p class="merch-desc">A custom deck box. Still putting the finishing touches on this one.</p>
+          <div class="merch-foot">
+            <span class="soon-badge">Coming soon</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-row">
+      <div class="tip-text">
+        <strong>Or just toss a tip in the jar!</strong>
+        <span>Tips start at $1. Every bit helps!</span>
+      </div>
+      <a class="tip-btn" id="tipBtn" href="#" target="_blank" rel="noopener"
+         data-ga-event="support_click" data-ga-item="tip">
+        <svg viewBox="0 0 24 24" fill="#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+        Leave a tip
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-buttons">
+      <a class="footer-btn" href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener"
+         data-ga-event="support_click" data-ga-item="footer_kofi">
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+        Tips Appreciated!
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+      </a>
+      <a class="footer-btn" href="https://instagram.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        MTJawnny
+      </a>
+    </div>
+    <a class="back-to-top" href="#top">↑ Back to top</a>
+  </footer>
+
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const PIP_BASE   = '/coffers/assets/pips/';
+  const BACK_BASE  = '/coffers/assets/back/';
+  const FRAME_BASE = '/coffers/assets/frames/';
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, c => (
+      { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]
+    ));
+  }
+
+  // Fire a GA4 event only if gtag is present (it isn't in artifact previews).
+  function track(name, params) {
+    try { if (typeof gtag === 'function') gtag('event', name, params || {}); } catch (e) {}
+  }
+
+  // One download/format button: <a download> + GA metadata.
+  function fmtBtn(label, href, asset, format) {
+    return '<a class="fmt-btn" href="' + esc(href) + '" download ' +
+      'data-ga-event="asset_download" data-ga-asset="' + esc(asset) + '" data-ga-format="' + esc(format) + '" ' +
+      'aria-label="Download ' + esc(asset) + ' as ' + esc(format.toUpperCase()) + '">' +
+      esc(label) + '</a>';
+  }
+
+  // ── Pips ──
+  document.getElementById('pipGrid').innerHTML = ASSETS.pips.map(p => {
+    const png = PIP_BASE + p.code + '.png';
+    const svg = PIP_BASE + p.code + '.svg';
+    const initial = p.name.charAt(0);
+    return (
+      '<div class="asset-tile">' +
+        '<img class="pip-thumb" src="' + esc(png) + '" alt="' + esc(p.name) + ' mana symbol" ' +
+          'loading="lazy" ' +
+          'onerror="this.outerHTML=\'<span class=&quot;pip-thumb ph&quot; style=&quot;background:' + p.fill + '&quot; aria-hidden=&quot;true&quot;>' + initial + '</span>\'">' +
+        '<div class="asset-name">' + esc(p.name) + '</div>' +
+        '<div class="fmt-row">' +
+          fmtBtn('SVG', svg, p.name + ' pip', 'svg') +
+          fmtBtn('PNG', png, p.name + ' pip', 'png') +
+        '</div>' +
+      '</div>'
+    );
+  }).join('');
+
+  // ── Card back ──
+  (function () {
+    const png = BACK_BASE + 'cardback.png';
+    const svg = BACK_BASE + 'cardback.svg';
+    const max = BACK_BASE + 'cardback-maxres.png';
+    document.getElementById('backSlot').innerHTML =
+      '<div class="back-card">' +
+        '<img class="back-thumb" src="' + esc(png) + '" alt="MTJawnny custom card back" loading="lazy" ' +
+          'onerror="this.outerHTML=\'<div class=&quot;back-thumb ph&quot; aria-hidden=&quot;true&quot;>card back preview</div>\'">' +
+        '<div class="back-meta">' +
+          '<div class="asset-name">' + esc(ASSETS.back.name) + '</div>' +
+          '<div class="fmt-row">' +
+            fmtBtn('SVG', svg, 'Card back', 'svg') +
+            fmtBtn('PNG', png, 'Card back', 'png') +
+          '</div>' +
+          '<a class="maxres-link" href="' + esc(max) + '" download ' +
+            'data-ga-event="asset_download" data-ga-asset="Card back" data-ga-format="maxres">' +
+            'Max-res source (large file)</a>' +
+        '</div>' +
+      '</div>';
+  })();
+
+  // ── Frames ──
+  document.getElementById('frameSlot').innerHTML = ASSETS.frameStyles.map(st => {
+    const cards = st.variants.map(v => {
+      const base = FRAME_BASE + st.slug + '/' + v.code;
+      const png = base + '.png';
+      const svg = base + '.svg';
+      const assetId = st.name + ' frame (' + v.color + ')';
+      const badge = v.isNew ? '<span class="badge-new">New</span>' : '';
+      return (
+        '<figure class="frame-card">' +
+          badge +
+          '<img class="frame-thumb" src="' + esc(png) + '" alt="' + esc(assetId) + '" loading="lazy" ' +
+            'onerror="this.outerHTML=\'<div class=&quot;frame-thumb ph&quot; aria-hidden=&quot;true&quot;><span>' + esc(v.color) + '</span></div>\'">' +
+          '<figcaption class="frame-color">' + esc(v.color) + '</figcaption>' +
+          '<div class="fmt-row">' +
+            fmtBtn('SVG', svg, assetId, 'svg') +
+            fmtBtn('PNG', png, assetId, 'png') +
+          '</div>' +
+        '</figure>'
+      );
+    }).join('');
+    return (
+      '<div class="frame-style">' +
+        '<div class="style-name">' + esc(st.name) + '</div>' +
+        (st.note ? '<p class="style-note">' + esc(st.note) + '</p>' : '') +
+        '<div class="frame-grid">' + cards + '</div>' +
+      '</div>'
+    );
+  }).join('');
+
+  // ── Free asset count ──
+  const frameCount = ASSETS.frameStyles.reduce((n, s) => n + s.variants.length, 0);
+  const total = ASSETS.pips.length + 1 + frameCount;
+  document.getElementById('freeCount').textContent = total + ' free assets and counting';
+
+  // ── Bundle preview strip (paid bundle sample cards) ──
+  (function () {
+    const strip = document.getElementById('bundleStrip');
+    if (!strip) return;
+    strip.innerHTML = BUNDLE_SAMPLES.map(c => {
+      const src = '/coffers/assets/bundle/' + c.file + '.png';
+      return (
+        '<div class="bundle-card">' +
+          '<img src="' + esc(src) + '" alt="' + esc(c.name) + ' sample card from the bundle" loading="lazy" ' +
+            'onerror="this.parentNode.classList.add(\'ph\');this.outerHTML=\'<span>' + esc(c.name) + '</span>\'">' +
+        '</div>'
+      );
+    }).join('');
+  })();
+
+  // ── Wire outbound / placeholder links from the constants ──
+  document.getElementById('tipBtn').href    = KOFI_TIP_URL;
+  document.getElementById('bundleBtn').href  = (KOFI_BUNDLE_URL && KOFI_BUNDLE_URL !== '#') ? KOFI_BUNDLE_URL : KOFI_TIP_URL;
+  const guide = document.getElementById('proxyGuideLink');
+  if (PROXY_GUIDE_URL && PROXY_GUIDE_URL !== '#') guide.href = PROXY_GUIDE_URL;
+  else guide.remove(); // hide the cross-link until the guide exists
+
+  // ── Credit chip ──
+  document.getElementById('creditText').textContent = CREDIT_TEXT;
+  const toast = document.getElementById('toast');
+  let toastTimer;
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+  }
+  document.getElementById('creditChip').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(CREDIT_TEXT);
+      showToast('Credit copied');
+    } catch (e) {
+      showToast('Copy failed. Select and copy it manually.');
+    }
+    track('credit_copy', {});
+  });
+
+  // ── GA4 click delegation for every tracked link ──
+  document.addEventListener('click', e => {
+    const el = e.target.closest('[data-ga-event]');
+    if (!el) return;
+    const ev = el.dataset.gaEvent;
+    if (ev === 'asset_download') {
+      track('asset_download', { asset_id: el.dataset.gaAsset, asset_format: el.dataset.gaFormat });
+    } else if (ev === 'download_all') {
+      track('download_all', {});
+    } else if (ev === 'support_click') {
+      track('support_click', { item: el.dataset.gaItem });
+    }
+  });
+})();
+</script>
+</body>
+</html>
