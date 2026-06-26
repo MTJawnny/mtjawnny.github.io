@@ -49,8 +49,8 @@
   }
 
   /* ══ HEADER — mirrors Tablekeep splash-hero ══════════════ */
-  .splash-hero { padding: 0.75rem 0 0; }
-  .tk-header { text-align: center; padding: 0.75rem 1.5rem 0; }
+  .splash-hero { padding: 0.25rem 0 0; }
+  .tk-header { text-align: center; padding: 0 1.5rem; }
 
   .logo-wrap {
     display: flex;
@@ -97,7 +97,7 @@
   .splash-hero h1 {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 900;
-    font-size: clamp(2.4rem, 8vw, 3.6rem);
+    font-size: clamp(2.4rem, 14vw, 3.6rem);
     letter-spacing: 0.04em;
     color: var(--bronze);
     line-height: 1;
@@ -168,34 +168,6 @@
   .clear-btn:hover { color: var(--white); background: var(--bronze-glow); }
   .clear-btn svg { width: 16px; height: 16px; }
   .clear-btn[hidden] { display: none; }
-
-  /* Segmented tier control — one connected bar, equal widths (Tablekeep .seg) */
-  .seg {
-    display: flex;
-    width: 100%;
-    margin-top: 0.6rem;
-    border: 2px solid var(--bronze-dim);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .seg button {
-    flex: 1;
-    background: transparent;
-    border: none;
-    border-left: 1.5px solid var(--bronze-dim);
-    padding: 9px 0;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--white);
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-    white-space: nowrap;
-  }
-  .seg button:first-child { border-left: none; }
-  .seg button.sel { background: var(--bronze); color: var(--bg); }
 
   /* No-match panel — drops in under the controls (an invitation, not an error) */
   .suggest-panel {
@@ -304,6 +276,59 @@
     overflow: hidden; white-space: nowrap;
   }
 
+  /* ══ BOTTOM AREA — back-to-top + support buttons ══════════ */
+  .back-to-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: min(420px, calc(100% - 2.5rem));
+    margin: 1.75rem auto 0;
+    background: transparent;
+    border: 1.5px solid var(--bronze-dim);
+    border-radius: 12px;
+    padding: 14px 0;
+    color: var(--bronze);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .back-to-top:hover { background: var(--bronze-glow); border-color: var(--bronze); }
+  .back-to-top svg { width: 16px; height: 16px; }
+
+  footer { text-align: center; padding: 1rem 1.5rem 0.5rem; }
+  .footer-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+  .footer-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.5rem;
+    color: var(--bronze);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .footer-btn:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+  .footer-btn svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+
   /* ── Quality floor: visible keyboard focus ── */
   a:focus-visible, button:focus-visible, input:focus-visible {
     outline: 2px solid var(--bronze);
@@ -328,29 +353,27 @@
        name  : shown to screen readers + used by the search box
        file  : the card's page, linked as  /<file>
        image : tile art, served from /cardimages/
-       tier  : "simple"  → appears under the "Cards" filter
-               "complex" → appears under the "Hard Cards" filter
      (Image filename matches the page slug, e.g. saga.html → saga.jpg)
 ═════════════════════════════════════════════════════════════════════ -->
 <script>
-const CARDS = [ 
- { name: "Wheel of Misfortune", file: "wheel.html", image: "/cardimages/wheel.jpg", tier: "complex" },
- { name: "Teferi's Protection", file: "tef.html", image: "/cardimages/tef.jpg", tier: "complex" },
- { name: "Glacial Chasm", file: "chasm.html", image: "/cardimages/chasm.jpg", tier: "complex" },
- { name: "Chains of Mephistopheles", file: "chains.html", image: "/cardimages/chains.jpg", tier: "complex" },
- { name: "Prisoner's Dilemma", file: "pris.html", image: "/cardimages/pris.jpg", tier: "complex" },
- { name: "Animate Dead", file: "dead.html", image: "/cardimages/dead.jpg", tier: "complex" },
- { name: "Anvil of Bogardan", file: "anvil.html", image: "/cardimages/anvil.jpg", tier: "complex" },
- { name: "Bojuka Bog", file: "bog.html", image: "/cardimages/bog.jpg", tier: "complex" },
- { name: "Ragavan, Nimble Pilferer", file: "rag.html", image: "/cardimages/rag.jpg", tier: "complex" },
- { name: "Blood Moon", file: "moon.html", image: "/cardimages/moon.jpg", tier: "complex" },
- { name: "Trinisphere", file: "trin.html", image: "/cardimages/trin.jpg", tier: "complex" },
- { name: "Uba Mask", file: "uba.html", image: "/cardimages/uba.jpg", tier: "complex" }
-  // { name: "Card Name",   file: "slug.html", image: "/cardimages/slug.jpg", tier: "simple" },
+const CARDS = [
+ { name: "Wheel of Misfortune", file: "wheel.html", image: "/cardimages/wheel.jpg" },
+ { name: "Teferi's Protection", file: "tef.html", image: "/cardimages/tef.jpg" },
+ { name: "Glacial Chasm", file: "chasm.html", image: "/cardimages/chasm.jpg" },
+ { name: "Chains of Mephistopheles", file: "chains.html", image: "/cardimages/chains.jpg" },
+ { name: "Prisoner's Dilemma", file: "pris.html", image: "/cardimages/pris.jpg" },
+ { name: "Animate Dead", file: "dead.html", image: "/cardimages/dead.jpg" },
+ { name: "Anvil of Bogardan", file: "anvil.html", image: "/cardimages/anvil.jpg" },
+ { name: "Bojuka Bog", file: "bog.html", image: "/cardimages/bog.jpg" },
+ { name: "Ragavan, Nimble Pilferer", file: "rag.html", image: "/cardimages/rag.jpg" },
+ { name: "Blood Moon", file: "moon.html", image: "/cardimages/moon.jpg" },
+ { name: "Trinisphere", file: "trin.html", image: "/cardimages/trin.jpg" },
+ { name: "Uba Mask", file: "uba.html", image: "/cardimages/uba.jpg" }
+  // { name: "Card Name",   file: "slug.html", image: "/cardimages/slug.jpg" },
 ];
 
-// Card-submission tool. Swap the "#" for the real form link when it's ready.
-const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
+// Card-submission tool.
+const SUBMISSION_URL = "https://tally.so/r/b5AQB2";
 </script>
 <!-- ════════════════════════════════════════════════════════════════ -->
 
@@ -406,12 +429,6 @@ const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
       </button>
     </div>
 
-    <div class="seg" id="tierToggle" role="group" aria-label="Filter by card type">
-      <button type="button" data-tier="all" class="sel" aria-pressed="true">All</button>
-      <button type="button" data-tier="simple" aria-pressed="false">Cards</button>
-      <button type="button" data-tier="complex" aria-pressed="false">Hard Cards</button>
-    </div>
-
     <div class="suggest-panel" id="suggestPanel" hidden>
       <p>No cards match “<span class="q" id="noMatchQ"></span>”.</p>
       <a class="suggest-btn" id="suggestLink" href="#">
@@ -429,6 +446,27 @@ const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
     <p class="visually-hidden" id="status" role="status" aria-live="polite"></p>
   </main>
 
+  <button class="back-to-top" type="button" aria-label="Back to top"
+          onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+    Back to Top
+  </button>
+
+  <footer>
+    <div class="footer-buttons">
+      <a class="footer-btn" href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+        Tips Appreciated!
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+      </a>
+      <a class="footer-btn" href="https://instagram.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        MTJawnny
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+    </div>
+  </footer>
+
 </div>
 
 <script>
@@ -436,7 +474,6 @@ const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
   const grid        = document.getElementById('grid');
   const searchInput = document.getElementById('search');
   const clearBtn    = document.getElementById('clearBtn');
-  const toggle      = document.getElementById('tierToggle');
   const suggestPanel= document.getElementById('suggestPanel');
   const suggestLink = document.getElementById('suggestLink');
   const noMatchQ    = document.getElementById('noMatchQ');
@@ -444,8 +481,6 @@ const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
   const statusEl    = document.getElementById('status');
 
   suggestLink.href = SUBMISSION_URL;
-
-  let currentTier = 'all';
 
   // Small inline pip-ring for the missing-art fallback
   const PIP_SVG =
@@ -504,7 +539,6 @@ const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
 
     let list = CARDS.map((c, i) => ({ c, i, s: score(raw, c.name) }));
     if (q !== '') list = list.filter(o => o.s >= 0);
-    if (currentTier !== 'all') list = list.filter(o => o.c.tier === currentTier);
 
     list.sort((a, b) => q !== '' ? (b.s - a.s || a.i - b.i) : (a.i - b.i));
     return { list, q };
@@ -534,7 +568,7 @@ const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
     suggestPanel.hidden = !showSuggest;
     if (showSuggest) noMatchQ.textContent = q;
 
-    // Empty bucket with no active search (e.g. a tier with no cards yet).
+    // Empty grid with no active search (no cards yet).
     emptyNote.hidden = !(noResults && q === '');
 
     // A11y: announce the result count.
@@ -562,18 +596,6 @@ const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
       clearBtn.hidden = true;
       render();
     }
-  });
-
-  toggle.addEventListener('click', e => {
-    const btn = e.target.closest('button[data-tier]');
-    if (!btn) return;
-    currentTier = btn.dataset.tier;
-    toggle.querySelectorAll('button').forEach(b => {
-      const on = b === btn;
-      b.classList.toggle('sel', on);
-      b.setAttribute('aria-pressed', on ? 'true' : 'false');
-    });
-    render();
   });
 
   render();
