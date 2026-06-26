@@ -14,6 +14,16 @@
 <link rel="canonical" href="https://mtjawnny.com/tools">
 <title>Deck Tech — MTJawnny</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WKH3Y62H5H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-WKH3Y62H5H');
+</script>
+
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -38,336 +48,255 @@
   }
 
   /* ── HEADER (from header-pattern.md, mirrors index.html title position) ── */
-  .tk-header {
-    text-align: center;
-    padding: 0.75rem 1.5rem 0;
-  }
-
+  .tk-header { text-align: center; padding: 0.25rem 1.5rem 0; }
   .logo-wrap {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    margin-bottom: 1.6rem; /* clears the absolute HOME label + breathes before content */
+    display: flex; flex-direction: row; align-items: center; justify-content: center;
+    gap: 0.75rem; margin-bottom: 1.6rem;
   }
-
-  .logo-pip-ring {
-    width: 48px;
-    height: 48px;
-    flex-shrink: 0;
-  }
-
-  /* Both pip-rings are clickable home links */
+  .logo-pip-ring { width: 48px; height: 48px; flex-shrink: 0; }
   .logo-home {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    padding: 6px;
-    margin: -6px;
-    text-decoration: none;
-    transition: background 0.15s;
-    -webkit-tap-highlight-color: transparent;
+    position: relative; display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; padding: 6px; margin: -6px; text-decoration: none;
+    transition: background 0.15s; -webkit-tap-highlight-color: transparent;
   }
-  .logo-home:hover,
-  .logo-home:active { background: var(--bronze-glow); }
+  .logo-home:hover, .logo-home:active { background: var(--bronze-glow); }
   .logo-home .logo-pip-ring { display: block; }
-
-  /* "HOME" floats beneath each ring — absolute so it adds no row height */
   .logo-home-label {
-    position: absolute;
-    top: calc(100% - 5px);
-    left: calc(50% + 2px);
-    transform: translateX(-50%);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    line-height: 1;
-    pointer-events: none;
+    position: absolute; top: calc(100% - 5px); left: calc(50% + 2px); transform: translateX(-50%);
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim);
+    line-height: 1; pointer-events: none;
   }
-
   h1 {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 900;
-    font-size: clamp(2.4rem, 8vw, 3.6rem);
-    letter-spacing: 0.04em;
-    color: var(--bronze);
-    line-height: 1;
-    text-transform: uppercase;
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 900;
+    font-size: clamp(2.4rem, 8vw, 3.6rem); letter-spacing: 0.04em;
+    color: var(--bronze); line-height: 1; text-transform: uppercase;
   }
-
-  .tagline {
-    font-size: 0.95rem;
-    color: var(--text-dim);
-    margin-top: 0.1rem;
-    letter-spacing: 0.01em;
-  }
+  .tagline { font-size: 0.95rem; color: var(--text-dim); margin-top: 0.1rem; letter-spacing: 0.01em; }
 
   /* ── SECTION HEAD ── */
   .section-head {
-    max-width: 480px;
-    margin: 2.2rem auto 0;
-    padding: 0 1.25rem;
-    text-align: center;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 1.05rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--bronze);
+    max-width: 480px; margin: 2.2rem auto 0; padding: 0 1.25rem; text-align: center;
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1.05rem;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--bronze);
   }
-  .section-head::after {
-    content: '';
-    display: block;
-    width: 54px;
-    height: 1.5px;
-    margin: 0.45rem auto 0;
-    background: var(--bronze-dim);
+  .section-head::after { display: none; }
+
+  /* ── GUIDE FEATURE CARD (leads the page; editorial, not a tool tile) ── */
+  .guide-feature {
+    position: relative; display: flex; align-items: center; gap: 0.9rem;
+    width: calc(100% - 2.2rem); max-width: 640px; margin: 1.5rem auto 0; padding: 1.15rem 1.25rem;
+    background: linear-gradient(180deg, rgba(184,147,90,0.12), var(--surface) 72%);
+    border: 1px solid var(--bronze); border-left: 4px solid var(--bronze); border-right: 4px solid var(--bronze);
+    border-radius: var(--radius); text-decoration: none; overflow: hidden;
+    transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s;
+  }
+  .guide-feature:hover { transform: translateY(-2px); box-shadow: 0 12px 26px -16px rgba(0,0,0,0.95); }
+  .gf-icon { color: var(--bronze); flex-shrink: 0; }
+  .gf-icon svg { width: 34px; height: 34px; display: block; }
+  .gf-text { display: flex; flex-direction: column; gap: 0.18rem; flex: 1; min-width: 0; }
+  .gf-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.62rem;
+    letter-spacing: 0.18em; text-transform: uppercase; color: #e3b15c;
+  }
+  .gf-title {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1.18rem;
+    letter-spacing: 0.02em; text-transform: uppercase; color: var(--bronze); line-height: 1.05;
+  }
+  .gf-desc { font-size: 0.78rem; color: var(--text-dim); line-height: 1.35; }
+  .gf-arrow { color: var(--bronze); flex-shrink: 0; display: flex; }
+  .gf-arrow svg { width: 22px; height: 22px; }
+
+  /* ── TOOL ZONES (Browser | Desktop side by side on desktop; cards inside) ── */
+  .tool-columns {
+    position: relative;
+    display: grid; grid-template-columns: 1fr; gap: 1rem;
+    max-width: 520px; margin: 2rem auto 0; padding: 0 1.1rem; align-items: start;
+  }
+  /* zone divider (only shown when zones sit side by side, >=980px) */
+  .tool-columns::before, .tool-columns::after { content: ''; display: none; }
+  .tool-columns::after {
+    position: absolute; top: 0.5rem; bottom: 0.5rem; left: 50%; width: 1px; transform: translateX(-50%);
+    background: linear-gradient(to bottom, transparent, rgba(184,147,90,0.38) 14%, rgba(184,147,90,0.38) 86%, transparent);
+  }
+  .tool-columns::before {
+    position: absolute; top: 50%; left: 50%; width: 7px; height: 7px; z-index: 1;
+    transform: translate(-50%,-50%) rotate(45deg);
+    background: var(--bg); border: 1px solid var(--bronze-dim); border-radius: 1px;
+  }
+  .tool-col {
+    display: flex; flex-direction: column; gap: 1rem;
+    padding: 0;
+  }
+  .tool-col > .section-head {
+    max-width: none; margin: 0; padding: 0; font-size: 1.3rem; letter-spacing: 0.05em; line-height: 1.05;
+  }
+  .card-grid {
+    display: grid; grid-template-columns: 1fr; gap: 1rem; align-items: start; justify-items: center;
   }
 
-  /* ── NAV GRID ── */
-  .nav-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.85rem;
-    max-width: 480px;
-    margin: 0.85rem auto 0;
-    padding: 0 1.25rem;
-  }
+  /* ─────────────  TOOL CARD  ─────────────
+     One knob per card: --ic (tool colour). Interior scales to card width
+     via container queries, so the spacing holds at any size. */
+  .tcard-slot { container-type: inline-size; width: 100%; max-width: 360px; }
 
-  .nav-tile {
-    background: var(--surface);
-    border: 1px solid var(--bronze-dim);
-    border-radius: var(--radius);
-    padding: 1.4rem 1rem 1.2rem;
-    text-align: center;
-    text-decoration: none;
+  .tcard {
+    --ic:     #57c07a;
+    --label:  #ead7a4;                 /* warm cream-gold, ALL text */
+    --ink:    #110c19;                 /* dark interior */
+    --line:   color-mix(in srgb, var(--ic) 82%, transparent);
+    --line-q: color-mix(in srgb, var(--ic) 34%, transparent);
+
+    font-size: clamp(10px, 4.4cqw, 15px);   /* scales to the slot (card) width */
+
+    position: relative;
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 63 / 88;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    transition: border-color 0.2s, background 0.2s, transform 0.15s;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
+    gap: 0.6em;
+    padding: 0.95em 0.95em 0.8em;
+    background: radial-gradient(120% 60% at 50% 30%, color-mix(in srgb, var(--ic) 7%, var(--ink)), var(--ink) 70%);
+    border: 2px solid var(--ic);
+    border-radius: 1.55em;
+    text-decoration: none;
+    box-shadow:
+      0 0 1.5em -0.4em color-mix(in srgb, var(--ic) 55%, transparent),
+      inset 0 0 1.1em -0.6em color-mix(in srgb, var(--ic) 60%, transparent),
+      0 1em 2.4em -1.1em rgba(0,0,0,0.95);
+    transition: transform 0.18s ease, box-shadow 0.22s ease;
   }
 
-  .nav-tile::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--bronze-glow);
-    opacity: 0;
-    transition: opacity 0.2s;
-    border-radius: var(--radius);
+  .tc-rule { height: 1.5px; background: var(--line); border-radius: 2px; opacity: 0.9; }
+
+  /* title band */
+  .tc-title { display: flex; align-items: center; gap: 0.62em; padding: 0.05em 0.15em 0; }
+  .tc-brand { width: 1.85em; height: 1.85em; color: var(--ic); flex-shrink: 0; }
+  .tc-name {
+    flex: 1; min-width: 0;
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 900;
+    font-size: 1.6em; letter-spacing: 0.01em; line-height: 0.95;
+    text-transform: uppercase; color: var(--label);
+  }
+  .tc-cost { width: 2.1em; height: 2.1em; flex-shrink: 0; color: var(--bronze); }
+
+  /* art window */
+  .tc-art {
+    position: relative; aspect-ratio: 7 / 5;
+    border: 1.5px solid var(--line); border-radius: 0.85em; overflow: hidden;
+    background: radial-gradient(60% 55% at 50% 48%, color-mix(in srgb, var(--ic) 12%, var(--ink)), var(--ink) 80%);
+  }
+  .tc-shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; z-index: 3; }
+  .tc-shot.is-missing { display: none; }
+  .tc-bracket { position: absolute; width: 1.15em; height: 1.15em; border: 2px solid var(--line); z-index: 2; }
+  .tc-bracket.tl { top: .85em; left: .85em;   border-right: none; border-bottom: none; border-radius: 4px 0 0 0; }
+  .tc-bracket.tr { top: .85em; right: .85em;  border-left: none;  border-bottom: none; border-radius: 0 4px 0 0; }
+  .tc-bracket.bl { bottom: .85em; left: .85em; border-right: none; border-top: none;   border-radius: 0 0 0 4px; }
+  .tc-bracket.br { bottom: .85em; right: .85em;border-left: none;  border-top: none;    border-radius: 0 0 4px 0; }
+  .tc-glyph { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; justify-content: center; }
+  .tc-glyph svg {
+    width: 54%; height: 54%; color: var(--ic);
+    filter: drop-shadow(0 0 0.5em color-mix(in srgb, var(--ic) 55%, transparent));
   }
 
-  .nav-tile:hover {
-    border-color: var(--bronze);
-    transform: translateY(-2px);
+  /* type band */
+  .tc-type { display: flex; align-items: center; gap: 0.6em; padding: 0.05em 0.15em; }
+  .tc-type-ic { width: 1.45em; height: 1.45em; color: var(--ic); flex-shrink: 0; }
+  .tc-type-txt {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1.02em;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--label);
   }
 
-  .nav-tile:hover::after {
-    opacity: 1;
+  /* text box */
+  .tc-text {
+    flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center;
+    border: 1.5px solid var(--line-q); border-radius: 0.85em; padding: 0.6em 0.8em;
+    background: color-mix(in srgb, var(--ic) 4%, var(--ink));
+  }
+  .tc-desc { font-family: 'Barlow', sans-serif; font-size: 1.05em; line-height: 1.3; text-align: center; color: var(--label); }
+
+  /* collector line */
+  .tc-coll {
+    display: flex; align-items: center; justify-content: space-between; padding: 0 0.2em;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.78em; letter-spacing: 0.05em;
+    color: color-mix(in srgb, var(--label) 70%, transparent);
   }
 
-  .nav-tile .tile-icon {
-    color: var(--bronze);
-    line-height: 1;
+  .tcard:hover {
+    transform: translateY(-5px);
+    box-shadow:
+      0 0 2em -0.3em color-mix(in srgb, var(--ic) 70%, transparent),
+      inset 0 0 1.2em -0.6em color-mix(in srgb, var(--ic) 65%, transparent),
+      0 1.4em 2.8em -1.1em rgba(0,0,0,0.95);
   }
 
-  .nav-tile .tile-icon img {
-    height: 38px;
-    width: auto;
-    display: block;
-  }
-
-  /* Inline pip-ring fallback when a tile has no art yet */
-  .nav-tile .tile-icon .fb-pip {
-    height: 38px;
-    width: auto;
-    display: block;
-  }
-
-  .nav-tile .tile-label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 1.1rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--bronze);
-  }
-
-  .nav-tile .tile-desc {
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    line-height: 1.35;
-  }
-
-  /* ── TYPE BADGE ── */
-  .tile-badge {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    z-index: 2;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    line-height: 1;
-    padding: 0.22rem 0.42rem;
-    border-radius: 999px;
-    border: 1px solid var(--bronze-dim);
-    background: rgba(10,8,18,0.35);
-  }
-  .badge-web  { color: #6aaee0; }
-  .badge-dl   { color: #5aab6e; }
-  .badge-soon { color: var(--text-dim); }
-
-  /* ── COMING-SOON TILE ── */
-  .nav-tile.is-soon {
-    opacity: 0.5;
-    cursor: default;
-  }
-  .nav-tile.is-soon:hover {
-    border-color: var(--bronze-dim);
+  /* coming-soon card */
+  .tcard.is-soon { opacity: 0.88; cursor: default; border-style: dashed; }
+  .tcard.is-soon:hover {
     transform: none;
-  }
-  .nav-tile.is-soon::after,
-  .nav-tile.is-soon:hover::after {
-    opacity: 0;
+    box-shadow:
+      0 0 1.5em -0.4em color-mix(in srgb, var(--ic) 55%, transparent),
+      inset 0 0 1.1em -0.6em color-mix(in srgb, var(--ic) 60%, transparent),
+      0 1em 2.4em -1.1em rgba(0,0,0,0.95);
   }
 
-  .btn-icon {
-    width: 15px;
-    height: 15px;
-    flex-shrink: 0;
-    transform: translateY(1.5px);
-  }
+  .btn-icon { width: 15px; height: 15px; flex-shrink: 0; transform: translateY(1.5px); }
 
   /* ── DISCORD ── */
-  .discord-section {
-    max-width: 440px;
-    margin: 0.85rem auto 0;
-    padding: 0 1.25rem;
-  }
-
-  .discord-btn {
-    flex-direction: column;
-    gap: 0.5rem;
-    width: 213px;
-    max-width: 100%;
-    padding: 1rem;
-  }
-
-  .discord-line2 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-  }
-
+  .discord-section { max-width: 440px; margin: 1.5rem auto 0; padding: 0 1.25rem; }
+  .discord-btn { flex-direction: column; gap: 0.5rem; width: 213px; max-width: 100%; padding: 1rem; }
+  .discord-line2 { display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
   .big-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    line-height: 1;
-    background: var(--surface);
-    border: 1px solid var(--bronze-dim);
-    border-radius: var(--radius);
-    padding: 0.75rem 1rem;
-    max-width: 88%;
-    margin-left: auto;
-    margin-right: auto;
-    color: var(--bronze);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 0.9rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: background 0.2s, border-color 0.2s;
-    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem; line-height: 1;
+    background: var(--surface); border: 1px solid var(--bronze-dim); border-radius: var(--radius);
+    padding: 0.75rem 1rem; max-width: 88%; margin-left: auto; margin-right: auto; color: var(--bronze);
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.9rem;
+    letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none;
+    transition: background 0.2s, border-color 0.2s; cursor: pointer;
   }
-
-  .big-btn:hover {
-    background: var(--bronze-glow);
-    border-color: var(--bronze);
-  }
+  .big-btn:hover { background: var(--bronze-glow); border-color: var(--bronze); }
 
   /* ── FOOTER ── */
-  footer {
-    text-align: center;
-    padding: 0.85rem 1.5rem 1.5rem;
-  }
-
+  footer { text-align: center; padding: 2rem 1.5rem 1.5rem; }
   .footer-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.85rem;
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 0 1.25rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;
+    max-width: 400px; margin: 0 auto; padding: 0 1.25rem;
   }
-
   .footer-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    white-space: nowrap;
-    background: var(--surface);
-    border: 1px solid var(--bronze-dim);
-    border-radius: var(--radius);
-    padding: 0.6rem 0.5rem;
-    color: var(--bronze);
-    font-family: 'Barlow', sans-serif;
-    font-weight: 600;
-    font-size: 0.8rem;
-    text-decoration: none;
-    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 0.4rem; white-space: nowrap;
+    background: var(--surface); border: 1px solid var(--bronze-dim); border-radius: var(--radius);
+    padding: 0.6rem 0.5rem; color: var(--bronze); font-family: 'Barlow', sans-serif; font-weight: 600;
+    font-size: 0.8rem; text-decoration: none; transition: border-color 0.2s, color 0.2s, background 0.2s;
   }
-
-  .footer-btn:hover {
-    border-color: var(--bronze);
-    color: var(--bronze);
-    background: var(--bronze-glow);
-  }
-
-  .footer-btn svg {
-    width: 16px;
-    height: 16px;
-    fill: currentColor;
-    flex-shrink: 0;
-  }
+  .footer-btn:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+  .footer-btn svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
 
   /* ── A11Y ── */
-  a:focus-visible,
-  .nav-tile:focus-visible {
-    outline: 2px solid var(--bronze);
-    outline-offset: 2px;
-  }
+  a:focus-visible, .tcard:focus-visible { outline: 2px solid var(--bronze); outline-offset: 2px; }
 
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; }
-    .nav-tile:hover { transform: none; }
+    .tcard:hover { transform: none; }
   }
 
-  /* ── DESKTOP ── */
-  @media (min-width: 640px) {
-    .tk-header { padding: 2rem 2rem 0; }
+  /* ── RESPONSIVE (desktop-first design; degrades cleanly) ── */
+  /* cards go 2-up once there's room */
+  @media (min-width: 560px) {
+    .card-grid { grid-template-columns: 1fr 1fr; }
+    .tcard-slot { max-width: none; }
+    .tool-columns { max-width: 720px; }
+  }
+  @media (min-width: 760px) {
+    .tk-header { padding: 0.25rem 2rem 0; }
     .section-head { max-width: 560px; font-size: 1.15rem; }
-    .nav-grid { max-width: 560px; gap: 1rem; }
-    .nav-tile { padding: 1.75rem 1.25rem 1.5rem; }
-    .nav-tile .tile-label { font-size: 1.2rem; }
-    .nav-tile .tile-desc { font-size: 0.8rem; }
+  }
+  /* zones side by side only when 4 cards across still read at a good size */
+  @media (min-width: 980px) {
+    .tool-columns { grid-template-columns: 1fr 1fr; max-width: 1140px; gap: 2.2rem; padding: 0 1.5rem; }
+    .tool-columns::before, .tool-columns::after { display: block; }
+    .tool-col { gap: 1.1rem; }
+    .tool-col > .section-head { font-size: 1.5rem; }
     .discord-btn { width: 252px; }
     .discord-section { max-width: 510px; }
     .footer-buttons { max-width: 380px; gap: 1rem; }
@@ -414,60 +343,221 @@
 
   <main>
 
-    <!-- BROWSER TOOLS -->
-    <h2 class="section-head">Browser Tools</h2>
-    <nav class="nav-grid" aria-label="Browser tools">
-      <a class="nav-tile" href="/token-grabber.html">
-        <span class="tile-badge badge-web">Web</span>
-        <span class="tile-icon"><img src="/icons/tokens.png" alt=""></span>
-        <span class="tile-label">Token Grabber</span>
-        <span class="tile-desc">Pull every token your deck makes, ready to print.</span>
-      </a>
-      <a class="nav-tile" href="/tag-grabber.html">
-        <span class="tile-badge badge-web">Web</span>
-        <span class="tile-icon"><img src="/icons/tags.png" alt=""></span>
-        <span class="tile-label">Scryfall Tag Grabber</span>
-        <span class="tile-desc">Export Scryfall tags for a card or query.</span>
-      </a>
-    </nav>
-
-    <!-- DESKTOP APPS -->
-    <h2 class="section-head">Desktop Apps</h2>
-    <nav class="nav-grid" aria-label="Desktop apps">
-      <a class="nav-tile" href="https://github.com/USER/REPO/releases/latest" target="_blank" rel="noopener">
-        <span class="tile-badge badge-dl">Download</span>
-        <span class="tile-icon"><img src="/icons/proxy.png" alt=""></span>
-        <span class="tile-label">TCG Proxy Page Builder</span>
-        <span class="tile-desc">Lay out print-ready proxy pages. Windows desktop app.</span>
-      </a>
-      <span class="nav-tile is-soon" aria-disabled="true">
-        <span class="tile-badge badge-soon">Soon</span>
-        <span class="tile-icon">
-          <svg class="fb-pip" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
-            <circle cx="24" cy="9"  r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
-            <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
-            <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
-            <circle cx="14" cy="36"  r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
-            <circle cx="34" cy="36"  r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
-          </svg>
-        </span>
-        <span class="tile-label">More Tools</span>
-        <span class="tile-desc">Coming soon.</span>
+    <!-- FEATURED GUIDE (leads the page) -->
+    <a class="guide-feature" href="/proxy-gear-guide.html">
+      <span class="gf-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 6.5C10.5 5.4 8 5 4 5v13c4 0 6.5.4 8 1.5 1.5-1.1 4-1.5 8-1.5V5c-4 0-6.5.4-8 1.5z"/>
+          <line x1="12" y1="6.5" x2="12" y2="19.5"/>
+        </svg>
       </span>
-    </nav>
+      <span class="gf-text">
+        <span class="gf-eyebrow">Proxy Gear Guide</span>
+        <span class="gf-title">Best Printer &amp; Paper for MTG Proxies</span>
+        <span class="gf-desc">What actually works for printing proxies, what doesn't, and why.</span>
+      </span>
+      <span class="gf-arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/>
+        </svg>
+      </span>
+    </a>
 
-    <!-- DISCORD -->
-    <section class="discord-section" aria-label="Discord">
-      <a class="big-btn discord-btn" href="https://discord.gg/jjJ5Zfn9qM" target="_blank" rel="noopener">
-        <span>Interested In Proxying?</span>
-        <span class="discord-line2">
-          <svg class="btn-icon" viewBox="0 0 24 24" style="fill:currentColor" stroke="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-          Join The Discord!
-          <svg class="btn-icon" viewBox="0 0 24 24" style="fill:currentColor" stroke="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-        </span>
-      </a>
-    </section>
+    <!-- TOOLS: Browser (left) | Desktop (right) -->
+    <div class="tool-columns">
+
+      <section class="tool-col" aria-label="Browser tools">
+        <h2 class="section-head">Browser Tools</h2>
+        <div class="card-grid">
+
+          <!-- Token Grabber -->
+          <div class="tcard-slot">
+          <a class="tcard" href="/token-grabber.html" style="--ic:#5fb0ea">
+            <div class="tc-title">
+              <svg class="tc-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="7" width="11" height="14" rx="1.6"/>
+                <rect x="10" y="3" width="11" height="14" rx="1.6" fill="#110c19"/>
+              </svg>
+              <span class="tc-name">Token Grabber</span>
+              <svg class="tc-cost" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><ellipse cx="12" cy="12" rx="5" ry="10"/>
+              </svg>
+            </div>
+            <div class="tc-rule"></div>
+            <div class="tc-art">
+              <img class="tc-shot is-missing" src="/toolshots/token-grabber.png" alt="" onerror="this.classList.add('is-missing')">
+              <span class="tc-bracket tl"></span><span class="tc-bracket tr"></span>
+              <span class="tc-bracket bl"></span><span class="tc-bracket br"></span>
+              <span class="tc-glyph">
+                <svg viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="23" y="17" width="26" height="38" rx="3.5" fill="#110c19" transform="rotate(-14 36 55)"/>
+                  <rect x="23" y="15" width="26" height="38" rx="3.5" fill="#110c19"/>
+                  <rect x="23" y="17" width="26" height="38" rx="3.5" fill="#110c19" transform="rotate(14 36 55)"/>
+                  <path d="M36 28l1.8 3.6 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4-2.9-2.8 4-.6z" stroke-width="1.8"/>
+                </svg>
+              </span>
+            </div>
+            <div class="tc-rule"></div>
+            <div class="tc-type">
+              <svg class="tc-type-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/>
+                <circle cx="6" cy="7" r="0.7" fill="currentColor" stroke="none"/><circle cx="8.4" cy="7" r="0.7" fill="currentColor" stroke="none"/>
+              </svg>
+              <span class="tc-type-txt">Token Finder</span>
+            </div>
+            <div class="tc-rule"></div>
+            <div class="tc-text"><span class="tc-desc">Pull every token your deck makes, ready to print.</span></div>
+            <div class="tc-coll"><span>Free</span><span>MTJ &middot; 001</span></div>
+          </a>
+          </div>
+
+          <!-- Scryfall Tag Grabber -->
+          <div class="tcard-slot">
+          <a class="tcard" href="/tag-grabber.html" style="--ic:#5fcfe0">
+            <div class="tc-title">
+              <svg class="tc-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                <circle cx="7" cy="7" r="1.2"/>
+              </svg>
+              <span class="tc-name">Tag Grabber</span>
+              <svg class="tc-cost" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><ellipse cx="12" cy="12" rx="5" ry="10"/>
+              </svg>
+            </div>
+            <div class="tc-rule"></div>
+            <div class="tc-art">
+              <img class="tc-shot is-missing" src="/toolshots/tag-grabber.png" alt="" onerror="this.classList.add('is-missing')">
+              <span class="tc-bracket tl"></span><span class="tc-bracket tr"></span>
+              <span class="tc-bracket bl"></span><span class="tc-bracket br"></span>
+              <span class="tc-glyph">
+                <svg viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M40 14H18a4 4 0 0 0-4 4v22l26 26a4 4 0 0 0 5.6 0L66 45.6a4 4 0 0 0 0-5.6z" fill="#110c19"/>
+                  <circle cx="26" cy="26" r="4"/>
+                  <path d="M34 40l8 8M40 36l8 8" stroke-width="2"/>
+                </svg>
+              </span>
+            </div>
+            <div class="tc-rule"></div>
+            <div class="tc-type">
+              <svg class="tc-type-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/>
+                <circle cx="6" cy="7" r="0.7" fill="currentColor" stroke="none"/><circle cx="8.4" cy="7" r="0.7" fill="currentColor" stroke="none"/>
+              </svg>
+              <span class="tc-type-txt">Tag Export</span>
+            </div>
+            <div class="tc-rule"></div>
+            <div class="tc-text"><span class="tc-desc">Export Scryfall tags for a card or query.</span></div>
+            <div class="tc-coll"><span>Free</span><span>MTJ &middot; 002</span></div>
+          </a>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="tool-col" aria-label="Desktop apps">
+        <h2 class="section-head">Desktop Apps</h2>
+        <div class="card-grid">
+
+          <!-- TCG Proxy Page Builder -->
+          <div class="tcard-slot">
+          <a class="tcard" href="https://github.com/USER/REPO/releases/latest" target="_blank" rel="noopener" style="--ic:#e76d6d">
+            <div class="tc-title">
+              <svg class="tc-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 6 2 18 2 18 9"/>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                <rect x="6" y="14" width="12" height="8" rx="1"/>
+                <path d="M8.5 17.5h7M8.5 19.8h5"/>
+              </svg>
+              <span class="tc-name">Proxy Page Builder</span>
+              <svg class="tc-cost" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><path d="M12 7v8M8.5 11.5 12 15l3.5-3.5"/>
+              </svg>
+            </div>
+            <div class="tc-rule"></div>
+            <div class="tc-art">
+              <img class="tc-shot is-missing" src="/toolshots/proxy-builder.png" alt="" onerror="this.classList.add('is-missing')">
+              <span class="tc-bracket tl"></span><span class="tc-bracket tr"></span>
+              <span class="tc-bracket bl"></span><span class="tc-bracket br"></span>
+              <span class="tc-glyph">
+                <svg viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 8H50V52L40 64H14Z"/>
+                  <path d="M50 52H40V64" stroke-width="2"/>
+                  <path d="M32 11V61" stroke-width="1.6" stroke-dasharray="3 3"/>
+                  <path d="M12 36H52" stroke-width="1.6" stroke-dasharray="3 3"/>
+                  <g stroke-width="1.7">
+                    <rect x="18" y="14" width="11" height="15" rx="1.6"/>
+                    <rect x="35" y="14" width="11" height="15" rx="1.6"/>
+                    <rect x="18" y="40" width="11" height="15" rx="1.6"/>
+                    <rect x="35" y="40" width="11" height="15" rx="1.6"/>
+                  </g>
+                  <g stroke-width="1.3">
+                    <path d="M20 22l1.8-2.2 1.5 1.8 1.6-2 1.5 2.4M20 25.5h5"/>
+                    <path d="M37 22l1.8-2.2 1.5 1.8 1.6-2 1.5 2.4M37 25.5h5"/>
+                    <path d="M20 48l1.8-2.2 1.5 1.8 1.6-2 1.5 2.4M20 51.5h5"/>
+                    <path d="M37 48l1.8-2.2 1.5 1.8 1.6-2 1.5 2.4M37 51.5h5"/>
+                  </g>
+                </svg>
+              </span>
+            </div>
+            <div class="tc-rule"></div>
+            <div class="tc-type">
+              <svg class="tc-type-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4.5" width="18" height="12" rx="1.6"/><path d="M12 16.5V20M8 20h8"/>
+              </svg>
+              <span class="tc-type-txt">Proxy Layout</span>
+            </div>
+            <div class="tc-rule"></div>
+            <div class="tc-text"><span class="tc-desc">Lay out print-ready proxy pages. Windows desktop app.</span></div>
+            <div class="tc-coll"><span>Open source</span><span>MTJ &middot; 003</span></div>
+          </a>
+          </div>
+
+          <!-- More Tools (coming soon) -->
+          <div class="tcard-slot">
+          <span class="tcard is-soon" aria-disabled="true" style="--ic:#e3a14a">
+            <div class="tc-title">
+              <svg class="tc-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+              <span class="tc-name">More Tools</span>
+              <svg class="tc-cost" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><path d="M12 7.5v5l3.2 1.9"/>
+              </svg>
+            </div>
+            <div class="tc-rule"></div>
+            <div class="tc-art">
+              <span class="tc-bracket tl"></span><span class="tc-bracket tr"></span>
+              <span class="tc-bracket bl"></span><span class="tc-bracket br"></span>
+              <span class="tc-glyph">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="24" cy="24" r="15"/>
+                  <circle cx="24" cy="9" r="4" fill="currentColor" stroke="none"/>
+                  <circle cx="10.5" cy="19" r="4" fill="currentColor" stroke="none"/>
+                  <circle cx="37.5" cy="19" r="4" fill="currentColor" stroke="none"/>
+                  <circle cx="14" cy="36" r="4" fill="currentColor" stroke="none"/>
+                  <circle cx="34" cy="36" r="4" fill="currentColor" stroke="none"/>
+                </svg>
+              </span>
+            </div>
+            <div class="tc-rule"></div>
+            <div class="tc-type">
+              <svg class="tc-type-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/>
+                <circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/>
+                <circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none"/>
+              </svg>
+              <span class="tc-type-txt">Coming Soon</span>
+            </div>
+            <div class="tc-rule"></div>
+            <div class="tc-text"><span class="tc-desc">New tools are on the way.</span></div>
+            <div class="tc-coll"><span>In development</span><span>MTJ &middot; 004</span></div>
+          </span>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
 
   </main>
 
@@ -485,6 +575,18 @@
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
       </a>
     </div>
+    <!-- DISCORD (below support buttons) -->
+    <section class="discord-section" aria-label="Discord">
+      <a class="big-btn discord-btn" href="https://discord.gg/jjJ5Zfn9qM" target="_blank" rel="noopener">
+        <span>Interested In Proxying?</span>
+        <span class="discord-line2">
+          <svg class="btn-icon" viewBox="0 0 24 24" style="fill:currentColor" stroke="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+          Join The Discord!
+          <svg class="btn-icon" viewBox="0 0 24 24" style="fill:currentColor" stroke="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+        </span>
+      </a>
+    </section>
+
   </footer>
 
 </body>
