@@ -145,13 +145,15 @@
 
   .section-head h2 {
     font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800;
-    font-size: clamp(1.5rem, 7vw, 2rem);
-    text-align: center;
-    letter-spacing: 0.02em;
-    color: var(--white);
-    line-height: 1.05;
+    font-weight: 900;
+    /* "STACK IT UP" fits the pip-ring row at the homepage's native size;
+       nowrap keeps the two spaces from wrapping the title to a second line. */
+    font-size: clamp(2.4rem, 14vw, 3.6rem);
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    line-height: 1;
     text-transform: uppercase;
+    white-space: nowrap;
   }
   .section-head .sub {
     color: var(--text-dim);
