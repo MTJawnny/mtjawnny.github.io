@@ -50,10 +50,11 @@
   /* ── HEADER (from header-pattern.md, mirrors index.html title position) ── */
   .tk-header { text-align: center; padding: 0.25rem 1.5rem 0; }
   .logo-wrap {
-    display: flex; flex-direction: row; align-items: center; justify-content: center;
-    gap: 0.75rem; margin-bottom: 1.6rem;
+    display: grid; grid-template-columns: 48px minmax(0, max-content) 48px; align-items: center; justify-content: center;
+    gap: 0.75rem; margin: 0 auto 1.6rem; max-width: min(100%, 620px);
   }
   .logo-pip-ring { width: 48px; height: 48px; flex-shrink: 0; }
+  .logo-spacer { width: 48px; height: 48px; flex-shrink: 0; display: block; }
   .logo-home {
     position: relative; display: flex; align-items: center; justify-content: center;
     border-radius: 50%; padding: 6px; margin: -6px; text-decoration: none;
@@ -72,7 +73,7 @@
     font-weight: 900;
     /* "STACK IT UP" fits the pip-ring row at the homepage's native size;
        nowrap keeps the two spaces from wrapping the title to a second line. */
-    font-size: clamp(2.4rem, 14vw, 3.6rem);
+    font-size: clamp(2.05rem, 11vw, 3.6rem);
     letter-spacing: 0.04em;
     color: var(--bronze);
     line-height: 1;
@@ -91,28 +92,36 @@
 
   /* ── GUIDE FEATURE CARD (leads the page; editorial, not a tool tile) ── */
   .guide-feature {
-    position: relative; display: flex; align-items: center; gap: 0.9rem;
-    width: calc(100% - 2.2rem); max-width: 640px; margin: 1.5rem auto 0; padding: 1.15rem 1.25rem;
-    background: linear-gradient(180deg, rgba(184,147,90,0.12), var(--surface) 72%);
-    border: 1px solid var(--bronze); border-left: 4px solid var(--bronze); border-right: 4px solid var(--bronze);
-    border-radius: var(--radius); text-decoration: none; overflow: hidden;
-    transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s;
+    position: relative; display: flex; align-items: center; gap: 0.75rem;
+    width: calc(100% - 2.2rem); max-width: 620px; margin: 1.35rem auto 0; padding: 0.85rem 1rem;
+    background:
+      linear-gradient(90deg, rgba(184,147,90,0.13), rgba(38,29,51,0.78) 48%, rgba(38,29,51,0.54)),
+      var(--surface);
+    border: 1px solid rgba(184,147,90,0.42); border-left: 3px solid var(--bronze);
+    border-radius: calc(var(--radius) + 2px); text-decoration: none; overflow: hidden;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.03), 0 10px 24px -22px rgba(0,0,0,0.95);
+    transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s, background 0.2s;
   }
-  .guide-feature:hover { transform: translateY(-2px); box-shadow: 0 12px 26px -16px rgba(0,0,0,0.95); }
-  .gf-icon { color: var(--bronze); flex-shrink: 0; }
-  .gf-icon svg { width: 34px; height: 34px; display: block; }
+  .guide-feature:hover {
+    transform: translateY(-2px);
+    border-color: rgba(184,147,90,0.72);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 12px 26px -18px rgba(0,0,0,0.95);
+  }
+  .gf-icon { color: var(--bronze); flex-shrink: 0; opacity: 0.92; }
+  .gf-icon svg { width: 28px; height: 28px; display: block; }
   .gf-text { display: flex; flex-direction: column; gap: 0.18rem; flex: 1; min-width: 0; }
   .gf-eyebrow {
     font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.62rem;
     letter-spacing: 0.18em; text-transform: uppercase; color: #e3b15c;
   }
   .gf-title {
-    font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1.18rem;
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1.05rem;
     letter-spacing: 0.02em; text-transform: uppercase; color: var(--bronze); line-height: 1.05;
   }
-  .gf-desc { font-size: 0.78rem; color: var(--text-dim); line-height: 1.35; }
+  .gf-desc { font-size: 0.76rem; color: var(--text-dim); line-height: 1.35; }
   .gf-arrow { color: var(--bronze); flex-shrink: 0; display: flex; }
-  .gf-arrow svg { width: 22px; height: 22px; }
+  .gf-arrow { opacity: 0.75; }
+  .gf-arrow svg { width: 20px; height: 20px; }
 
   /* ── TOOL ZONES (Browser | Desktop side by side on desktop; cards inside) ── */
   .tool-columns {
@@ -164,8 +173,10 @@
     flex-direction: column;
     gap: 0.6em;
     padding: 0.95em 0.95em 0.8em;
-    background: radial-gradient(120% 60% at 50% 30%, color-mix(in srgb, var(--ic) 7%, var(--ink)), var(--ink) 70%);
-    border: 2px solid var(--ic);
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--ic) 8%, var(--ink)), var(--ink) 58%, #0d0914),
+      var(--ink);
+    border: 1.5px solid color-mix(in srgb, var(--ic) 72%, var(--bronze) 28%);
     border-radius: 1.55em;
     text-decoration: none;
     box-shadow:
@@ -174,16 +185,31 @@
       0 1em 2.4em -1.1em rgba(0,0,0,0.95);
     transition: transform 0.18s ease, box-shadow 0.22s ease;
   }
+  .tcard::before {
+    content: '';
+    position: absolute;
+    inset: 0.42em;
+    border: 1px solid rgba(234,215,164,0.08);
+    border-radius: 1.16em;
+    pointer-events: none;
+  }
+  .tcard > * { position: relative; z-index: 1; }
 
   .tc-rule { height: 1.5px; background: var(--line); border-radius: 2px; opacity: 0.9; }
 
   /* title band */
-  .tc-title { display: flex; align-items: center; gap: 0.62em; padding: 0.05em 0.15em 0; }
+  .tc-title {
+    display: flex; align-items: center; gap: 0.62em; padding: 0.26em 0.36em 0.22em;
+    background: linear-gradient(180deg, rgba(234,215,164,0.075), rgba(234,215,164,0.025));
+    border: 1px solid rgba(234,215,164,0.10);
+    border-radius: 0.58em;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+  }
   .tc-brand { width: 1.85em; height: 1.85em; color: var(--ic); flex-shrink: 0; }
   .tc-name {
     flex: 1; min-width: 0;
     font-family: 'Barlow Condensed', sans-serif; font-weight: 900;
-    font-size: 1.6em; letter-spacing: 0.01em; line-height: 0.95;
+    font-size: clamp(1.25em, 8cqw, 1.6em); letter-spacing: 0.01em; line-height: 0.95;
     text-transform: uppercase; color: var(--label);
   }
   .tc-cost { width: 2.1em; height: 2.1em; flex-shrink: 0; color: var(--bronze); }
@@ -192,7 +218,10 @@
   .tc-art {
     position: relative; aspect-ratio: 7 / 5;
     border: 1.5px solid var(--line); border-radius: 0.85em; overflow: hidden;
-    background: radial-gradient(60% 55% at 50% 48%, color-mix(in srgb, var(--ic) 12%, var(--ink)), var(--ink) 80%);
+    background:
+      radial-gradient(60% 55% at 50% 48%, color-mix(in srgb, var(--ic) 12%, var(--ink)), var(--ink) 80%),
+      linear-gradient(180deg, rgba(234,215,164,0.03), transparent);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.45), inset 0 0 1.1em rgba(0,0,0,0.32);
   }
   .tc-shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; z-index: 3; }
   .tc-shot.is-missing { display: none; }
@@ -208,7 +237,12 @@
   }
 
   /* type band */
-  .tc-type { display: flex; align-items: center; gap: 0.6em; padding: 0.05em 0.15em; }
+  .tc-type {
+    display: flex; align-items: center; gap: 0.6em; padding: 0.22em 0.36em;
+    background: linear-gradient(180deg, rgba(234,215,164,0.06), rgba(234,215,164,0.018));
+    border: 1px solid rgba(234,215,164,0.085);
+    border-radius: 0.52em;
+  }
   .tc-type-ic { width: 1.45em; height: 1.45em; color: var(--ic); flex-shrink: 0; }
   .tc-type-txt {
     font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1.02em;
@@ -219,7 +253,10 @@
   .tc-text {
     flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center;
     border: 1.5px solid var(--line-q); border-radius: 0.85em; padding: 0.6em 0.8em;
-    background: color-mix(in srgb, var(--ic) 4%, var(--ink));
+    background:
+      linear-gradient(180deg, rgba(234,215,164,0.10), rgba(234,215,164,0.035)),
+      color-mix(in srgb, var(--ic) 4%, var(--ink));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.035);
   }
   .tc-desc { font-family: 'Barlow', sans-serif; font-size: 1.05em; line-height: 1.3; text-align: center; color: var(--label); }
 
@@ -287,6 +324,14 @@
     .tcard:hover { transform: none; }
   }
 
+
+  @media (max-width: 430px) {
+    .logo-wrap { grid-template-columns: 42px minmax(0, 1fr) 42px; gap: 0.45rem; }
+    .logo-pip-ring, .logo-spacer { width: 42px; height: 42px; }
+    .logo-home-label { font-size: 0.62rem; top: calc(100% - 3px); }
+    h1 { font-size: clamp(1.85rem, 10.5vw, 2.55rem); letter-spacing: 0.02em; }
+  }
+
   /* ── RESPONSIVE (desktop-first design; degrades cleanly) ── */
   /* cards go 2-up once there's room */
   @media (min-width: 560px) {
@@ -331,21 +376,10 @@
 
       <h1>Deck Tech</h1>
 
-      <a class="logo-home" href="/" aria-label="Back to MTJawnny home">
-        <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
-          <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
-          <circle cx="24" cy="9"  r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
-          <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
-          <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
-          <circle cx="14" cy="36"  r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
-          <circle cx="34" cy="36"  r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
-        </svg>
-        <span class="logo-home-label">home</span>
-      </a>
+      <span class="logo-spacer" aria-hidden="true"></span>
 
     </div>
-    <p class="tagline">Research, Proxy, Win. Desktop Based Tools.</p>
+    <p class="tagline">Research, Proxy, Print. Tools for MTG deck prep.</p>
   </header>
 
   <main>
@@ -392,7 +426,7 @@
             </div>
             <div class="tc-rule"></div>
             <div class="tc-art">
-              <img class="tc-shot is-missing" src="/toolshots/token-grabber.png" alt="" onerror="this.classList.add('is-missing')">
+              <img class="tc-shot" src="/toolshots/token-grabber.png" alt="" onerror="this.classList.add('is-missing')">
               <span class="tc-bracket tl"></span><span class="tc-bracket tr"></span>
               <span class="tc-bracket bl"></span><span class="tc-bracket br"></span>
               <span class="tc-glyph">
@@ -433,7 +467,7 @@
             </div>
             <div class="tc-rule"></div>
             <div class="tc-art">
-              <img class="tc-shot is-missing" src="/toolshots/tag-grabber.png" alt="" onerror="this.classList.add('is-missing')">
+              <img class="tc-shot" src="/toolshots/tag-grabber.png" alt="" onerror="this.classList.add('is-missing')">
               <span class="tc-bracket tl"></span><span class="tc-bracket tr"></span>
               <span class="tc-bracket bl"></span><span class="tc-bracket br"></span>
               <span class="tc-glyph">
@@ -482,7 +516,7 @@
             </div>
             <div class="tc-rule"></div>
             <div class="tc-art">
-              <img class="tc-shot is-missing" src="/toolshots/proxy-builder.png" alt="" onerror="this.classList.add('is-missing')">
+              <img class="tc-shot" src="/toolshots/proxy-builder.png" alt="" onerror="this.classList.add('is-missing')">
               <span class="tc-bracket tl"></span><span class="tc-bracket tr"></span>
               <span class="tc-bracket bl"></span><span class="tc-bracket br"></span>
               <span class="tc-glyph">
