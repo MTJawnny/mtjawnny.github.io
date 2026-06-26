@@ -49,7 +49,7 @@
   }
   .splash-hero {
     min-height: 100dvh;
-    padding: 0.75rem 0 76px;
+    padding: 0.25rem 0 76px;
     position: relative;
   }
   /* ── Left title pip doubles as the home/back link (site-wide pattern) ── */
@@ -86,7 +86,7 @@
   /* ── HEADER (mirrors index.html) ── */
   .tk-header {
     text-align: center;
-    padding: 0.75rem 1.5rem 0;
+    padding: 0 1.5rem;
   }
   .logo-wrap {
     display: flex;
@@ -290,7 +290,6 @@
 
   /* ── DESKTOP (mirrors index.html breakpoint) ── */
   @media (min-width: 640px) {
-    .splash-hero { padding-top: 2rem; }
     .tk-header { padding: 0 2rem; }
     .setup-grid { max-width: 560px; gap: 1rem; }
     .setup-tile { padding: 1.5rem 1.25rem 1.35rem; }
@@ -310,35 +309,46 @@
     line-height: 1.5;
   }
   .splash-more {
-    padding: 40px 24px 56px;
+    padding: 32px 24px 56px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 18px;
-    border-top: 1px solid #2a2040;
   }
   .splash-more h2 {
-    font-size: 16px; font-weight: 800;
-    letter-spacing: 0.14em; text-transform: uppercase;
+    font-size: clamp(1.9rem, 8vw, 2.8rem);
+    font-weight: 900;
+    letter-spacing: 0.04em; text-transform: uppercase;
     color: var(--bronze);
+    line-height: 1;
+  }
+  .more-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    width: min(560px, 100%);
   }
   .more-card {
-    width: min(420px, 100%);
     border: 1.5px solid var(--bronze-dim);
     border-radius: 14px;
-    padding: 16px 20px;
+    padding: 16px 12px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    justify-content: flex-start;
+    text-align: center;
+    gap: 8px;
+    transition: border-color 0.2s, background 0.2s;
   }
+  .more-card:hover { border-color: var(--bronze); background: var(--bronze-glow); }
   .more-card .mc-name {
-    font-size: 15px; font-weight: 800;
-    letter-spacing: 0.08em; text-transform: uppercase;
+    font-size: 14px; font-weight: 800;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    line-height: 1.15;
   }
   .more-card .mc-desc {
-    font-size: 13px; color: var(--muted);
-    margin-top: 3px;
+    font-size: 11.5px; color: var(--muted);
+    margin-top: 3px; line-height: 1.3;
   }
   .more-card .mc-tag {
     font-size: 10px; font-weight: 800;
@@ -346,15 +356,27 @@
     color: var(--bronze);
     border: 1.5px solid var(--bronze-dim);
     border-radius: 7px;
-    padding: 5px 9px;
+    padding: 4px 8px;
     white-space: nowrap;
+    margin-top: auto;
   }
-  .splash-footer {
-    margin-top: 14px;
-    font-size: 12px; font-weight: 700;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--muted);
+  .back-to-top {
+    width: min(420px, 100%);
+    margin-top: 6px;
+    background: transparent;
+    border: 1.5px solid var(--bronze-dim);
+    border-radius: 12px;
+    padding: 14px 0;
+    color: var(--bronze);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background 0.2s, border-color 0.2s;
   }
+  .back-to-top:hover { background: var(--bronze-glow); border-color: var(--bronze); }
+  .back-to-top svg { width: 16px; height: 16px; }
 
   /* Tile color picker — a mini table map; tap a seat to cycle its color */
   #color-map {
@@ -1088,21 +1110,33 @@
 
   <section class="splash-more">
     <h2>More Table Tools</h2>
-    <div class="more-card">
-      <div>
-        <div class="mc-name">Format Guides</div>
-        <div class="mc-desc">Commander, Draft &amp; Sealed cheat sheets</div>
+    <div class="more-grid">
+      <div class="more-card">
+        <div>
+          <div class="mc-name">Format Guides</div>
+          <div class="mc-desc">Commander, Draft &amp; Sealed cheat sheets</div>
+        </div>
+        <span class="mc-tag">Soon</span>
       </div>
-      <span class="mc-tag">Soon</span>
-    </div>
-    <div class="more-card">
-      <div>
-        <div class="mc-name">Draft Timer</div>
-        <div class="mc-desc">Pick clocks with audio cues</div>
+      <div class="more-card">
+        <div>
+          <div class="mc-name">Draft Timer</div>
+          <div class="mc-desc">Pick clocks with audio cues</div>
+        </div>
+        <span class="mc-tag">Soon</span>
       </div>
-      <span class="mc-tag">Soon</span>
+      <div class="more-card">
+        <div>
+          <div class="mc-name">Dice Roller</div>
+          <div class="mc-desc">Coin flips &amp; planar dice</div>
+        </div>
+        <span class="mc-tag">Soon</span>
+      </div>
     </div>
-    <div class="splash-footer">mtjawnny.com</div>
+    <button class="back-to-top" onclick="document.getElementById('setup-screen').scrollTo({top:0,behavior:'smooth'})">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+      Back to Top
+    </button>
   </section>
 </div>
 
