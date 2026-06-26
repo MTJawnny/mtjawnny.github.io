@@ -63,27 +63,19 @@
     padding-bottom: calc(2rem + env(safe-area-inset-bottom));
   }
 
-  /* ══ HEADER — mirrors Cardex / Tablekeep splash-hero ══════ */
-  .splash-hero { padding: 0.2rem 0 0; }
-  .tk-header { text-align: center; padding: -1rem 0rem 0; }
-
-  .logo-wrap {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    margin-bottom: 0.3rem;
+  /* ══ HEADER — mirrors Tablekeep title row ══════ */
+  .splash-hero {
+    padding: 0.25rem 0 0;
+    position: relative;
   }
-
-  /* Left & right title pips double as the home link (site-wide pattern) */
+  /* ── Left & right title pips double as the home link (site-wide pattern) ── */
   .logo-home {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    padding: 8px;
+    padding: 6px;
     margin: -6px;
     text-decoration: none;
     transition: background 0.15s;
@@ -91,13 +83,14 @@
   }
   .logo-home:hover, .logo-home:active { background: var(--bronze-glow); }
   .logo-home .logo-pip-ring { display: block; }
+  /* Tiny label floats beneath the ring — absolute so it adds no row height */
   .logo-home-label {
     position: absolute;
     top: calc(100% - 5px);
     left: calc(50% + 2px);
     transform: translateX(-50%);
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -106,19 +99,32 @@
     pointer-events: none;
   }
 
-  .logo-pip-ring { width: 48px; height: 48px; flex-shrink: 0; }
-
+  /* ── HEADER (mirrors Tablekeep) ── */
+  .tk-header {
+    text-align: center;
+    padding: 0 1.5rem;
+  }
+  .logo-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: -0.5rem;
+  }
+  .logo-pip-ring {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+  }
   .splash-hero h1 {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 900;
-    /* "STACK IT UP" fits the pip-ring row at the homepage's native size;
-       nowrap keeps the two spaces from wrapping the title to a second line. */
     font-size: clamp(2.4rem, 14vw, 3.6rem);
     letter-spacing: 0.04em;
     color: var(--bronze);
     line-height: 1;
     text-transform: uppercase;
-    white-space: nowrap;
   }
 
   .tagline {
@@ -237,7 +243,7 @@
 
   /* ── Asset group sub-heading ── */
   .group-head {
-    margin: 1.6rem 0 0.7rem;
+    margin: 0rem 0 0.7rem;
   }
   .group-head h3 {
     font-family: 'Barlow Condensed', sans-serif;
@@ -322,6 +328,7 @@
 
   .coming-note {
     margin-top: 0.85rem;
+    margin-bottom: 1.6rem;
     color: var(--muted);
     font-size: 0.82rem;
     font-style: italic;
@@ -701,20 +708,23 @@
   .footer-btn:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
   .footer-btn svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
   .back-to-top {
-    display: inline-flex; align-items: center; gap: 0.35rem;
-    margin-top: 1.5rem;
+    width: min(420px, 100%);
+    margin: 1.5rem auto 0;
     background: transparent;
-    border: 1px solid var(--bronze-dim);
-    border-radius: 999px;
-    padding: 0.4rem 0.9rem;
-    color: var(--text-dim);
+    border: 1.5px solid var(--bronze-dim);
+    border-radius: 12px;
+    padding: 14px 0;
+    color: var(--bronze);
     font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700; font-size: 0.8rem;
-    letter-spacing: 0.06em; text-transform: uppercase;
+    font-size: 16px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
     text-decoration: none;
-    transition: border-color 0.18s, color 0.18s, background 0.18s;
+    transition: background 0.2s, border-color 0.2s;
   }
-  .back-to-top:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+  .back-to-top:hover { background: var(--bronze-glow); border-color: var(--bronze); }
+  .back-to-top svg { width: 16px; height: 16px; }
 
   /* ── Toast (credit copied) ── */
   .toast {
@@ -874,7 +884,7 @@ const BUNDLE_SAMPLES = [
   <section class="section">
     <div class="section-head">
       <h2>Free stuff from me to you!</h2>
-      <p class="sub">Custom mana symbols, card backs, and card frames I made for the proxy community! SVG and PNG, crack open and use as a base for your own designs!</p>
+      <p class="sub">Mana symbols, card backs, and frames I've made for the proxy community! SVG and PNG, crack open and use as a base for your own designs!</p>
     </div>
 
     <!-- Pips -->
@@ -1002,7 +1012,10 @@ const BUNDLE_SAMPLES = [
         MTJawnny
       </a>
     </div>
-    <a class="back-to-top" href="#top">↑ Back to top</a>
+    <a class="back-to-top" href="#top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg>
+      Back to Top
+    </a>
   </footer>
 
 </div>
