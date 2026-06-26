@@ -58,7 +58,7 @@
   }
 
   /* ══ HEADER — standard index-page pattern (header-pattern.md) ══════ */
-  .tk-header { text-align: center; padding: 0.75rem 1.5rem 0; }
+  .tk-header { text-align: center; padding: 0.25rem 1.5rem 0; }
 
   .logo-wrap {
     display: flex;
@@ -279,6 +279,36 @@
   .clear-btn svg { width: 16px; height: 16px; }
   .clear-btn[hidden] { display: none; }
 
+  /* ── Category filter chips — sit under the search field ── */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+  }
+  .filter-chip {
+    display: inline-flex;
+    align-items: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--chip, var(--bronze));
+    border: 1.5px solid var(--bronze);
+    border-radius: 999px;
+    padding: 0.32rem 0.8rem;
+    cursor: pointer;
+    transition: box-shadow 0.15s, transform 0.15s, filter 0.15s;
+  }
+  .filter-chip:hover { filter: brightness(1.07); }
+  .filter-chip.active {
+    transform: translateY(-1px);
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--bronze), 0 6px 14px -8px rgba(0,0,0,0.8);
+  }
+
   /* No-match panel — drops in under the controls (an invitation, not an error) */
   .suggest-panel {
     margin-top: 0.7rem;
@@ -336,11 +366,12 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 90px;
-    padding: 1rem 0.85rem;
+    min-height: 96px;
+    padding: 1.4rem 0.85rem 1rem;
     background: var(--surface);
     border: 1px solid var(--bronze-dim);
     border-radius: var(--radius);
+    overflow: hidden;
     text-decoration: none;
     text-align: center;
     transition: border-color 0.18s, background 0.18s, transform 0.15s, box-shadow 0.18s;
@@ -351,6 +382,18 @@
     transform: translateY(-2px);
     box-shadow: 0 10px 22px -16px rgba(0,0,0,0.95);
   }
+
+  /* Category color bar across the top edge; segments split equally,
+     divided by a bronze hairline. Driven by each entry's cat(s). */
+  .tile-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    display: flex;
+    gap: 1.5px;
+    background: var(--bronze);
+  }
+  .tile-bar > span { flex: 1; }
 
   .entry-name {
     font-family: 'Barlow Condensed', sans-serif;
@@ -391,6 +434,30 @@
     clip: rect(0 0 0 0); clip-path: inset(50%);
     overflow: hidden; white-space: nowrap;
   }
+
+  /* ── Back-to-top button — sits under the results grid ── */
+  .back-to-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: min(420px, calc(100% - 2.5rem));
+    margin: 1.5rem auto 0;
+    background: transparent;
+    border: 1.5px solid var(--bronze-dim);
+    border-radius: 12px;
+    padding: 14px 0;
+    color: var(--bronze);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .back-to-top:hover { background: var(--bronze-glow); border-color: var(--bronze); }
+  .back-to-top svg { width: 16px; height: 16px; }
 
   /* ══ FOOTER — mirrors the homepage footer exactly ════════════════ */
   footer {
@@ -458,7 +525,7 @@
 
   /* ── DESKTOP ── */
   @media (min-width: 640px) {
-    .tk-header { padding: 2rem 2rem 0; }
+    .tk-header { padding: 0.25rem 2rem 0; }
     .footer-buttons { max-width: 380px; gap: 1rem; }
   }
 </style>
@@ -475,31 +542,52 @@
 const ENTRIES = [
   {
     names: ["Protection"],
-    slug: "protection"
+    slug: "protection",
+    cat: "targeting"
   },
   {
     names: ["Ward"],
-    slug: "ward"
+    slug: "ward",
+    cat: "targeting"
   },
   {
     names: ["Hexproof/Shroud", "Nontargeting"],
     slug: "hexproof-shroud-nontargeting",
-    sep: "vs"
+    sep: "vs",
+    cat: "targeting"
   },
   {
     names: ["Indestructible", "-X/-X"],
     slug: "indestructible-minus-toughness",
-    sep: "vs"
+    sep: "vs",
+    cat: "sba"
   },
   {
     names: ["Trample", "Deathtouch"],
-    slug: "trample-deathtouch"
+    slug: "trample-deathtouch",
+    cat: "combat"
   },
   {
     names: ["When a Player Leaves"],
-    slug: "losing-player-permanents"
+    slug: "losing-player-permanents",
+    cat: "multiplayer"
   }
 ];
+
+// Category metadata — drives the filter chips and the tile top-bar colors.
+//   chip  : label shown in the filter row (also used for the tile's a11y label)
+//   color : the chip fill + top-bar segment color
+// Chip order below is the order they appear in the filter row.
+// An entry's `cat` may be a single string ("combat") or an array
+// (["combat","timing"]); arrays paint one bar segment per category,
+// left to right, with the first listed as the primary. Cap at three.
+const CATS = {
+  combat:      { chip: "Combat",      color: "#e06060" },
+  targeting:   { chip: "Targeting",   color: "#6aaee0" },
+  sba:         { chip: "State-Based", color: "#c79be8" },
+  timing:      { chip: "Timing",      color: "#5aab6e" },
+  multiplayer: { chip: "Multiplayer", color: "#e6a23c" }
+};
 
 // Interaction-submission tool. Swap the "#" for the real form link when it's ready.
 const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
@@ -589,6 +677,8 @@ const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
       </button>
     </div>
 
+    <div class="filters" id="filters" role="group" aria-label="Filter by category"></div>
+
     <div class="suggest-panel" id="suggestPanel" hidden>
       <p>No interactions match “<span class="q" id="noMatchQ"></span>”.</p>
       <a class="suggest-btn" id="suggestLink" href="#">
@@ -605,6 +695,12 @@ const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
     <div class="grid" id="grid"></div>
     <p class="visually-hidden" id="status" role="status" aria-live="polite"></p>
   </main>
+
+  <button class="back-to-top" type="button" aria-label="Back to top"
+          onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+    Back to Top
+  </button>
 
   <!-- FOOTER -->
   <footer>
@@ -634,8 +730,40 @@ const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
   const noMatchQ    = document.getElementById('noMatchQ');
   const emptyNote   = document.getElementById('emptyNote');
   const statusEl    = document.getElementById('status');
+  const filtersEl   = document.getElementById('filters');
 
   suggestLink.href = SUBMISSION_URL;
+
+  // ── Category filtering ─────────────────────────────────────────
+  let activeCat = 'all';
+
+  // An entry's category can be a string or an array; normalize to an array.
+  const catList = e => Array.isArray(e.cat) ? e.cat : (e.cat ? [e.cat] : []);
+
+  // Build the chip row from CATS (single source of truth with the bars).
+  function buildFilters() {
+    const chips = [['all', 'All', null]].concat(
+      Object.keys(CATS).map(k => [k, CATS[k].chip, CATS[k].color])
+    );
+    filtersEl.innerHTML = chips.map(([id, label, color]) =>
+      '<button class="filter-chip' + (id === activeCat ? ' active' : '') + '"' +
+      ' type="button" data-cat="' + id + '"' +
+      ' aria-pressed="' + (id === activeCat ? 'true' : 'false') + '"' +
+      (color ? ' style="--chip:' + color + '"' : '') + '>' +
+      esc(label) + '</button>'
+    ).join('');
+  }
+
+  filtersEl.addEventListener('click', e => {
+    const chip = e.target.closest('.filter-chip');
+    if (!chip) return;
+    activeCat = chip.dataset.cat;
+    buildFilters();
+    render();
+    if (typeof gtag === 'function') {
+      gtag('event', 'click_filter', { 'event_category': 'filter', 'item_name': activeCat });
+    }
+  });
 
   function esc(s) {
     return String(s).replace(/[&<>"']/g, c => (
@@ -685,6 +813,7 @@ const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
 
     let list = ENTRIES.map((e, i) => ({ e, i, s: score(raw, e.names.join(' ')) }));
     if (q !== '') list = list.filter(o => o.s >= 0);
+    if (activeCat !== 'all') list = list.filter(o => catList(o.e).includes(activeCat));
 
     list.sort((a, b) => q !== '' ? (b.s - a.s || a.i - b.i) : (a.i - b.i));
     return { list, q };
@@ -706,7 +835,16 @@ const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
         (i > 0 ? '<span class="' + sepCls + '" aria-hidden="true">' + sepSym + '</span>' : '') +
         '<span class="entry-name">' + esc(n) + '</span>'
       ).join('');
-      return '<a class="tile" href="' + esc(href) + '" aria-label="' + esc(label) + '">' + inner + '</a>';
+      const cats = catList(e);
+      const bar = cats.length
+        ? '<span class="tile-bar" aria-hidden="true">' +
+            cats.map(k => '<span style="background:' +
+              (CATS[k] ? CATS[k].color : 'var(--bronze)') + '"></span>').join('') +
+          '</span>'
+        : '';
+      const catNames = cats.map(k => CATS[k] ? CATS[k].chip : k).join(', ');
+      const aria = label + (catNames ? '. Category: ' + catNames : '');
+      return '<a class="tile" href="' + esc(href) + '" aria-label="' + esc(aria) + '">' + bar + inner + '</a>';
     }).join('');
 
     // No-match panel: a non-empty search that turned up nothing.
@@ -715,8 +853,14 @@ const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
     suggestPanel.hidden = !showSuggest;
     if (showSuggest) noMatchQ.textContent = q;
 
-    // Empty grid with no active search (no entries yet).
-    emptyNote.hidden = !(noResults && q === '');
+    // Empty grid with no active search (no entries in this view yet).
+    const emptyNoQuery = noResults && q === '';
+    emptyNote.hidden = !emptyNoQuery;
+    if (emptyNoQuery) {
+      emptyNote.textContent = activeCat === 'all'
+        ? 'No interactions here yet.'
+        : 'Nothing in this category yet.';
+    }
 
     // A11y: announce the result count.
     statusEl.textContent = list.length + (list.length === 1 ? ' interaction' : ' interactions');
@@ -797,6 +941,7 @@ const SUBMISSION_URL = "#"; /* TODO_SUBMISSION_URL */
     }
   });
   
+  buildFilters();
   render();
 })();
 </script>
