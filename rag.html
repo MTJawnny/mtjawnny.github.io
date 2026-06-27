@@ -210,20 +210,25 @@
   .card-title-line {
     display: flex;
     align-items: center;
-    gap: 0.45rem;
+    flex-wrap: nowrap;
+    gap: 0.65rem;
     min-width: 0;
   }
   .card-name {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 900;
-    font-size: clamp(1.45rem, 6vw, 2.05rem);
+    font-size: clamp(1.38rem, 5.75vw, 2.05rem);
     letter-spacing: 0.03em;
     text-transform: uppercase;
     color: var(--bronze);
-    line-height: 1.02;
+    line-height: 0.98;
     min-width: 0;
   }
-  .card-title-line .mana-cost { flex: 0 0 auto; }
+  .card-title-line .mana-cost {
+    flex: 0 0 auto;
+    gap: 0.16rem;
+    transform: translateY(-0.03em);
+  }
   .cost-line { display: flex; align-items: center; flex-wrap: wrap; gap: 0.55rem; margin-top: 0.55rem; }
   .type-line {
     font-family: 'Barlow Condensed', sans-serif;
@@ -241,8 +246,13 @@
     display: inline-block; width: 1em; height: 1em; vertical-align: -0.12em;
     background-repeat: no-repeat; background-position: center; background-size: contain;
   }
-  .card-title-line .ms { font-size: 1.2rem; }
+  .card-title-line .ms { font-size: clamp(1.55rem, 5.2vw, 1.95rem); }
   .cost-line .ms { font-size: 1.15rem; }
+  @media (max-width: 380px) {
+    .card-title-line { gap: 0.45rem; }
+    .card-name { font-size: clamp(1.22rem, 5.3vw, 1.55rem); }
+    .card-title-line .ms { font-size: 1.35rem; }
+  }
   .ms[data-s="1"] { background-image: url(/manasymbols/1.svg); }
   .ms[data-s="R"] { background-image: url(/manasymbols/R.svg); }
 
