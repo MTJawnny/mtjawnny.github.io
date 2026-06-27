@@ -136,7 +136,14 @@
     padding: 0;
   }
   .tool-col > .section-head {
-    max-width: none; margin: 0; padding: 0; font-size: 1.3rem; letter-spacing: 0.05em; line-height: 1.05;
+    align-self: center;
+    display: inline-flex; align-items: center; justify-content: center;
+    max-width: none; margin: 0; padding: 0.42rem 1.4rem;
+    font-size: 1.55rem; letter-spacing: 0.1em; line-height: 1;
+    color: var(--bronze);
+    background: linear-gradient(180deg, rgba(184,147,90,0.18), rgba(184,147,90,0.06));
+    border: 1px solid var(--bronze-dim);
+    border-radius: 999px;
   }
   .card-grid {
     display: grid; grid-template-columns: 1fr; gap: 1rem; align-items: start; justify-items: center;
@@ -303,7 +310,7 @@
     .tool-columns { grid-template-columns: 1fr 1fr; max-width: 1140px; gap: 2.2rem; padding: 0 1.5rem; }
     .tool-columns::before, .tool-columns::after { display: block; }
     .tool-col { gap: 1.1rem; }
-    .tool-col > .section-head { font-size: 1.5rem; }
+    .tool-col > .section-head { font-size: 1.75rem; padding: 0.45rem 1.6rem; }
     .discord-btn { width: 252px; }
     .discord-section { max-width: 510px; }
     .footer-buttons { max-width: 380px; gap: 1rem; }
