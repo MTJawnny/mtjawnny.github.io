@@ -199,16 +199,40 @@
     border-radius: var(--radius);
     padding: 1.1rem 1.2rem 1rem;
   }
+  .card-title-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 0.85rem;
+    width: 100%;
+    min-width: 0;
+  }
   .card-name {
+    flex: 1 1 auto;
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 900;
-    font-size: clamp(1.9rem, 7vw, 2.5rem);
+    font-size: clamp(1.34rem, 5.65vw, 2.05rem);
     letter-spacing: 0.03em;
     text-transform: uppercase;
     color: var(--bronze);
-    line-height: 1.05;
+    line-height: 0.98;
+    min-width: 0;
   }
-  .cost-line { display: flex; align-items: center; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.45rem; }
+  .card-title-line .mana-cost {
+    flex: 0 0 auto;
+    margin-left: auto;
+    gap: 0.16rem;
+    transform: translateY(-0.01em);
+  }
+  .cost-line { display: flex; align-items: center; flex-wrap: wrap; gap: 0.55rem; margin-top: 0.55rem; }
+  .card-title-line .ms { font-size: clamp(1.42rem, 4.85vw, 1.78rem); }
+  .cost-line .ms { font-size: 1.15rem; }
+  @media (max-width: 380px) {
+    .card-title-line { gap: 0.55rem; }
+    .card-name { font-size: clamp(1.18rem, 5.05vw, 1.48rem); }
+    .card-title-line .ms { font-size: clamp(1.18rem, 5.05vw, 1.48rem); }
+  }
   .type-line {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
@@ -231,7 +255,6 @@
   .ms[data-s="2"] { background-image: url('/manasymbols/2.svg'); }
   .ms[data-s="W"] { background-image: url('/manasymbols/W.svg'); }
   .mana-cost { display: inline-flex; align-items: center; gap: 0.2rem; }
-  .cost-line .ms { font-size: 1.3rem; }
 
   .oracle {
     margin-top: 0.85rem;
@@ -629,12 +652,14 @@
       </div>
 
       <div class="readout">
-        <h1 class="card-name">Teferi's Protection</h1>
-        <div class="cost-line">
+        <div class="card-title-line">
+          <h1 class="card-name">Teferi's Protection</h1>
           <span class="mana-cost">
             <span class="ms" data-s="2"></span>
             <span class="ms" data-s="W"></span>
           </span>
+        </div>
+        <div class="cost-line">
           <span class="type-line">Instant</span>
         </div>
 
