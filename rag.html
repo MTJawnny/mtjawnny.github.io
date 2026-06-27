@@ -207,16 +207,24 @@
     border-radius: var(--radius);
     padding: 1.1rem 1.2rem 1rem;
   }
+  .card-title-line {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-width: 0;
+  }
   .card-name {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 900;
-    font-size: clamp(1.9rem, 7vw, 2.5rem);
+    font-size: clamp(1.45rem, 6vw, 2.05rem);
     letter-spacing: 0.03em;
     text-transform: uppercase;
     color: var(--bronze);
-    line-height: 1.05;
+    line-height: 1.02;
+    min-width: 0;
   }
-  .cost-line { display: flex; align-items: center; flex-wrap: wrap; gap: 0.55rem; margin-top: 0.45rem; }
+  .card-title-line .mana-cost { flex: 0 0 auto; }
+  .cost-line { display: flex; align-items: center; flex-wrap: wrap; gap: 0.55rem; margin-top: 0.55rem; }
   .type-line {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
@@ -233,6 +241,7 @@
     display: inline-block; width: 1em; height: 1em; vertical-align: -0.12em;
     background-repeat: no-repeat; background-position: center; background-size: contain;
   }
+  .card-title-line .ms { font-size: 1.2rem; }
   .cost-line .ms { font-size: 1.15rem; }
   .ms[data-s="1"] { background-image: url(/manasymbols/1.svg); }
   .ms[data-s="R"] { background-image: url(/manasymbols/R.svg); }
@@ -614,11 +623,13 @@
       </div>
 
       <div class="readout">
-        <h1 class="card-name">Ragavan, Nimble Pilferer</h1>
-        <div class="cost-line">
+        <div class="card-title-line">
+          <h1 class="card-name">Ragavan, Nimble Pilferer</h1>
           <span class="mana-cost" role="img" aria-label="one red mana">
             <span class="ms" data-s="R" aria-hidden="true"></span>
           </span>
+        </div>
+        <div class="cost-line">
           <span class="type-line">Legendary Creature — Monkey Pirate · 2/1</span>
         </div>
 
