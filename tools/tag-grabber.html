@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1e1728">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tag Grabber">
+<meta name="description" content="Paste a Commander deck and see what it actually does. Tag Grabber reads each card's Scryfall function tags, charts your deck's strategy, and finds cards that fit.">
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="https://mtjawnny.com/tag-grabber.html">
+<title>Tag Grabber — MTJawnny</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WKH3Y62H5H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-WKH3Y62H5H');
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #1e1728;
+    --surface:     #261d33;
+    --surface-2:   #2c2240;
+    --bronze:      #b8935a;
+    --bronze-dim:  #7a5e35;
+    --bronze-glow: rgba(184,147,90,0.15);
+    --text-dim:    #9b8fb0;
+    --white:       #f0ece6;
+    --muted:       #6b5f7a;
+    /* pip palette — used to colour the bars */
+    --green:  #5aab6e;
+    --blue:   #6aaee0;
+    --red:    #e06060;
+    --grey:   #a09ab0;
+    --amber:  #e6a23c;
+    --radius: 10px;
+  }
+
+  html, body {
+    width: 100%; min-height: 100%;
+    background: var(--bg); color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button, input, textarea { font-family: inherit; }
+
+  .page {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 1.25rem calc(2rem + env(safe-area-inset-bottom));
+  }
+
+  /* ══ HEADER — site-wide logo-home pattern ══════════════════ */
+  .splash-hero { padding: 0.75rem 0 0; }
+  .tk-header { text-align: center; padding: 0.75rem 0 0; }
+  .logo-wrap {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0.75rem; margin-bottom: 0.3rem;
+  }
+  .logo-home {
+    position: relative; display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; padding: 6px; margin: -6px;
+    text-decoration: none; transition: background 0.15s;
+  }
+  .logo-home:hover, .logo-home:active { background: var(--bronze-glow); }
+  .logo-pip-ring { width: 48px; height: 48px; flex-shrink: 0; display: block; }
+  .logo-home-label {
+    position: absolute; top: calc(100% - 5px); left: calc(50% + 2px);
+    transform: translateX(-50%);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.55rem; font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--text-dim);
+    line-height: 1; pointer-events: none;
+  }
+  .splash-hero h1 {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 900;
+    font-size: clamp(2.4rem, 9vw, 3.4rem); letter-spacing: 0.04em;
+    color: var(--bronze); line-height: 1; text-transform: uppercase;
+  }
+  .tagline { font-size: 0.95rem; color: var(--text-dim); margin-top: 0.5rem; }
+
+  /* ══ HELP PANEL — in-tool, auto-shows first visit (site-wide tool pattern) ══ */
+  .help-bar { display: flex; justify-content: flex-end; margin-top: 0.6rem; }
+  .help-toggle {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    background: transparent; border: 1px solid var(--bronze-dim);
+    border-radius: 999px; padding: 0.32rem 0.8rem;
+    color: var(--text-dim); cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+    font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+    transition: border-color 0.18s, color 0.18s, background 0.18s;
+  }
+  .help-toggle:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+  .help-panel {
+    background: var(--surface); border: 1px solid var(--bronze-dim);
+    border-radius: 14px; padding: 1rem 1.1rem; margin-top: 0.7rem;
+  }
+  .help-panel[hidden] { display: none; }
+  .help-panel h2 {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+    font-size: 1.05rem; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--bronze); margin-bottom: 0.5rem;
+  }
+  .help-panel ol { margin: 0 0 0.4rem 1.1rem; }
+  .help-panel li { font-size: 0.92rem; line-height: 1.5; margin-bottom: 0.3rem; color: var(--white); }
+  .help-panel .fine { font-size: 0.82rem; color: var(--text-dim); line-height: 1.45; }
+  .help-panel a { color: var(--bronze); }
+
+  /* ══ INPUT ══════════════════════════════════════════════════ */
+  .input-card {
+    background: var(--surface); border: 1px solid var(--bronze-dim);
+    border-radius: 16px; padding: 1rem; margin-top: 1.1rem;
+  }
+  .input-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 0.6rem; margin-bottom: 0.6rem;
+  }
+  .input-head .lbl {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+    font-size: 0.95rem; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--white);
+  }
+  .input-head .example {
+    background: none; border: none; color: var(--bronze);
+    font-size: 0.82rem; font-weight: 600; cursor: pointer; padding: 0;
+    text-decoration: underline; text-underline-offset: 2px;
+  }
+  #deck {
+    width: 100%; min-height: 168px; resize: vertical;
+    background: var(--bg); color: var(--white);
+    border: 1.5px solid var(--bronze-dim); border-radius: 12px;
+    font-size: 16px; line-height: 1.5; padding: 0.7rem 0.8rem;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  #deck::placeholder { color: var(--muted); }
+  #deck:focus { outline: none; border-color: var(--bronze); background: var(--surface-2); }
+
+  .actions { display: flex; gap: 0.6rem; margin-top: 0.7rem; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+    border-radius: 10px; cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+    font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase;
+    padding: 0.6rem 1.1rem; transition: filter 0.15s, transform 0.15s, border-color 0.18s, background 0.18s, color 0.18s;
+  }
+  .btn-primary { flex: 1; background: var(--bronze); color: var(--bg); border: none; }
+  .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.5; cursor: default; transform: none; filter: none; }
+  .btn-ghost { background: transparent; color: var(--text-dim); border: 1px solid var(--bronze-dim); }
+  .btn-ghost:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+
+  .data-note { margin-top: 0.6rem; font-size: 0.78rem; color: var(--muted); text-align: center; }
+  .data-note.warn { color: var(--amber); }
+
+  /* ══ RESULTS ════════════════════════════════════════════════ */
+  .results { margin-top: 1.4rem; }
+  .results[hidden] { display: none; }
+
+  .summary {
+    background: var(--surface); border: 1px solid var(--bronze-dim);
+    border-radius: 14px; padding: 0.85rem 1rem; margin-bottom: 1.2rem;
+  }
+  .summary .line { font-size: 0.95rem; line-height: 1.5; }
+  .summary .num { color: var(--bronze); font-weight: 600; }
+  .unmatched { margin-top: 0.55rem; }
+  .unmatched summary {
+    cursor: pointer; color: var(--text-dim); font-size: 0.85rem;
+    list-style: none;
+  }
+  .unmatched summary::-webkit-details-marker { display: none; }
+  .unmatched summary::before { content: '▸ '; color: var(--muted); }
+  .unmatched[open] summary::before { content: '▾ '; }
+  .unmatched .names {
+    margin-top: 0.4rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5;
+  }
+
+  .sec-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 0.6rem; margin-bottom: 0.7rem;
+  }
+  .sec-head h2 {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+    font-size: 1.2rem; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--white);
+  }
+  .sec-head .sub { font-size: 0.8rem; color: var(--text-dim); }
+  .copy-btn {
+    background: none; border: 1px solid var(--bronze-dim); border-radius: 8px;
+    color: var(--text-dim); cursor: pointer; padding: 0.28rem 0.6rem;
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+    font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase;
+    transition: border-color 0.18s, color 0.18s, background 0.18s; white-space: nowrap;
+  }
+  .copy-btn:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+
+  /* Tag bars */
+  .bars { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.5rem; }
+  .bar-row { display: grid; grid-template-columns: 1fr; gap: 0.18rem; }
+  .bar-top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; }
+  .bar-name {
+    font-size: 0.9rem; color: var(--white); text-transform: capitalize;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .bar-count { font-size: 0.82rem; color: var(--text-dim); font-variant-numeric: tabular-nums; flex-shrink: 0; }
+  .bar-track { height: 8px; background: var(--surface-2); border-radius: 999px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 999px; min-width: 4px; transition: width 0.5s cubic-bezier(.2,.7,.3,1); }
+
+  .show-all {
+    width: 100%; margin-top: 0.7rem; background: transparent;
+    border: 1px dashed var(--bronze-dim); border-radius: 10px;
+    color: var(--text-dim); cursor: pointer; padding: 0.5rem;
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+    font-size: 0.82rem; letter-spacing: 0.06em; text-transform: uppercase;
+    transition: border-color 0.18s, color 0.18s;
+  }
+  .show-all:hover { border-color: var(--bronze); color: var(--bronze); }
+  .show-all[hidden] { display: none; }
+
+  /* Similar cards */
+  .rec-list { display: flex; flex-direction: column; gap: 0.55rem; }
+  .rec {
+    background: var(--surface); border: 1px solid var(--bronze-dim);
+    border-radius: 12px; padding: 0.7rem 0.85rem;
+    display: flex; flex-direction: column; gap: 0.45rem;
+  }
+  .rec-top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; }
+  .rec-name {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+    font-size: 1.05rem; letter-spacing: 0.02em; color: var(--white);
+    text-decoration: none;
+  }
+  a.rec-name:hover { color: var(--bronze); }
+  .rec-fit {
+    flex-shrink: 0; font-size: 0.72rem; color: var(--text-dim);
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .chip {
+    font-size: 0.74rem; line-height: 1; padding: 0.3rem 0.5rem;
+    border-radius: 999px; text-transform: capitalize;
+    background: var(--bronze-glow); color: var(--bronze);
+    border: 1px solid rgba(184,147,90,0.35);
+  }
+
+  .empty {
+    text-align: center; color: var(--muted); font-size: 0.95rem;
+    padding: 1.5rem 1rem;
+  }
+  .empty[hidden] { display: none; }
+
+  /* ══ FOOTER ════════════════════════════════════════════════ */
+  .source-line {
+    margin: 1.8rem auto 0; max-width: 460px; text-align: center;
+    font-size: 0.8rem; color: var(--muted); line-height: 1.5;
+  }
+  .source-line a { color: var(--bronze); }
+  footer { text-align: center; padding: 1.6rem 0 0.5rem; }
+  .footer-buttons {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;
+    max-width: 400px; margin: 0 auto;
+  }
+  .footer-btn {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0.4rem; white-space: nowrap;
+    background: var(--surface); border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius); padding: 0.6rem 0.5rem;
+    color: var(--bronze);
+    font-weight: 600; font-size: 0.8rem; text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .footer-btn:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+  .footer-btn svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+  .back-to-top {
+    display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 1.5rem;
+    background: transparent; border: 1px solid var(--bronze-dim); border-radius: 999px;
+    padding: 0.4rem 0.9rem; color: var(--text-dim);
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.8rem;
+    letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none;
+    transition: border-color 0.18s, color 0.18s, background 0.18s;
+  }
+  .back-to-top:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+
+  /* Toast */
+  .toast {
+    position: fixed; left: 50%; bottom: calc(1.2rem + env(safe-area-inset-bottom));
+    transform: translateX(-50%) translateY(20px);
+    background: var(--surface-2); color: var(--white);
+    border: 1px solid var(--bronze); border-radius: 999px;
+    padding: 0.55rem 1.1rem; font-size: 0.85rem; font-weight: 600;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; z-index: 50;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Quality floor */
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--bronze); outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+    .btn-primary:hover { transform: none; }
+    .bar-fill { transition: none; }
+  }
+
+  @media (min-width: 640px) {
+    .footer-buttons { max-width: 380px; gap: 1rem; }
+  }
+</style>
+</head>
+<body id="top">
+
+<div class="page">
+
+  <section class="splash-hero">
+    <header class="tk-header">
+      <div class="logo-wrap">
+        <a class="logo-home" href="/" aria-label="Back to MTJawnny home">
+          <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+            <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+            <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+          </svg>
+          <span class="logo-home-label">home</span>
+        </a>
+        <h1>Tag Grabber</h1>
+        <a class="logo-home" href="/" aria-label="Back to MTJawnny home">
+          <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+            <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+            <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+          </svg>
+          <span class="logo-home-label">home</span>
+        </a>
+      </div>
+      <p class="tagline">Paste a deck. See what it actually does.</p>
+    </header>
+  </section>
+
+  <div class="help-bar">
+    <button class="help-toggle" id="helpToggle" type="button" aria-expanded="false" aria-controls="helpPanel">
+      How it works
+    </button>
+  </div>
+  <section class="help-panel" id="helpPanel" hidden>
+    <h2>How it works</h2>
+    <ol>
+      <li>Paste your decklist as plain text. One card per line. Quantities and set codes are fine.</li>
+      <li>Tag Grabber reads each card's Scryfall function tags, like ramp, removal, and token generation.</li>
+      <li>The breakdown shows what your deck leans on. The card list finds cards that share your deck's tags.</li>
+    </ol>
+    <p class="fine">Tags come from Scryfall's community Tagger project and refresh weekly. Everything runs in your browser. No login, no upload.</p>
+  </section>
+
+  <div class="input-card">
+    <div class="input-head">
+      <span class="lbl">Your decklist</span>
+      <button class="example" id="exampleBtn" type="button">Load example</button>
+    </div>
+    <textarea id="deck" spellcheck="false" autocapitalize="none"
+      placeholder="1 Krenko, Mob Boss&#10;1 Sol Ring&#10;1 Goblin Chieftain&#10;1 Impact Tremors&#10;..."></textarea>
+    <div class="actions">
+      <button class="btn btn-primary" id="analyzeBtn" type="button" disabled>Loading tags…</button>
+      <button class="btn btn-ghost" id="clearBtn" type="button">Clear</button>
+    </div>
+    <p class="data-note" id="dataNote">Tag database loading…</p>
+  </div>
+
+  <section class="results" id="results" hidden>
+    <div class="summary" id="summary"></div>
+
+    <div class="sec-head">
+      <h2>What your deck does</h2>
+      <button class="copy-btn" id="copyTags" type="button">Copy tags</button>
+    </div>
+    <div class="bars" id="bars"></div>
+    <button class="show-all" id="showAll" type="button" hidden></button>
+
+    <div class="sec-head" style="margin-top:1.6rem;">
+      <h2>Cards that fit</h2>
+      <span class="sub">ranked by shared tags</span>
+    </div>
+    <div class="rec-list" id="recs"></div>
+    <p class="empty" id="recEmpty" hidden>No close matches in the tag database. Try a fuller decklist.</p>
+  </section>
+
+  <p class="source-line">
+    Tag data from the <a href="https://tagger.scryfall.com/" target="_blank" rel="noopener">Scryfall Tagger</a> project.
+    Spot a wrong or missing tag? Anyone with a free Scryfall account can fix it there.
+  </p>
+
+  <footer>
+    <div class="footer-buttons">
+      <a class="footer-btn" href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+        Tips Appreciated!
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+      </a>
+      <a class="footer-btn" href="https://instagram.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        MTJawnny
+      </a>
+    </div>
+    <a class="back-to-top" href="#top">↑ Back to top</a>
+  </footer>
+
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     Inline SAMPLE — the fallback dataset, so the tool works the moment
+     this file is opened (and inside previews). On the live site the
+     loader fetches the full baked file from DATA_URL and ignores this.
+     Format here is readable slug-arrays; internSlugMap() converts it to
+     the canonical interned shape at startup.
+══════════════════════════════════════════════════════════════════ -->
+<script>
+const DATA_URL = "/data/card-tags.json";   /* baked weekly by the GitHub Action */
+
+const SAMPLE_SLUGS = {
+  "Sol Ring": ["ramp","mana-rock"],
+  "Arcane Signet": ["ramp","mana-rock"],
+  "Krenko, Mob Boss": ["goblin","tokens","go-wide","mana-sink"],
+  "Krenko, Tin Street Kingpin": ["goblin","tokens","go-wide","mana-sink"],
+  "Goblin Chieftain": ["goblin","haste-granting"],
+  "Goblin Warchief": ["goblin","haste-granting","cost-reduction"],
+  "Goblin Rabblemaster": ["goblin","tokens","go-wide"],
+  "Goblin Recruiter": ["goblin","tutor"],
+  "Boggart Harbinger": ["goblin","tutor"],
+  "Conspicuous Snoop": ["goblin","card-advantage"],
+  "Beetleback Chief": ["goblin","tokens","go-wide"],
+  "Mogg War Marshal": ["goblin","tokens","go-wide","sacrifice-outlet"],
+  "Skirk Prospector": ["goblin","sacrifice-outlet","ramp"],
+  "Goblin Sharpshooter": ["goblin","targeted-removal"],
+  "Pashalik Mons": ["goblin","aristocrats","burn","tokens"],
+  "Krenko's Command": ["goblin","tokens","go-wide"],
+  "Shared Animosity": ["go-wide","goblin"],
+  "Impact Tremors": ["aristocrats","burn"],
+  "Reckless Fireweaver": ["aristocrats","burn","artifact-matters"],
+  "Purphoros, God of the Forge": ["aristocrats","burn","tokens"],
+  "Terror of the Peaks": ["aristocrats","burn"],
+  "Goblin Bombardment": ["sacrifice-outlet","aristocrats","burn"],
+  "Ashnod's Altar": ["sacrifice-outlet","ramp","mana-sink"],
+  "Phyrexian Altar": ["sacrifice-outlet","ramp"],
+  "Dockside Extortionist": ["treasure","ramp","artifact-matters"],
+  "Treasure Nabber": ["treasure","artifact-matters"],
+  "Brass's Bounty": ["treasure","ramp"],
+  "Birgi, God of Storytelling": ["ramp","mana-sink"],
+  "Mana Echoes": ["ramp","mana-sink","go-wide"],
+  "Lightning Bolt": ["burn","targeted-removal"],
+  "Chaos Warp": ["targeted-removal"],
+  "Faithless Looting": ["card-advantage","looting"],
+  "Wheel of Fortune": ["card-advantage","wheel"],
+  "Hoard-Smelter Dragon": ["artifact-matters","targeted-removal"],
+  "Goblin Engineer": ["goblin","tutor","artifact-matters","recursion"],
+  "Coat of Arms": ["go-wide","artifact-matters"]
+};
+
+const EXAMPLE_DECK = [
+  "1 Krenko, Mob Boss","1 Goblin Chieftain","1 Goblin Warchief","1 Goblin Rabblemaster",
+  "1 Beetleback Chief","1 Mogg War Marshal","1 Skirk Prospector","1 Krenko's Command",
+  "1 Impact Tremors","1 Purphoros, God of the Forge","1 Goblin Bombardment","1 Ashnod's Altar",
+  "1 Sol Ring","1 Arcane Signet","1 Lightning Bolt","1 Faithless Looting"
+].join("\n");
+</script>
+
+<script>
+(function () {
+  "use strict";
+
+  // ── Name normalisation — MUST match normalizeName() in bake-tags.mjs ──
+  function normalizeName(name) {
+    return String(name)
+      .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[\u2018\u2019]/g, "'")
+      .toLowerCase()
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  const el = id => document.getElementById(id);
+  const deck = el('deck'), analyzeBtn = el('analyzeBtn'), clearBtn = el('clearBtn'),
+        exampleBtn = el('exampleBtn'), results = el('results'), summary = el('summary'),
+        bars = el('bars'), showAll = el('showAll'), recs = el('recs'), recEmpty = el('recEmpty'),
+        dataNote = el('dataNote'), copyTags = el('copyTags'),
+        helpToggle = el('helpToggle'), helpPanel = el('helpPanel'), toast = el('toast');
+
+  let DATA = null;             // { tags:[], df:[], cards:{ name:[idx] } }
+  let lastTagCounts = null;    // [{ idx, count }] sorted desc, for copy + show-all
+  let barsExpanded = false;
+  const BAR_LIMIT = 24;
+
+  function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function pretty(slug){ return String(slug).replace(/-/g, ' '); }
+
+  function showToast(msg){
+    toast.textContent = msg; toast.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toast.classList.remove('show'), 1600);
+  }
+
+  // ── Build the canonical interned shape from the readable sample ──
+  function internSlugMap(slugMap){
+    const tagIndex = new Map(), tags = [], cards = {}, df = [];
+    const idxOf = s => { let i = tagIndex.get(s); if (i===undefined){ i=tags.length; tags.push(s); tagIndex.set(s,i);} return i; };
+    for (const rawName in slugMap){
+      const arr = slugMap[rawName].map(idxOf).sort((a,b)=>a-b);
+      cards[normalizeName(rawName)] = arr;
+      for (const i of arr) df[i] = (df[i]||0)+1;
+    }
+    for (let i=0;i<tags.length;i++) if (!df[i]) df[i]=0;
+    return { tags, df, cards, cardCount: Object.keys(cards).length, tagCount: tags.length, sample:true };
+  }
+
+  // ── Load: try the baked file, fall back to the inline sample ──
+  async function load(){
+    try {
+      const r = await fetch(DATA_URL, { cache: 'default' });
+      if (!r.ok) throw new Error(String(r.status));
+      const json = await r.json();
+      if (!json || !json.cards || !json.tags) throw new Error('shape');
+      if (!Array.isArray(json.df)) {            // df is optional in the contract
+        const df = []; for (const n in json.cards) for (const i of json.cards[n]) df[i]=(df[i]||0)+1;
+        for (let i=0;i<json.tags.length;i++) if(!df[i]) df[i]=0;
+        json.df = df;
+      }
+      DATA = json;
+      dataNote.textContent = DATA.cardCount.toLocaleString() + ' cards in the tag database';
+      dataNote.classList.remove('warn');
+    } catch (e) {
+      DATA = internSlugMap(SAMPLE_SLUGS);
+      dataNote.textContent = 'Showing sample data — the full tag database loads on the live site.';
+      dataNote.classList.add('warn');
+    }
+    analyzeBtn.disabled = false;
+    analyzeBtn.textContent = 'Analyze deck';
+  }
+
+  // ── Parse a pasted decklist into [{ name, qty }] ──
+  function parseDeck(text){
+    const out = [];
+    const seen = new Set();
+    for (let line of text.split('\n')){
+      line = line.trim();
+      if (!line) continue;
+      if (/^(\/\/|#)/.test(line)) continue;                 // comment
+      if (/^(deck|sideboard|maybeboard|commander|companion|about)\b\s*:?\s*$/i.test(line)) continue; // section header
+      let qty = 1;
+      const q = line.match(/^(\d+)\s*[xX]?\s+(.+)$/);        // "3 Card" / "3x Card"
+      if (q){ qty = parseInt(q[1], 10) || 1; line = q[2].trim(); }
+      line = line.replace(/\s*\([0-9A-Za-z]{2,6}\)\s*\d+.*$/, ''); // " (SET) 123 ..." trailing
+      line = line.replace(/\s*\[[^\]]*\]\s*$/, '');           // " [FOIL]" trailing
+      line = line.replace(/\s+\*[^*]+\*\s*$/, '');            // " *F*" trailing
+      line = line.replace(/\s+#\d+\s*$/, '');                 // " #123" trailing
+      line = line.trim();
+      if (!line) continue;
+      const key = normalizeName(line);
+      if (seen.has(key)) {                                    // merge dupes (e.g. basics)
+        out.find(o => o.key === key).qty += qty;
+      } else {
+        seen.add(key);
+        out.push({ name: line, key, qty });
+      }
+    }
+    return out;
+  }
+
+  function lookup(key){
+    if (DATA.cards[key]) return DATA.cards[key];
+    // tolerate a list that gives only the front face of a "a // b" name
+    if (key.includes('//')) {
+      const front = key.split('//')[0].trim();
+      if (DATA.cards[front]) return DATA.cards[front];
+    }
+    return null;
+  }
+
+  // ── Analyse ──
+  function analyze(){
+    if (!DATA) return;
+    const parsed = parseDeck(deck.value);
+    if (parsed.length === 0){ showToast('Paste a decklist first'); return; }
+
+    const tagCount = new Map();   // idx -> # deck cards (qty-weighted) carrying it
+    const deckKeys = new Set();   // normalized names that matched (to exclude from recs)
+    const matched = [], unmatched = [];
+
+    for (const c of parsed){
+      const tagArr = lookup(c.key);
+      if (!tagArr){ unmatched.push(c.name); continue; }
+      matched.push(c);
+      deckKeys.add(c.key);
+      for (const i of tagArr) tagCount.set(i, (tagCount.get(i) || 0) + c.qty);
+    }
+
+    renderSummary(matched, unmatched, tagCount.size);
+
+    if (tagCount.size === 0){
+      bars.innerHTML = ''; showAll.hidden = true;
+      recs.innerHTML = ''; recEmpty.hidden = false;
+      lastTagCounts = [];
+      results.hidden = false;
+      results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+
+    lastTagCounts = [...tagCount.entries()]
+      .map(([idx, count]) => ({ idx, count }))
+      .sort((a, b) => b.count - a.count || DATA.tags[a.idx].localeCompare(DATA.tags[b.idx]));
+
+    barsExpanded = false;
+    renderBars();
+    renderRecs(tagCount, deckKeys);
+
+    results.hidden = false;
+    results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function renderSummary(matched, unmatched, uniqTags){
+    const total = matched.length + unmatched.length;
+    let html = '<p class="line">Read <span class="num">' + matched.length + '</span> of '
+             + '<span class="num">' + total + '</span> cards. '
+             + 'Found <span class="num">' + uniqTags + '</span> function tags.</p>';
+    if (unmatched.length){
+      html += '<details class="unmatched"><summary>' + unmatched.length
+            + (unmatched.length === 1 ? ' card not tagged' : ' cards not tagged')
+            + '</summary><div class="names">' + unmatched.map(esc).join(' · ') + '</div></details>';
+    }
+    summary.innerHTML = html;
+  }
+
+  function renderBars(){
+    const list = barsExpanded ? lastTagCounts : lastTagCounts.slice(0, BAR_LIMIT);
+    const max = lastTagCounts[0].count;
+    const palette = ['var(--bronze)','var(--green)','var(--blue)','var(--red)','var(--amber)','var(--grey)'];
+    bars.innerHTML = list.map((t, n) => {
+      const pct = Math.max(4, Math.round(t.count / max * 100));
+      const col = palette[n % palette.length];
+      return '<div class="bar-row">'
+        + '<div class="bar-top"><span class="bar-name">' + esc(pretty(DATA.tags[t.idx])) + '</span>'
+        + '<span class="bar-count">' + t.count + '</span></div>'
+        + '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:' + col + '"></div></div>'
+        + '</div>';
+    }).join('');
+    const hidden = lastTagCounts.length - BAR_LIMIT;
+    if (hidden > 0){
+      showAll.hidden = false;
+      showAll.textContent = barsExpanded ? 'Show fewer' : ('Show all ' + lastTagCounts.length + ' tags');
+    } else {
+      showAll.hidden = true;
+    }
+  }
+
+  // ── Deck-aware similarity: IDF-weighted shared-tag score ──
+  function renderRecs(tagCount, deckKeys){
+    const N = DATA.cardCount || Object.keys(DATA.cards).length;
+    const idf = DATA._idf || (DATA._idf = DATA.df.map(d => Math.log((N + 1) / ((d || 0) + 1)) + 1));
+    const deckTagSet = tagCount;   // Map idx -> deck count
+
+    const scored = [];
+    for (const name in DATA.cards){
+      if (deckKeys.has(name)) continue;
+      const tagArr = DATA.cards[name];
+      let score = 0, shared = 0;
+      const sharedIdx = [];
+      for (const i of tagArr){
+        const dc = deckTagSet.get(i);
+        if (dc){
+          score += idf[i] * Math.log(1 + dc);
+          shared++;
+          sharedIdx.push(i);
+        }
+      }
+      if (shared === 0) continue;
+      score = score / Math.sqrt(tagArr.length || 1);   // damp kitchen-sink cards
+      scored.push({ name, score, shared, sharedIdx });
+    }
+
+    scored.sort((a, b) => b.score - a.score || b.shared - a.shared);
+    const top = scored.slice(0, 24);
+
+    if (top.length === 0){ recs.innerHTML = ''; recEmpty.hidden = false; return; }
+    recEmpty.hidden = true;
+
+    recs.innerHTML = top.map(r => {
+      const chips = r.sharedIdx
+        .slice()
+        .sort((a, b) => idf[b] - idf[a])      // most distinctive shared tags first
+        .slice(0, 4)
+        .map(i => '<span class="chip">' + esc(pretty(DATA.tags[i])) + '</span>')
+        .join('');
+      const disp = displayName(r.name);
+      const href = 'https://scryfall.com/search?q=' + encodeURIComponent('!"' + disp + '"');
+      return '<div class="rec">'
+        + '<div class="rec-top">'
+        + '<a class="rec-name" href="' + href + '" target="_blank" rel="noopener">' + esc(disp) + '</a>'
+        + '<span class="rec-fit">' + r.shared + (r.shared === 1 ? ' shared tag' : ' shared tags') + '</span>'
+        + '</div><div class="chips">' + chips + '</div></div>';
+    }).join('');
+  }
+
+  // The baked keys are normalized (lowercase). Title-case for display.
+  function displayName(key){
+    return key.replace(/\b([a-z])/g, (m, c) => c.toUpperCase())
+              .replace(/\bOf\b/g, 'of').replace(/\bThe\b/g, 'the').replace(/\bAnd\b/g, 'and')
+              .replace(/^(.)/, (m, c) => c.toUpperCase());
+  }
+
+  // ── Wiring ──
+  analyzeBtn.addEventListener('click', analyze);
+  deck.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter'){ e.preventDefault(); analyze(); }
+  });
+  clearBtn.addEventListener('click', () => {
+    deck.value = ''; results.hidden = true; deck.focus();
+  });
+  exampleBtn.addEventListener('click', () => {
+    deck.value = EXAMPLE_DECK; deck.focus();
+    analyze();
+  });
+  showAll.addEventListener('click', () => { barsExpanded = !barsExpanded; renderBars(); });
+
+  copyTags.addEventListener('click', async () => {
+    if (!lastTagCounts || !lastTagCounts.length){ showToast('Analyze a deck first'); return; }
+    const text = lastTagCounts.map(t => pretty(DATA.tags[t.idx]) + ',' + t.count).join('\n');
+    try { await navigator.clipboard.writeText('tag,count\n' + text); showToast('Tags copied'); }
+    catch (e) { showToast('Copy failed'); }
+  });
+
+  // Help panel — open on first visit (guarded so previews without storage still work)
+  function setHelp(open){
+    helpPanel.hidden = !open;
+    helpToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  helpToggle.addEventListener('click', () => setHelp(helpPanel.hidden));
+  let firstVisit = true;
+  try { firstVisit = !localStorage.getItem('tg_seen'); localStorage.setItem('tg_seen', '1'); } catch (e) {}
+  setHelp(firstVisit);
+
+  load();
+})();
+</script>
+</body>
+</html>
