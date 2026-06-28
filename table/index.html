@@ -35,7 +35,7 @@
     --bg:         #1e1728;
     --surface:    #261d33;
     --bronze:     #b8935a;
-    --bronze-dim: #7a5e35;
+    --bronze-dim:#7a5e35;
     --bronze-glow: rgba(184,147,90,0.15);
     --text-dim:   #9b8fb0;
     --red:        #c0392b;
@@ -83,6 +83,8 @@
     -webkit-tap-highlight-color: transparent;
   }
   .logo-home:hover, .logo-home:active { background: var(--bronze-glow); }
+  button.logo-home { background: none; border: 0; font: inherit; cursor: pointer; }
+  .logo-home:focus-visible { outline: 2px solid var(--bronze); outline-offset: 2px; }
   .logo-home .logo-pip-ring { display: block; }
   /* Tiny label floats beneath the ring — absolute so it adds no row height */
   .logo-home-label {
@@ -306,7 +308,26 @@
   #start-btn:active { background: var(--red-bright); }
 
   /* ── DESKTOP (mirrors index.html breakpoint) ── */
-  @media (min-width: 640px) {
+  .toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  transform: translateX(-50%) translateY(8px);
+  background: var(--surface);
+  border: 1px solid var(--bronze-dim);
+  color: var(--white);
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.9rem;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 100;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@media (min-width: 640px) {
     .tk-header { padding: 0 2rem; }
     .setup-grid { max-width: 560px; gap: 1rem; }
     .setup-tile { padding: 1.5rem 1.25rem 1.35rem; }
@@ -1054,18 +1075,18 @@
           <span class="logo-home-label">home</span>
         </a>
         <h1>Tablekeep</h1>
-        <a class="logo-home" href="/" aria-label="Back to MTJawnny home">
+        <button class="logo-home logo-share" id="shareBtn" type="button" aria-label="Share this page">
           <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
-            <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
-            <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
-            <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
-            <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
-            <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
-            <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="24" cy="24" r="16" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+            <line x1="14.8" y1="24" x2="30.16" y2="17.16" stroke="#b8935a" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="14.8" y1="24" x2="30.16" y2="30.84" stroke="#b8935a" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="14.8" cy="24" r="3.4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="30.16" cy="17.16" r="3.4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="30.16" cy="30.84" r="3.4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
           </svg>
-          <span class="logo-home-label">home</span>
-        </a>
+          <span class="logo-home-label">share</span>
+        </button>
       </div>
       <!-- tagline slot — tips + instagram -->
       <div class="tk-links">
@@ -2413,5 +2434,136 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').catch(() => {});
 }
 </script>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  var btn = document.getElementById('shareBtn');
+  if (!btn) return;
+
+  // Zero per-page config: both read at runtime.
+  var canonical = document.querySelector('link[rel="canonical"]');
+  var url = (canonical && canonical.href) ? canonical.href : location.href;
+  var raw = document.title || '';
+  var title = raw.replace(/\s*[—·|-]\s*MTJawnny\s*$/i, '').trim() || raw;
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function () { t.classList.remove('show'); }, 1800);
+  }
+
+  function legacyCopy() {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = url;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'absolute';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Link copied');
+    } catch (e) {
+      showToast('Copy not supported');
+    }
+  }
+
+  btn.addEventListener('click', function () {
+    if (navigator.share) {
+      navigator.share({ title: title, url: url }).catch(function () {});
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url)
+        .then(function () { showToast('Link copied'); })
+        .catch(function () { legacyCopy(); });
+    } else {
+      legacyCopy();
+    }
+  });
+})();
+</script>
+
+<!-- ===== MTJawnny pip-ring footer nav ===== -->
+<style>
+  .mtjnav-wrap { padding: 0.75rem 1rem; display: flex; justify-content: center; }
+  .mtjnav, .mtjnav * { box-sizing: border-box; }
+  .mtjnav {
+    --size: min(94vw, 380px);
+    --R:    calc(var(--size) * 0.34);
+    --pip:  calc(var(--size) * 0.24);
+    position: relative; width: var(--size); height: var(--size);
+  }
+  .mtjnav-bg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .mtjnav-bg .back    { fill: #130e1b; stroke: #b8935a; stroke-width: 2; vector-effect: non-scaling-stroke; }
+  .mtjnav-bg .connect { fill: none;    stroke: #b8935a; stroke-width: 5; vector-effect: non-scaling-stroke; }
+  .mtjnav-pip { position: absolute; left: 50%; top: 50%; width: var(--pip); height: var(--pip); text-decoration: none; }
+  .mtjnav-pip.is-table   { transform: translate(calc(-50% + (-0.5878 * var(--R))), calc(-50% + (-0.8090 * var(--R)))); }
+  .mtjnav-pip.is-tools   { transform: translate(calc(-50% + ( 0.5878 * var(--R))), calc(-50% + (-0.8090 * var(--R)))); }
+  .mtjnav-pip.is-stack   { transform: translate(calc(-50% + (-0.9511 * var(--R))), calc(-50% + ( 0.3090 * var(--R)))); }
+  .mtjnav-pip.is-cards   { transform: translate(calc(-50% + ( 0.9511 * var(--R))), calc(-50% + ( 0.3090 * var(--R)))); }
+  .mtjnav-pip.is-coffers { transform: translate(-50%, calc(-50% + (1.0 * var(--R)))); }
+  .mtjnav-dot {
+    width: 100%; height: 100%; border-radius: 50%;
+    background: #261d33; border: 5px solid #b8935a;
+    display: grid; place-items: center;
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+  .mtjnav-dot svg { width: 44%; height: 44%; color: #b8935a; display: block; }
+  .mtjnav-dot .mtjnav-icon { width: auto; height: auto; max-width: 54%; max-height: 48%; object-fit: contain; display: block; }
+  .mtjnav-pip:hover .mtjnav-dot, .mtjnav-pip:focus-visible .mtjnav-dot {
+    border-color: #d8b27a; box-shadow: 0 0 14px rgba(184,147,90,0.35), 0 6px 18px rgba(0,0,0,0.4);
+    transform: translateY(-2px);
+  }
+  .mtjnav-pip:focus-visible { outline: none; }
+  .mtjnav-pip.is-current .mtjnav-dot { opacity: 0.45; }
+  @media (min-width: 640px) { .mtjnav { --size: min(72vw, 470px); } }
+  @media (prefers-reduced-motion: reduce) { .mtjnav-dot { transition: none; } }
+</style>
+
+<div class="mtjnav-wrap">
+  <nav class="mtjnav" aria-label="Site sections">
+    <svg class="mtjnav-bg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle class="back"    cx="50" cy="50" r="49"/>
+      <circle class="connect" cx="50" cy="50" r="34"/>
+    </svg>
+    <a class="mtjnav-pip is-table"   href="/table"   aria-label="Table"   data-i="table"><span class="mtjnav-dot"></span></a>
+    <a class="mtjnav-pip is-tools"   href="/tools"   aria-label="Tools"   data-i="tools"><span class="mtjnav-dot"></span></a>
+    <a class="mtjnav-pip is-cards"   href="/stack"   aria-label="Stack"   data-i="stack"><span class="mtjnav-dot"></span></a>
+    <a class="mtjnav-pip is-stack"   href="/cards"   aria-label="Cards"   data-i="cards"><span class="mtjnav-dot"></span></a>
+    <a class="mtjnav-pip is-coffers" href="/coffers" aria-label="Coffers" data-i="coffers"><span class="mtjnav-dot"></span></a>
+  </nav>
+</div>
+
+<script>
+(function () {
+  var G = {
+    table:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M9 5v14"/></svg>',
+    tools:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17v3h3l5.3-5.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.2-.6-.6-2.2 2.6-2.5Z"/></svg>',
+    cards:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="12" height="15" rx="2"/><path d="M8 6V4a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-2"/></svg>',
+    stack:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5-10-5ZM2 13l10 5 10-5M2 18l10 5 10-5"/></svg>',
+    coffers:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16l-1 11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1L4 8Z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/><circle cx="12" cy="14" r="2"/></svg>'
+  };
+  var seg = (location.pathname.split('/')[1] || '').toLowerCase();
+  document.querySelectorAll('.mtjnav-pip').forEach(function (a) {
+    var k = a.getAttribute('data-i');
+    var dot = a.querySelector('.mtjnav-dot');
+    var img = new Image();
+    img.className = 'mtjnav-icon'; img.alt = '';
+    img.onerror = function () { dot.innerHTML = G[k] || ''; };
+    img.src = '/icons/' + k + '.png';
+    dot.appendChild(img);
+    var s = (a.getAttribute('href').split('/')[1] || '').toLowerCase();
+    if (s && s === seg) { a.classList.add('is-current'); a.setAttribute('aria-current', 'page'); }
+  });
+})();
+</script>
+<!-- ===== /MTJawnny pip-ring footer nav ===== -->
 </body>
 </html>
