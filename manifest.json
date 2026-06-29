@@ -1,0 +1,17 @@
+{
+  "name": "MTJawnny",
+  "short_name": "MTJawnny",
+  "description": "Your free Magic: The Gathering toolbox: card explainers, stack interactions, deck utilities, and custom proxy assets.",
+  "start_url": "/",
+  "display": "minimal-ui",
+  "background_color": "#1e1728",
+  "theme_color": "#1e1728",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='10' fill='%231e1728'/%3E%3Ccircle cx='24' cy='24' r='15' stroke='%23b8935a' stroke-width='1.8' fill='none'/%3E%3Ccircle cx='24' cy='9' r='4' fill='%23f0ead0' stroke='%23b8935a' stroke-width='1.2'/%3E%3Ccircle cx='10.5' cy='19' r='4' fill='%235aab6e' stroke='%23b8935a' stroke-width='1.2'/%3E%3Ccircle cx='37.5' cy='19' r='4' fill='%236aaee0' stroke='%23b8935a' stroke-width='1.2'/%3E%3Ccircle cx='14' cy='36' r='4' fill='%23e06060' stroke='%23b8935a' stroke-width='1.2'/%3E%3Ccircle cx='34' cy='36' r='4' fill='%23a09ab0' stroke='%23b8935a' stroke-width='1.2'/%3E%3C/svg%3E",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
