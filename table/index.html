@@ -2165,7 +2165,7 @@ function buildManaGrid() {
   const g = document.getElementById('mana-grid');
   g.innerHTML = MANA_TYPES.map(m => `
     <div class="mana-cell">
-      <div class="mana-orb" data-m="${m}" onclick="bumpMana('${m}',1)"><img class="mana-sym" src="/manasymbols/${m}.svg" alt="${MANA_LABEL[m]} mana" onerror="this.remove()"><span class="mana-letter">${MANA_LABEL[m]}</span></div>
+      <div class="mana-orb" data-m="${m}" onclick="bumpMana('${m}',1)"><img class="mana-sym" src="/manasymbols/${m.toUpperCase()}.svg" alt="${MANA_LABEL[m]} mana" onerror="this.remove()"><span class="mana-letter">${MANA_LABEL[m]}</span></div>
       <div class="mana-count" id="mc-${m}">${S.mana[m]}</div>
       <button class="mana-minus" onclick="bumpMana('${m}',-1)">−</button>
     </div>
