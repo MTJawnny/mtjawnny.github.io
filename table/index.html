@@ -2106,7 +2106,7 @@ function openMana() {
   gadgetView = 'mana';
   buildManaGrid();
   applyGadgetView();
-  orientOverlay('mana-card');
+  document.getElementById('mana-card').style.transform = 'none';
   document.getElementById('mana-overlay').classList.add('open');
   document.getElementById('tab-mana').classList.add('active');
 }
@@ -2176,8 +2176,7 @@ function showTokenCard(id) {
   if (!t) return;
   const inner = document.getElementById('token-lightbox-inner');
   inner.innerHTML = '';
-  const rot = S.active >= 0 ? effRot(S.active) : 0;
-  inner.style.transform = 'rotate(' + rot + 'deg)';
+  inner.style.transform = 'none';
   t.imgs.forEach(src => {
     const img = new Image();
     img.className = 'token-img';
