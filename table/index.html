@@ -1027,7 +1027,11 @@
     max-height: 84vh;
     border-radius: 12px;
     box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    touch-action: pan-y;            /* 1-finger drag still scrolls the stacked list */
+    transform-origin: center center;
+    will-change: transform;
   }
+  .token-img.zoomed { touch-action: none; }   /* when zoomed, 1-finger pans instead */
   .token-img-missing {
     width: min(70vw, 300px);
     padding: 26px 18px;
@@ -1349,7 +1353,7 @@
 </div>
 
 <!-- ══ HELPER TOKEN LIGHTBOX ═════════════════════════ -->
-<div class="token-lightbox" id="token-lightbox" onclick="closeTokenCard()">
+<div class="token-lightbox" id="token-lightbox" onclick="onLightboxTap(event)">
   <div class="token-lightbox-inner" id="token-lightbox-inner"></div>
 </div>
 
@@ -2188,6 +2192,7 @@ function showTokenCard(id) {
       ph.textContent = t.name + ': add ' + src.split('/').pop();
       img.replaceWith(ph);
     };
+    attachZoom(img);
     inner.appendChild(img);
   });
   document.getElementById('token-lightbox').classList.add('open');
@@ -2198,6 +2203,60 @@ function closeTokenCard() {
   if (lb) lb.classList.remove('open');
   const inner = document.getElementById('token-lightbox-inner');
   if (inner) inner.innerHTML = '';
+}
+
+// Pinch-to-zoom + pan, scoped to helper-token card images only.
+function attachZoom(img) {
+  let scale = 1, tx = 0, ty = 0;
+  let startDist = 0, startScale = 1, lastX = 0, lastY = 0, mode = null;
+  const apply = () => {
+    img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+    img.classList.toggle('zoomed', scale > 1.01);
+  };
+  const reset = () => { scale = 1; tx = 0; ty = 0; apply(); };
+  const dist = (t) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+  img._isZoomed = () => scale > 1.01;
+  img._resetZoom = reset;
+
+  img.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 2) {
+      mode = 'pinch'; startDist = dist(e.touches); startScale = scale; e.preventDefault();
+    } else if (e.touches.length === 1 && scale > 1.01) {
+      mode = 'pan'; lastX = e.touches[0].clientX; lastY = e.touches[0].clientY; e.preventDefault();
+    } else {
+      mode = null;
+    }
+  }, { passive: false });
+
+  img.addEventListener('touchmove', (e) => {
+    if (mode === 'pinch' && e.touches.length === 2) {
+      scale = Math.min(5, Math.max(1, startScale * (dist(e.touches) / startDist)));
+      if (scale <= 1.01) { tx = 0; ty = 0; }
+      apply(); e.preventDefault();
+    } else if (mode === 'pan' && e.touches.length === 1) {
+      const x = e.touches[0].clientX, y = e.touches[0].clientY;
+      tx += x - lastX; ty += y - lastY; lastX = x; lastY = y;
+      apply(); e.preventDefault();
+    }
+  }, { passive: false });
+
+  img.addEventListener('touchend', (e) => {
+    if (e.touches.length === 0) {
+      if (scale <= 1.01) reset();
+      mode = null;
+    } else if (e.touches.length === 1) {
+      mode = scale > 1.01 ? 'pan' : null;
+      lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
+    }
+  });
+}
+
+// Tap a zoomed card to reset it; tap anywhere else to close.
+function onLightboxTap(e) {
+  const tgt = e.target;
+  const img = (tgt && tgt.classList && tgt.classList.contains('token-img')) ? tgt : null;
+  if (img && img._isZoomed && img._isZoomed()) { img._resetZoom(); return; }
+  closeTokenCard();
 }
 
 // ══ TRACKERS ══════════════════════════════════════════
