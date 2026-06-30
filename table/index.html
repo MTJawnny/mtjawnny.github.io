@@ -951,6 +951,7 @@
     display: flex; flex-direction: column; align-items: center; gap: 4px;
   }
   .mana-orb {
+    position: relative; overflow: hidden;
     width: 56px; height: 56px;
     border-radius: 50%;
     border: 3px solid rgba(255,255,255,0.25);
@@ -960,6 +961,8 @@
     transition: transform 0.1s;
   }
   .mana-orb:active { transform: scale(0.9); }
+  /* real mana pip overlays the colored-dot fallback; removes itself if the svg is missing */
+  .mana-sym { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
   .mana-orb[data-m="w"] { background: #d8cfa8; color: #4a3f1e; }
   .mana-orb[data-m="u"] { background: #2a6fa8; color: #cfe8ff; }
   .mana-orb[data-m="b"] { background: #2a2035; color: #b9a8d8; }
@@ -2162,7 +2165,7 @@ function buildManaGrid() {
   const g = document.getElementById('mana-grid');
   g.innerHTML = MANA_TYPES.map(m => `
     <div class="mana-cell">
-      <div class="mana-orb" data-m="${m}" onclick="bumpMana('${m}',1)">${MANA_LABEL[m]}</div>
+      <div class="mana-orb" data-m="${m}" onclick="bumpMana('${m}',1)"><img class="mana-sym" src="/manasymbols/${m}.svg" alt="${MANA_LABEL[m]} mana" onerror="this.remove()"><span class="mana-letter">${MANA_LABEL[m]}</span></div>
       <div class="mana-count" id="mc-${m}">${S.mana[m]}</div>
       <button class="mana-minus" onclick="bumpMana('${m}',-1)">−</button>
     </div>
