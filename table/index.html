@@ -978,6 +978,63 @@
   .overlay-actions { display: flex; gap: 12px; }
   .overlay-actions .opt-btn { padding: 10px 22px; font-size: 14px; }
 
+  /* Gadget view toggle + helper tokens */
+  .gadget-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .gadget-toggle { padding: 8px 18px; font-size: 13px; background: var(--surface); }
+  .gadget-toggle:hover { border-color: var(--bronze); }
+  .token-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    width: 280px;
+    max-width: 78vw;
+  }
+  .token-btn {
+    background: var(--surface);
+    border: 2px solid var(--bronze-dim);
+    color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; font-weight: 700;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    line-height: 1.15;
+    min-height: 52px;
+    padding: 10px 8px; border-radius: 8px; cursor: pointer;
+    transition: border-color 0.15s, transform 0.1s;
+  }
+  .token-btn:hover { border-color: var(--bronze); }
+  .token-btn:active { transform: scale(0.96); }
+
+  /* Helper-token card lightbox */
+  .token-lightbox {
+    position: fixed; inset: 0;
+    background: rgba(5,3,10,0.94);
+    z-index: 70;
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 16px; cursor: pointer;
+  }
+  .token-lightbox.open { display: flex; }
+  .token-lightbox-inner {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    align-items: center; justify-content: center;
+    max-width: 100%; max-height: 100%;
+  }
+  .token-img {
+    max-width: min(80vw, 360px);
+    max-height: 84vh;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  }
+  .token-img-missing {
+    width: min(70vw, 300px);
+    padding: 26px 18px;
+    border: 2px dashed var(--bronze-dim);
+    border-radius: 12px;
+    color: var(--text-dim);
+    text-align: center;
+    font-size: 14px; line-height: 1.4;
+  }
+
   /* Trackers config rows */
   .tracker-rows { display: flex; flex-direction: column; gap: 10px; width: 240px; }
   .tracker-row {
@@ -1274,14 +1331,23 @@
 
 <!-- ══ MANA OVERLAY ═══════════════════════════════════ -->
 <div class="overlay" id="mana-overlay" onclick="if(event.target===this) closeOverlays()">
-  <div class="overlay-card" id="mana-card">
-    <div class="overlay-title">Mana Pool</div>
-    <div class="mana-grid" id="mana-grid"></div>
-    <div class="overlay-actions">
-      <button class="opt-btn" onclick="clearMana()">Clear</button>
-      <button class="opt-btn sel" onclick="closeOverlays()">Close</button>
+  <div class="gadget-wrap" id="mana-card">
+    <button class="opt-btn gadget-toggle" id="gadget-toggle" onclick="toggleGadgetView()">Helper Tokens</button>
+    <div class="overlay-card gadget-box">
+      <div class="overlay-title" id="gadget-title">Mana Pool</div>
+      <div class="mana-grid" id="mana-grid"></div>
+      <div class="token-grid" id="token-grid" style="display:none"></div>
+      <div class="overlay-actions">
+        <button class="opt-btn" id="mana-clear-btn" onclick="clearMana()">Clear</button>
+        <button class="opt-btn sel" onclick="closeOverlays()">Close</button>
+      </div>
     </div>
   </div>
+</div>
+
+<!-- ══ HELPER TOKEN LIGHTBOX ═════════════════════════ -->
+<div class="token-lightbox" id="token-lightbox" onclick="closeTokenCard()">
+  <div class="token-lightbox-inner" id="token-lightbox-inner"></div>
 </div>
 
 <!-- ══ TOGGLES OVERLAY ════════════════════════════════ -->
@@ -1305,8 +1371,8 @@
     Reset
   </button>
   <button class="nav-tab" id="tab-mana" onclick="openMana()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
-    Mana
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    Gadgets
   </button>
   <button class="nav-tab" id="tab-toggles" onclick="openTrackers()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
@@ -2034,7 +2100,9 @@ function toggleDesktop() {
 function openMana() {
   if (S.phase === 'setup') return;
   closeOverlays();
+  gadgetView = 'mana';
   buildManaGrid();
+  applyGadgetView();
   orientOverlay('mana-card');
   document.getElementById('mana-overlay').classList.add('open');
   document.getElementById('tab-mana').classList.add('active');
@@ -2062,6 +2130,72 @@ function clearMana() {
   if (had) logEv('manaclear', { pool: { ...S.mana } });
   MANA_TYPES.forEach(m => S.mana[m] = 0);
   buildManaGrid(); save();
+}
+
+// ══ HELPER TOKEN GADGET ════════════════════════════════
+let gadgetView = 'mana';
+
+const HELPER_TOKENS = [
+  { id: 'ring',          name: 'Ring-bearer',            imgs: ['/tools/helpertokens/ring1.png', '/tools/helpertokens/ring2.png'] },
+  { id: 'monarch',       name: 'Monarch',                imgs: ['/tools/helpertokens/monarch.png'] },
+  { id: 'rad',           name: 'Radiation',              imgs: ['/tools/helpertokens/rad.png'] },
+  { id: 'wildermage',    name: 'Wilder / Mage',          imgs: ['/tools/helpertokens/wilder.png', '/tools/helpertokens/mage.png'] },
+  { id: 'daynight',      name: 'Day / Night',            imgs: ['/tools/helpertokens/day.png', '/tools/helpertokens/night.png'] },
+  { id: 'minetomb',      name: 'Mine / Tomb',            imgs: ['/tools/helpertokens/mine.png', '/tools/helpertokens/tomb.png'] },
+  { id: 'speed',         name: 'Speed',                  imgs: ['/tools/helpertokens/speed.png'] },
+  { id: 'initundercity', name: 'Initi / Undercity', imgs: ['/tools/helpertokens/initiative.png', '/tools/helpertokens/undercity.png'] }
+];
+
+function toggleGadgetView() {
+  gadgetView = (gadgetView === 'mana') ? 'tokens' : 'mana';
+  if (gadgetView === 'tokens') buildTokenGrid();
+  applyGadgetView();
+}
+
+function applyGadgetView() {
+  const isMana = gadgetView === 'mana';
+  document.getElementById('mana-grid').style.display  = isMana ? 'grid' : 'none';
+  document.getElementById('token-grid').style.display = isMana ? 'none' : 'grid';
+  document.getElementById('mana-clear-btn').style.display = isMana ? '' : 'none';
+  document.getElementById('gadget-title').textContent  = isMana ? 'Mana Pool' : 'Helper Tokens';
+  document.getElementById('gadget-toggle').textContent = isMana ? 'Helper Tokens' : 'Mana Pool';
+}
+
+function buildTokenGrid() {
+  const g = document.getElementById('token-grid');
+  g.innerHTML = HELPER_TOKENS.map(t =>
+    `<button class="token-btn" onclick="showTokenCard('${t.id}')">${t.name}</button>`
+  ).join('');
+}
+
+function showTokenCard(id) {
+  const t = HELPER_TOKENS.find(x => x.id === id);
+  if (!t) return;
+  const inner = document.getElementById('token-lightbox-inner');
+  inner.innerHTML = '';
+  const rot = S.active >= 0 ? effRot(S.active) : 0;
+  inner.style.transform = 'rotate(' + rot + 'deg)';
+  t.imgs.forEach(src => {
+    const img = new Image();
+    img.className = 'token-img';
+    img.alt = t.name + ' helper card';
+    img.src = src;
+    img.onerror = () => {
+      const ph = document.createElement('div');
+      ph.className = 'token-img-missing';
+      ph.textContent = t.name + ': add ' + src.split('/').pop();
+      img.replaceWith(ph);
+    };
+    inner.appendChild(img);
+  });
+  document.getElementById('token-lightbox').classList.add('open');
+}
+
+function closeTokenCard() {
+  const lb = document.getElementById('token-lightbox');
+  if (lb) lb.classList.remove('open');
+  const inner = document.getElementById('token-lightbox-inner');
+  if (inner) inner.innerHTML = '';
 }
 
 // ══ TRACKERS ══════════════════════════════════════════
@@ -2325,6 +2459,7 @@ function closeOverlays() {
   document.querySelectorAll('.overlay').forEach(o => o.classList.remove('open'));
   document.getElementById('tab-mana').classList.remove('active');
   document.getElementById('tab-toggles').classList.remove('active');
+  closeTokenCard();
   closeAllPops();
 }
 
