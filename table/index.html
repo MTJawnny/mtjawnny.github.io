@@ -1021,6 +1021,9 @@
     display: flex; flex-wrap: wrap; gap: 12px;
     align-items: center; justify-content: center;
     max-width: 100%;
+    transform-origin: center center;
+    will-change: transform;
+    touch-action: pan-y;
   }
   .token-img {
     max-width: min(80vw, 360px);
@@ -1028,10 +1031,10 @@
     border-radius: 12px;
     box-shadow: 0 8px 30px rgba(0,0,0,0.6);
     touch-action: pan-y;            /* 1-finger drag still scrolls the stacked list */
-    transform-origin: center center;
-    will-change: transform;
   }
-  .token-img.zoomed { touch-action: none; }   /* when zoomed, 1-finger pans instead */
+  /* When zoomed, the whole stack pans as one unit (no native scroll) */
+  .token-lightbox-inner.zoomed,
+  .token-lightbox-inner.zoomed .token-img { touch-action: none; }
   .token-img-missing {
     width: min(70vw, 300px);
     padding: 26px 18px;
@@ -1040,6 +1043,25 @@
     color: var(--text-dim);
     text-align: center;
     font-size: 14px; line-height: 1.4;
+  }
+
+  /* ── Portrait guard: phone in landscape gets a rotate prompt (effective portrait lock) ── */
+  .rotate-guard { display: none; }
+  @media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+    .rotate-guard {
+      position: fixed; inset: 0; z-index: 200;
+      background: var(--bg);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 18px;
+      text-align: center; padding: 24px;
+    }
+    .rotate-guard svg { width: 60px; height: 60px; color: var(--bronze); }
+    .rotate-guard-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 20px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--bronze);
+    }
   }
 
   /* Trackers config rows */
@@ -1356,6 +1378,28 @@
 <div class="token-lightbox" id="token-lightbox" onclick="onLightboxTap(event)">
   <div class="token-lightbox-inner" id="token-lightbox-inner"></div>
 </div>
+
+<!-- ══ PORTRAIT GUARD ═════════════════════════════════ -->
+<div class="rotate-guard" aria-hidden="true">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="7" y="2" width="10" height="20" rx="2.5"/>
+    <path d="M11 18.5h2"/>
+    <path d="M2 9a5 5 0 0 1 5-5"/>
+    <path d="M2 6v3h3"/>
+  </svg>
+  <div class="rotate-guard-text">Rotate to portrait</div>
+</div>
+<script>
+// Best-effort hardware orientation lock (installed PWA / Android). No-ops where unsupported, e.g. iOS Safari.
+(function () {
+  try {
+    if (screen.orientation && screen.orientation.lock) {
+      var p = screen.orientation.lock('portrait');
+      if (p && p.catch) p.catch(function () {});
+    }
+  } catch (e) {}
+})();
+</script>
 
 <!-- ══ TOGGLES OVERLAY ════════════════════════════════ -->
 <div class="overlay" id="trackers-overlay" onclick="if(event.target===this) closeOverlays()">
@@ -2180,7 +2224,6 @@ function showTokenCard(id) {
   if (!t) return;
   const inner = document.getElementById('token-lightbox-inner');
   inner.innerHTML = '';
-  inner.style.transform = 'none';
   t.imgs.forEach(src => {
     const img = new Image();
     img.className = 'token-img';
@@ -2192,9 +2235,10 @@ function showTokenCard(id) {
       ph.textContent = t.name + ': add ' + src.split('/').pop();
       img.replaceWith(ph);
     };
-    attachZoom(img);
     inner.appendChild(img);
   });
+  bindZoom(inner);
+  resetZoom(inner);
   document.getElementById('token-lightbox').classList.add('open');
 }
 
@@ -2206,19 +2250,21 @@ function closeTokenCard() {
 }
 
 // Pinch-to-zoom + pan, scoped to helper-token card images only.
-function attachZoom(img) {
+// Pinch-to-zoom + pan the whole card stack as one unit (helper tokens only).
+function bindZoom(el) {
+  if (el._zoomBound) return;
+  el._zoomBound = true;
   let scale = 1, tx = 0, ty = 0;
   let startDist = 0, startScale = 1, lastX = 0, lastY = 0, mode = null;
   const apply = () => {
-    img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
-    img.classList.toggle('zoomed', scale > 1.01);
+    el.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+    el.classList.toggle('zoomed', scale > 1.01);
   };
-  const reset = () => { scale = 1; tx = 0; ty = 0; apply(); };
   const dist = (t) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
-  img._isZoomed = () => scale > 1.01;
-  img._resetZoom = reset;
+  el._isZoomed = () => scale > 1.01;
+  el._resetZoom = () => { scale = 1; tx = 0; ty = 0; apply(); };
 
-  img.addEventListener('touchstart', (e) => {
+  el.addEventListener('touchstart', (e) => {
     if (e.touches.length === 2) {
       mode = 'pinch'; startDist = dist(e.touches); startScale = scale; e.preventDefault();
     } else if (e.touches.length === 1 && scale > 1.01) {
@@ -2228,7 +2274,7 @@ function attachZoom(img) {
     }
   }, { passive: false });
 
-  img.addEventListener('touchmove', (e) => {
+  el.addEventListener('touchmove', (e) => {
     if (mode === 'pinch' && e.touches.length === 2) {
       scale = Math.min(5, Math.max(1, startScale * (dist(e.touches) / startDist)));
       if (scale <= 1.01) { tx = 0; ty = 0; }
@@ -2240,9 +2286,9 @@ function attachZoom(img) {
     }
   }, { passive: false });
 
-  img.addEventListener('touchend', (e) => {
+  el.addEventListener('touchend', (e) => {
     if (e.touches.length === 0) {
-      if (scale <= 1.01) reset();
+      if (scale <= 1.01) el._resetZoom();
       mode = null;
     } else if (e.touches.length === 1) {
       mode = scale > 1.01 ? 'pan' : null;
@@ -2251,11 +2297,15 @@ function attachZoom(img) {
   });
 }
 
+function resetZoom(el) {
+  if (el._resetZoom) el._resetZoom();
+  else el.style.transform = 'none';
+}
+
 // Tap a zoomed card to reset it; tap anywhere else to close.
 function onLightboxTap(e) {
-  const tgt = e.target;
-  const img = (tgt && tgt.classList && tgt.classList.contains('token-img')) ? tgt : null;
-  if (img && img._isZoomed && img._isZoomed()) { img._resetZoom(); return; }
+  const inner = document.getElementById('token-lightbox-inner');
+  if (inner && inner._isZoomed && inner._isZoomed()) { inner._resetZoom(); return; }
   closeTokenCard();
 }
 
