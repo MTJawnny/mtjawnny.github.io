@@ -1010,14 +1010,17 @@
     background: rgba(5,3,10,0.94);
     z-index: 70;
     display: none;
-    align-items: center; justify-content: center;
-    padding: 16px; cursor: pointer;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 20px 16px; cursor: pointer;
   }
   .token-lightbox.open { display: flex; }
+  /* margin:auto centers when content fits, but stays scroll-reachable when it overflows */
   .token-lightbox-inner {
+    margin: auto;
     display: flex; flex-wrap: wrap; gap: 12px;
     align-items: center; justify-content: center;
-    max-width: 100%; max-height: 100%;
+    max-width: 100%;
   }
   .token-img {
     max-width: min(80vw, 360px);
