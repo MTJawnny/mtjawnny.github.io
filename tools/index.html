@@ -183,8 +183,8 @@
     border-radius: 1.55em;
     text-decoration: none;
     box-shadow:
-      0 0 1.5em -0.4em color-mix(in srgb, var(--ic) 55%, transparent),
-      inset 0 0 1.1em -0.6em color-mix(in srgb, var(--ic) 60%, transparent),
+      0 0 1.1em -0.5em color-mix(in srgb, var(--ic) 24%, transparent),
+      inset 0 0 0.85em -0.7em color-mix(in srgb, var(--ic) 26%, transparent),
       0 1em 2.4em -1.1em rgba(0,0,0,0.95);
     transition: transform 0.18s ease, box-shadow 0.22s ease;
   }
@@ -218,16 +218,18 @@
   .tc-glyph { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; justify-content: center; }
   .tc-glyph svg {
     width: 54%; height: 54%; color: var(--ic);
-    filter: drop-shadow(0 0 0.5em color-mix(in srgb, var(--ic) 55%, transparent));
+    filter: drop-shadow(0 0 0.35em color-mix(in srgb, var(--ic) 22%, transparent));
   }
 
   /* type band */
   .tc-type { display: flex; align-items: center; gap: 0.6em; padding: 0.05em 0.15em; }
   .tc-type-ic { width: 1.45em; height: 1.45em; color: var(--ic); flex-shrink: 0; }
   .tc-type-txt {
+    flex: 1; min-width: 0;
     font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1.02em;
     letter-spacing: 0.1em; text-transform: uppercase; color: var(--label);
   }
+  .tc-setsym { width: 1.75em; height: 1.75em; color: var(--bronze); flex-shrink: 0; opacity: 0.95; }
 
   /* text box */
   .tc-text {
@@ -247,8 +249,8 @@
   .tcard:hover {
     transform: translateY(-5px);
     box-shadow:
-      0 0 2em -0.3em color-mix(in srgb, var(--ic) 70%, transparent),
-      inset 0 0 1.2em -0.6em color-mix(in srgb, var(--ic) 65%, transparent),
+      0 0 1.4em -0.4em color-mix(in srgb, var(--ic) 34%, transparent),
+      inset 0 0 0.95em -0.6em color-mix(in srgb, var(--ic) 30%, transparent),
       0 1.4em 2.8em -1.1em rgba(0,0,0,0.95);
   }
 
@@ -257,8 +259,8 @@
   .tcard.is-soon:hover {
     transform: none;
     box-shadow:
-      0 0 1.5em -0.4em color-mix(in srgb, var(--ic) 55%, transparent),
-      inset 0 0 1.1em -0.6em color-mix(in srgb, var(--ic) 60%, transparent),
+      0 0 1.1em -0.5em color-mix(in srgb, var(--ic) 24%, transparent),
+      inset 0 0 0.85em -0.7em color-mix(in srgb, var(--ic) 26%, transparent),
       0 1em 2.4em -1.1em rgba(0,0,0,0.95);
   }
 
@@ -444,6 +446,14 @@
                 <circle cx="6" cy="7" r="0.7" fill="currentColor" stroke="none"/><circle cx="8.4" cy="7" r="0.7" fill="currentColor" stroke="none"/>
               </svg>
               <span class="tc-type-txt">Token Finder</span>
+              <svg class="tc-setsym" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="24" cy="24" r="14.5" stroke="currentColor" stroke-width="3.4"/>
+                <circle cx="24" cy="9" r="4.4" fill="currentColor"/>
+                <circle cx="10.5" cy="19" r="4.4" fill="currentColor"/>
+                <circle cx="37.5" cy="19" r="4.4" fill="currentColor"/>
+                <circle cx="14" cy="36" r="4.4" fill="currentColor"/>
+                <circle cx="34" cy="36" r="4.4" fill="currentColor"/>
+              </svg>
             </div>
             <div class="tc-rule"></div>
             <div class="tc-text"><span class="tc-desc">Pull every token your deck makes, ready to print.</span></div>
@@ -484,6 +494,14 @@
                 <circle cx="6" cy="7" r="0.7" fill="currentColor" stroke="none"/><circle cx="8.4" cy="7" r="0.7" fill="currentColor" stroke="none"/>
               </svg>
               <span class="tc-type-txt">Tag Export</span>
+              <svg class="tc-setsym" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="24" cy="24" r="14.5" stroke="currentColor" stroke-width="3.4"/>
+                <circle cx="24" cy="9" r="4.4" fill="currentColor"/>
+                <circle cx="10.5" cy="19" r="4.4" fill="currentColor"/>
+                <circle cx="37.5" cy="19" r="4.4" fill="currentColor"/>
+                <circle cx="14" cy="36" r="4.4" fill="currentColor"/>
+                <circle cx="34" cy="36" r="4.4" fill="currentColor"/>
+              </svg>
             </div>
             <div class="tc-rule"></div>
             <div class="tc-text"><span class="tc-desc">Export Scryfall tags for a card or query.</span></div>
@@ -549,6 +567,14 @@
                 <rect x="9.5" y="9.5" width="5" height="5" rx="1" fill="currentColor" stroke="none"/>
               </svg>
               <span class="tc-type-txt">QR Generator</span>
+              <svg class="tc-setsym" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="24" cy="24" r="14.5" stroke="currentColor" stroke-width="3.4"/>
+                <circle cx="24" cy="9" r="4.4" fill="currentColor"/>
+                <circle cx="10.5" cy="19" r="4.4" fill="currentColor"/>
+                <circle cx="37.5" cy="19" r="4.4" fill="currentColor"/>
+                <circle cx="14" cy="36" r="4.4" fill="currentColor"/>
+                <circle cx="34" cy="36" r="4.4" fill="currentColor"/>
+              </svg>
             </div>
             <div class="tc-rule"></div>
             <div class="tc-text"><span class="tc-desc">Turn any link or text into a scannable code.</span></div>
@@ -610,6 +636,14 @@
                 <rect x="3" y="4.5" width="18" height="12" rx="1.6"/><path d="M12 16.5V20M8 20h8"/>
               </svg>
               <span class="tc-type-txt">Proxy Layout</span>
+              <svg class="tc-setsym" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="24" cy="24" r="14.5" stroke="currentColor" stroke-width="3.4"/>
+                <circle cx="24" cy="9" r="4.4" fill="currentColor"/>
+                <circle cx="10.5" cy="19" r="4.4" fill="currentColor"/>
+                <circle cx="37.5" cy="19" r="4.4" fill="currentColor"/>
+                <circle cx="14" cy="36" r="4.4" fill="currentColor"/>
+                <circle cx="34" cy="36" r="4.4" fill="currentColor"/>
+              </svg>
             </div>
             <div class="tc-rule"></div>
             <div class="tc-text"><span class="tc-desc">Lay out print-ready proxy pages. Windows desktop app.</span></div>
@@ -652,6 +686,14 @@
                 <circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none"/>
               </svg>
               <span class="tc-type-txt">Coming Soon</span>
+              <svg class="tc-setsym" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="24" cy="24" r="14.5" stroke="currentColor" stroke-width="3.4"/>
+                <circle cx="24" cy="9" r="4.4" fill="currentColor"/>
+                <circle cx="10.5" cy="19" r="4.4" fill="currentColor"/>
+                <circle cx="37.5" cy="19" r="4.4" fill="currentColor"/>
+                <circle cx="14" cy="36" r="4.4" fill="currentColor"/>
+                <circle cx="34" cy="36" r="4.4" fill="currentColor"/>
+              </svg>
             </div>
             <div class="tc-rule"></div>
             <div class="tc-text"><span class="tc-desc">New tools are on the way.</span></div>
