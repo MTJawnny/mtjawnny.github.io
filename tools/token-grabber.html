@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Token Grabber">
-<meta name="description" content="Search Scryfall for the tokens, emblems and helper cards your Commander deck makes, pick the art you like, and download them as print-ready PNGs.">
+<meta name="description" content="Search Scryfall for the tokens and emblems your Commander deck makes, pick the art you like, and download them as print-ready PNGs.">
 
 <link rel="icon" href="/favicon.ico">
 <link rel="manifest" href="/manifest.json">
@@ -26,12 +26,12 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MTJawnny">
 <meta property="og:title" content="Token Grabber">
-<meta property="og:description" content="Pull every token, emblem and helper card your deck makes, then grab the art as print-ready PNGs.">
+<meta property="og:description" content="Pull every token and emblem your deck makes, then grab the art as print-ready PNGs.">
 <meta property="og:url" content="https://mtjawnny.com/tools/token-grabber">
 <meta property="og:image" content="https://mtjawnny.com/og-cover.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Token Grabber">
-<meta name="twitter:description" content="Pull every token, emblem and helper card your deck makes, then grab the art as print-ready PNGs.">
+<meta name="twitter:description" content="Pull every token and emblem your deck makes, then grab the art as print-ready PNGs.">
 <meta name="twitter:image" content="https://mtjawnny.com/og-cover.png">
 
 <title>Token Grabber — MTJawnny</title>
@@ -188,17 +188,6 @@
 
   /* ── Search results ── */
   .search-results { display: flex; flex-direction: column; gap: 3px; margin-top: 0.6rem; max-height: 260px; overflow-y: auto; }
-  .helper-block { border-top: 1px solid var(--bronze-dim); margin-top: 0.9rem; padding-top: 0.2rem; }
-  .helper-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-  .helper-chip {
-    height: 30px; padding: 0 0.75rem; border-radius: 999px;
-    border: 1.5px solid var(--bronze-dim); background: var(--surface2);
-    color: var(--white); font-family: 'Barlow', sans-serif; font-size: 0.82rem;
-    cursor: pointer; white-space: nowrap;
-    transition: background 0.14s, border-color 0.14s, color 0.14s, transform 0.1s;
-  }
-  .helper-chip:hover { border-color: var(--bronze); background: var(--bronze-glow); color: var(--bronze); }
-  .helper-chip:active { transform: scale(0.96); }
   .search-result-item {
     display: flex; align-items: center; gap: 0.6rem;
     padding: 0.5rem 0.7rem; border-radius: var(--radius);
@@ -264,7 +253,7 @@
   .queue-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .queue-set { font-size: 0.7rem; color: var(--text-dim); }
   .qty-control { display: flex; align-items: center; gap: 2px; }
-  .qty-btn { width: 24px; height: 24px; padding: 0; font-size: 1rem; display: flex; align-items: center; justify-content: center; border-radius: 5px; height: 24px; line-height: 1; }
+  .qty-btn { width: 24px; height: 24px; padding: 0; font-size: 1rem; display: flex; align-items: center; justify-content: center; border-radius: 5px; line-height: 1; }
   .qty-val { width: 22px; text-align: center; font-weight: 700; }
   .remove-btn { width: 24px; height: 24px; padding: 0; font-size: 0.9rem; color: var(--red); border-color: transparent; background: none; display: flex; align-items: center; justify-content: center; border-radius: 5px; }
   .remove-btn:hover { background: rgba(224,96,96,0.12); border-color: var(--red); }
@@ -457,7 +446,7 @@
         <span class="logo-home-label">share</span>
       </button>
     </div>
-    <p class="tagline">Pull every token, emblem and helper card your deck makes, pick the art, and grab print-ready PNGs.</p>
+    <p class="tagline">Pull every token and emblem your deck makes, pick the art, and grab print-ready PNGs.</p>
   </header>
 
   <main>
@@ -482,12 +471,6 @@
             </div>
             <div class="statusbar" id="searchStatus"></div>
             <div class="search-results" id="searchResults"></div>
-
-            <div class="helper-block">
-              <div class="section-label" style="margin-top:1rem;">Helper game objects</div>
-              <p class="hint" style="margin-bottom:0.5rem;">Markers &amp; dungeons that aren't creature tokens. Tap one to browse its art.</p>
-              <div class="helper-chips" id="helperChips"></div>
-            </div>
           </div>
 
           <!-- Import tab -->
@@ -541,7 +524,7 @@
   </main>
 
   <!-- FOOTER -->
-  <footer style="margin-top:2.5rem;">
+  <footer>
     <div class="footer-buttons">
       <a class="footer-btn" href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
@@ -559,13 +542,13 @@
 <dialog id="help">
   <div class="help-body">
     <h2>Token Grabber</h2>
-    <p>This pulls the tokens, emblems and helper cards your Commander deck makes straight from Scryfall, so you can print them on the same proxy sheets as the deck.</p>
+    <p>This pulls the tokens and emblems your Commander deck makes straight from Scryfall, so you can print them on the same proxy sheets as the deck.</p>
 
     <h3>Search</h3>
     <p>Type a token name (<strong>Goblin</strong>, <strong>Treasure</strong>, <strong>Energy</strong>, <strong>The Ring</strong>). Click a result to see every printing, then add the art you like to the queue.</p>
 
     <h3>Import deck</h3>
-    <p>Paste a plain-text decklist. The grabber looks up each card and lists every token, emblem and helper it can make. Click a token's name to browse its art, or hit <strong>Add</strong> for the latest printing.</p>
+    <p>Paste a plain-text decklist. The grabber looks up each card and lists every token and emblem it can make. Click a token's name to browse its art, or hit <strong>Add</strong> for the latest printing.</p>
 
     <h3>Download</h3>
     <p>On Chrome or Edge you can pick a folder and the PNGs save straight into it. Everywhere else, each file downloads on its own. Files are named <code>TokenName_N.png</code> so duplicates stay tidy.</p>
@@ -599,7 +582,6 @@ function storeCard(card) { if (card && card.id) cardStore[card.id] = card; retur
 let queue = [];          // [{ id, name, set, setName, imgSmall, qty }]
 let dirHandle = null;
 const hasFSA = ('showDirectoryPicker' in window);
-let activeOracle = null; // oracle name currently shown in right panel
 let importRows = [];     // [{ card, sources }] from the last deck import
 
 // ── Helpers ───────────────────────────────────────────────────
@@ -834,7 +816,7 @@ async function importDecklist() {
     if (!partIds.size) {
       bar.style.width = '100%';
       setStatus('importStatus', '');
-      setStatus('importResultStatus', 'None of those cards make tokens, emblems or helper cards.', 'err');
+      setStatus('importResultStatus', 'None of those cards make tokens or emblems.', 'err');
       document.getElementById('importResultsSection').style.display = 'block';
       document.getElementById('importTokenList').innerHTML = '';
       return;
@@ -933,7 +915,6 @@ function addAllImported() {
 
 // ── Printings (right panel) ───────────────────────────────────
 async function showPrintings(oracleName) {
-  activeOracle = oracleName;
   const panel = document.getElementById('rightPanel');
   panel.innerHTML = '<div class="right-empty"><span class="spinner"></span>Loading printings of ' + esc(oracleName) + '...</div>';
   try {
@@ -941,58 +922,6 @@ async function showPrintings(oracleName) {
     prints.forEach(storeCard);
     if (!prints.length) { panel.innerHTML = '<div class="right-empty">No printings found for ' + esc(oracleName) + '.</div>'; return; }
     renderPrintings(oracleName, prints);
-  } catch (e) {
-    panel.innerHTML = '<div class="right-empty">' + esc(netMsg(e)) + '</div>';
-  }
-}
-
-// ── Helper game objects (monarch, dungeons, the ring, etc.) ───
-// These aren't creature tokens, so they live behind their own quick-pick chips.
-const HELPER_TYPES = '(type:token OR type:emblem OR type:card OR type:dungeon)';
-const HELPERS = [
-  ['Monarch',        '!"The Monarch"'],
-  ['The Ring',       '!"The Ring"'],
-  ['The Initiative', '!"The Initiative"'],
-  ['Undercity',      '!"Undercity"'],
-  ['Energy',         '!"Energy Reserve"'],
-  ["City's Blessing",'!"City\'s Blessing"'],
-  ['Day // Night',   '!"Day // Night"'],
-  ['Radiation',      'radiation'],
-  ['Lost Mine',      '!"Lost Mine of Phandelver"'],
-  ['Mad Mage',       '!"Dungeon of the Mad Mage"'],
-  ['Tomb',           '!"Tomb of Annihilation"']
-];
-
-function buildHelperChips() {
-  const box = document.getElementById('helperChips');
-  if (!box) return;
-  HELPERS.forEach(([label, query]) => {
-    const chip = document.createElement('button');
-    chip.type = 'button';
-    chip.className = 'helper-chip';
-    chip.textContent = label;
-    chip.onclick = () => loadHelper(query, label);
-    box.appendChild(chip);
-  });
-}
-
-async function loadHelper(query, label) {
-  activeOracle = label;
-  const panel = document.getElementById('rightPanel');
-  panel.innerHTML = '<div class="right-empty"><span class="spinner"></span>Loading ' + esc(label) + '...</div>';
-  try {
-    const q = encodeURIComponent(HELPER_TYPES + ' ' + query);
-    const prints = [];
-    let url = SF + '/cards/search?q=' + q + '&unique=prints&order=released&dir=desc';
-    while (url) {
-      const data = await sfFetch(url);
-      prints.push(...(data.data || []));
-      url = data.has_more ? data.next_page : null;
-      if (url) await sleep(90);
-    }
-    prints.forEach(storeCard);
-    if (!prints.length) { panel.innerHTML = '<div class="right-empty">Couldn\'t find ' + esc(label) + ' on Scryfall.</div>'; return; }
-    renderPrintings(prints[0].name, prints);
   } catch (e) {
     panel.innerHTML = '<div class="right-empty">' + esc(netMsg(e)) + '</div>';
   }
@@ -1181,24 +1110,18 @@ document.getElementById('searchInput').addEventListener('keydown', e => { if (e.
 
 // Init
 renderQueue();
-buildHelperChips();
 </script>
 
-<!-- Help panel: auto-open first visit, dismissal persists -->
+<!-- Help panel: opens only when the user taps the ? button -->
 <script>
 (function () {
   var dlg = document.getElementById('help');
   var openBtn = document.getElementById('help-open');
   var closeBtn = document.getElementById('help-close');
-  var KEY = 'tg_help_seen';
   function open() { if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open',''); }
-  function close() { if (typeof dlg.close === 'function') dlg.close(); else dlg.removeAttribute('open'); try { localStorage.setItem(KEY, '1'); } catch (e) {} }
+  function close() { if (typeof dlg.close === 'function') dlg.close(); else dlg.removeAttribute('open'); }
   openBtn.addEventListener('click', open);
   closeBtn.addEventListener('click', close);
-  dlg.addEventListener('cancel', function () { try { localStorage.setItem(KEY, '1'); } catch (e) {} });
-  var seen = false;
-  try { seen = localStorage.getItem(KEY) === '1'; } catch (e) {}
-  if (!seen) open();
 })();
 </script>
 
