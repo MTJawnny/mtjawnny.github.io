@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1e1728">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Token Grabber">
+<meta name="description" content="Search Scryfall for the tokens, emblems and helper cards your Commander deck makes, pick the art you like, and download them as print-ready PNGs.">
+
+<link rel="icon" href="/favicon.ico">
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="https://mtjawnny.com/tools/token-grabber">
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WKH3Y62H5H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-WKH3Y62H5H');
+</script>
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MTJawnny">
+<meta property="og:title" content="Token Grabber">
+<meta property="og:description" content="Pull every token, emblem and helper card your deck makes, then grab the art as print-ready PNGs.">
+<meta property="og:url" content="https://mtjawnny.com/tools/token-grabber">
+<meta property="og:image" content="https://mtjawnny.com/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Token Grabber">
+<meta name="twitter:description" content="Pull every token, emblem and helper card your deck makes, then grab the art as print-ready PNGs.">
+<meta name="twitter:image" content="https://mtjawnny.com/og-cover.png">
+
+<title>Token Grabber — MTJawnny</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #1e1728;
+    --surface:     #261d33;
+    --surface2:    #2c2240;
+    --bronze:      #b8935a;
+    --bronze-dim:  #7a5e35;
+    --bronze-glow: rgba(184,147,90,0.15);
+    --text-dim:    #9b8fb0;
+    --white:       #f0ece6;
+    --muted:       #6b5f7a;
+    --red:         #e06060;
+    --green:       #5aab6e;
+    --radius:      10px;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button, input, textarea { font-family: inherit; }
+  code { font-family: 'Barlow', monospace; font-size: 0.85em; color: var(--bronze); }
+
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+  }
+
+  /* ══ HEADER ══════════════════════════════════════════════ */
+  .tk-header { text-align: center; padding: 0.75rem 1.5rem 0; }
+  .logo-wrap {
+    display: flex; flex-direction: row;
+    align-items: center; justify-content: center;
+    gap: 0.75rem; margin-bottom: 0.3rem;
+  }
+  .logo-home, .logo-share {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; padding: 6px; margin: -6px;
+    text-decoration: none; cursor: pointer;
+    background: none; border: none;
+    transition: background 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .logo-home:hover, .logo-home:active,
+  .logo-share:hover, .logo-share:active { background: var(--bronze-glow); }
+  .logo-pip-ring { width: 48px; height: 48px; flex-shrink: 0; display: block; }
+  .logo-home-label {
+    position: absolute;
+    top: calc(100% - 5px);
+    left: calc(50% + 2px);
+    transform: translateX(-50%);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.55rem; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-dim); line-height: 1; pointer-events: none;
+  }
+  .tk-header h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 8vw, 3.6rem);
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    line-height: 1; text-transform: uppercase;
+  }
+  .tagline {
+    font-size: 0.95rem; color: var(--text-dim);
+    margin-top: 0.5rem; letter-spacing: 0.01em;
+    padding: 0 1rem;
+  }
+
+  /* ══ WORKSPACE LAYOUT ════════════════════════════════════ */
+  main { padding: 1.25rem 1.25rem 0; }
+  .workspace { display: flex; flex-direction: column; gap: 1.25rem; }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .panel-pad { padding: 1rem 1.1rem; }
+
+  .section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.78rem; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--bronze); margin-bottom: 0.55rem;
+  }
+
+  /* ── Tabs ── */
+  .tabs { display: flex; border-bottom: 1px solid var(--bronze-dim); }
+  .tab {
+    flex: 1; padding: 0.8rem 0; text-align: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-dim); cursor: pointer;
+    background: none; border: none;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+  }
+  .tab:hover { color: var(--white); background: var(--surface2); }
+  .tab.active { color: var(--bronze); border-bottom-color: var(--bronze); }
+
+  .tab-panel { display: none; padding: 1rem 1.1rem; }
+  .tab-panel.active { display: block; }
+
+  /* ── Inputs ── */
+  .search-row { display: flex; gap: 0.5rem; }
+  input[type="text"], textarea {
+    background: var(--surface2);
+    border: 1.5px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    color: var(--white);
+    font-size: 16px; outline: none;
+    transition: border-color 0.18s, background 0.18s;
+  }
+  input[type="text"] { flex: 1; height: 42px; padding: 0 0.8rem; }
+  input[type="text"]:focus, textarea:focus { border-color: var(--bronze); background: #322648; }
+  input::placeholder, textarea::placeholder { color: var(--muted); }
+  textarea { width: 100%; padding: 0.7rem 0.8rem; resize: vertical; line-height: 1.5; min-height: 150px; }
+
+  button.act {
+    height: 42px; padding: 0 1.1rem;
+    border: 1.5px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    background: var(--surface2); color: var(--white);
+    font-size: 0.95rem; font-weight: 600; cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    white-space: nowrap;
+  }
+  button.act:hover { background: var(--bronze-glow); border-color: var(--bronze); }
+  button.act:active { transform: scale(0.98); }
+  button.act:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+  button.gold { background: var(--bronze); border-color: var(--bronze); color: var(--bg); font-weight: 700; }
+  button.gold:hover { background: #cda564; }
+  button.full { width: 100%; }
+
+  .hint { font-size: 0.82rem; color: var(--text-dim); line-height: 1.55; margin-bottom: 0.6rem; }
+
+  /* ── Search results ── */
+  .search-results { display: flex; flex-direction: column; gap: 3px; margin-top: 0.6rem; max-height: 260px; overflow-y: auto; }
+  .helper-block { border-top: 1px solid var(--bronze-dim); margin-top: 0.9rem; padding-top: 0.2rem; }
+  .helper-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .helper-chip {
+    height: 30px; padding: 0 0.75rem; border-radius: 999px;
+    border: 1.5px solid var(--bronze-dim); background: var(--surface2);
+    color: var(--white); font-family: 'Barlow', sans-serif; font-size: 0.82rem;
+    cursor: pointer; white-space: nowrap;
+    transition: background 0.14s, border-color 0.14s, color 0.14s, transform 0.1s;
+  }
+  .helper-chip:hover { border-color: var(--bronze); background: var(--bronze-glow); color: var(--bronze); }
+  .helper-chip:active { transform: scale(0.96); }
+  .search-result-item {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.5rem 0.7rem; border-radius: var(--radius);
+    cursor: pointer; border: 1px solid transparent;
+    transition: background 0.12s, border-color 0.12s; font-size: 0.92rem;
+  }
+  .search-result-item:hover, .search-result-item.active { background: var(--surface2); border-color: var(--bronze-dim); }
+  .result-name { flex: 1; font-weight: 600; }
+  .result-type { font-size: 0.78rem; color: var(--text-dim); }
+
+  /* ── Import results ── */
+  .import-results-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.55rem; }
+  #importAddAll {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    height: 32px; padding: 0 0.5rem 0 0.7rem;
+    border-radius: 999px; flex-shrink: 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.84rem; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--bronze);
+    background: var(--bronze-glow);
+    border: 1.5px solid var(--bronze-dim);
+    transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+  }
+  #importAddAll:hover { background: var(--bronze); color: var(--bg); border-color: var(--bronze); }
+  #importAddAll:active { transform: scale(0.97); }
+  #importAddAll .addall-ico { width: 15px; height: 15px; flex-shrink: 0; }
+  #importAddAll .addall-count {
+    display: inline-grid; place-items: center;
+    min-width: 22px; height: 20px; padding: 0 6px;
+    border-radius: 999px; background: var(--bronze); color: var(--bg);
+    font-family: 'Barlow', sans-serif; font-size: 0.72rem; font-weight: 800; letter-spacing: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+  #importAddAll:hover .addall-count { background: var(--bg); color: var(--bronze); }
+  /* all-added state echoes the green "Added" rows */
+  #importAddAll:disabled {
+    opacity: 1; cursor: default; transform: none;
+    color: var(--green); border-color: var(--green);
+    background: rgba(90,171,110,0.12);
+  }
+  #importAddAll:disabled:hover { background: rgba(90,171,110,0.12); color: var(--green); }
+  .import-token-list { display: flex; flex-direction: column; gap: 0.4rem; }
+  .import-token-row {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.55rem 0.7rem; border-radius: var(--radius);
+    border: 1px solid var(--bronze-dim); background: var(--surface2); font-size: 0.9rem;
+  }
+  .import-token-main { flex: 1; min-width: 0; cursor: pointer; }
+  .import-token-name { font-weight: 600; }
+  .import-token-main:hover .import-token-name { color: var(--bronze); }
+  .import-token-sources { font-size: 0.74rem; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .import-token-btn { height: 30px; font-size: 0.78rem; padding: 0 0.7rem; flex-shrink: 0; border-radius: 7px; }
+  .import-token-row.added .import-token-btn { background: var(--green); color: #10241a; border-color: var(--green); }
+
+  /* ── Queue ── */
+  .queue { border: 1px solid var(--bronze-dim); border-radius: var(--radius); background: var(--surface2); max-height: 320px; overflow-y: auto; }
+  .queue-empty { padding: 1rem; text-align: center; color: var(--text-dim); font-size: 0.85rem; line-height: 1.6; }
+  .queue-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.45rem 0.55rem; border-bottom: 1px solid rgba(122,94,53,0.3); font-size: 0.82rem; }
+  .queue-item:last-child { border-bottom: none; }
+  .queue-thumb { width: 28px; height: 39px; object-fit: cover; border-radius: 3px; border: 1px solid var(--bronze-dim); flex-shrink: 0; background: var(--surface); }
+  .queue-info { flex: 1; min-width: 0; }
+  .queue-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .queue-set { font-size: 0.7rem; color: var(--text-dim); }
+  .qty-control { display: flex; align-items: center; gap: 2px; }
+  .qty-btn { width: 24px; height: 24px; padding: 0; font-size: 1rem; display: flex; align-items: center; justify-content: center; border-radius: 5px; height: 24px; line-height: 1; }
+  .qty-val { width: 22px; text-align: center; font-weight: 700; }
+  .remove-btn { width: 24px; height: 24px; padding: 0; font-size: 0.9rem; color: var(--red); border-color: transparent; background: none; display: flex; align-items: center; justify-content: center; border-radius: 5px; }
+  .remove-btn:hover { background: rgba(224,96,96,0.12); border-color: var(--red); }
+
+  /* ── Folder row ── */
+  .folder-row {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.55rem 0.7rem; border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius); background: var(--surface2);
+    font-size: 0.85rem; cursor: pointer; transition: border-color 0.15s, background 0.15s;
+  }
+  .folder-row:hover { border-color: var(--bronze); background: var(--bronze-glow); }
+  .folder-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .folder-none { color: var(--text-dim); font-style: italic; }
+  .folder-change { font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* ── Status bars ── */
+  .statusbar { font-size: 0.8rem; color: var(--text-dim); min-height: 16px; line-height: 1.5; }
+  .statusbar.ok { color: var(--green); }
+  .statusbar.err { color: var(--red); }
+
+  /* ── Right panel: printings ── */
+  .printings-head { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.9rem; flex-wrap: wrap; }
+  .printings-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--white); }
+  .printings-count { font-size: 0.82rem; color: var(--text-dim); }
+  .right-empty { display: flex; align-items: center; justify-content: center; text-align: center; min-height: 220px; color: var(--text-dim); font-size: 0.95rem; padding: 1rem; line-height: 1.6; }
+  .printings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem; }
+
+  .printing-card { border: 2px solid var(--bronze-dim); border-radius: 10px; overflow: hidden; background: var(--surface2); position: relative; transition: border-color 0.12s, transform 0.1s, box-shadow 0.12s; }
+  .printing-card:hover { border-color: var(--bronze); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0,0.4); }
+  .printing-card.in-queue { border-color: var(--green); box-shadow: 0 0 0 2px var(--green); }
+  .printing-card img { width: 100%; display: block; }
+  .printing-img-placeholder { width: 100%; aspect-ratio: 63/88; background: var(--surface); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; color: var(--text-dim); text-align: center; padding: 0.5rem; }
+  .printing-meta { padding: 0.4rem 0.55rem 0; }
+  .printing-set { font-size: 0.74rem; font-weight: 700; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .printing-artist { font-size: 0.68rem; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .in-queue-badge { position: absolute; top: 5px; right: 5px; background: var(--green); color: #10241a; font-size: 0.6rem; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: 0.06em; padding: 2px 5px; border-radius: 4px; display: none; }
+  .printing-card.in-queue .in-queue-badge { display: block; }
+  .add-printing-btn { width: 100%; border-radius: 0; border: none; border-top: 1px solid var(--bronze-dim); background: var(--surface); font-size: 0.72rem; height: 30px; color: var(--white); margin-top: 0.35rem; cursor: pointer; font-weight: 600; transition: background 0.12s, color 0.12s; }
+  .add-printing-btn:hover { background: var(--bronze); color: var(--bg); }
+  .printing-card.in-queue .add-printing-btn { background: var(--green); color: #10241a; }
+  .printing-card.in-queue .add-printing-btn:hover { background: #4d9a60; }
+
+  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--bronze-dim); border-top-color: var(--bronze); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 5px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Import progress ── */
+  .import-progress { margin-top: 0.6rem; }
+  .bar-track { height: 5px; background: var(--surface); border-radius: 3px; overflow: hidden; margin-bottom: 0.4rem; border: 1px solid var(--bronze-dim); }
+  .bar-fill { height: 100%; background: var(--bronze); border-radius: 3px; transition: width 0.3s; width: 0%; }
+
+  /* ══ DESKTOP TWO-PANE ════════════════════════════════════ */
+  @media (min-width: 840px) {
+    /* Both columns fill one equal-height region. The left column scrolls as a */
+    /* single unit (full token list, then queue); the right gallery scrolls too. */
+    .workspace {
+      display: grid; grid-template-columns: 360px 1fr; gap: 1.25rem;
+      align-items: stretch;
+      height: calc(100vh - 2rem);
+    }
+    .col-controls {
+      display: flex; flex-direction: column; gap: 1.25rem;
+      min-height: 0; overflow-y: auto; padding-right: 4px;
+    }
+    /* search/import panel keeps its natural height: the whole token list shows */
+    .col-controls > .panel:first-child { flex: 0 0 auto; }
+    /* queue panel grows to absorb leftover height (kills the void) but never */
+    /* shrinks below its content, so it just scrolls the column when things are long */
+    .col-queue { flex: 1 0 auto; display: flex; flex-direction: column; }
+    .col-queue .queue { flex: 1 1 auto; max-height: none; min-height: 120px; }
+    #rightPanel { min-height: 0; overflow-y: auto; }
+  }
+
+  /* ══ HELP BUTTON + DIALOG ════════════════════════════════ */
+  .help-btn {
+    position: fixed; right: 1rem;
+    bottom: calc(1.1rem + env(safe-area-inset-bottom));
+    width: 46px; height: 46px; border-radius: 50%;
+    background: var(--surface); border: 1.5px solid var(--bronze);
+    color: var(--bronze); font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.5rem; font-weight: 700; cursor: pointer; z-index: 80;
+    display: grid; place-items: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+    transition: background 0.15s, transform 0.15s;
+  }
+  .help-btn:hover { background: var(--bronze-glow); transform: translateY(-2px); }
+
+  dialog#help {
+    max-width: 460px; width: calc(100% - 2rem);
+    background: var(--surface); color: var(--white);
+    border: 1.5px solid var(--bronze); border-radius: 16px;
+    padding: 0; margin: auto;
+  }
+  dialog#help::backdrop { background: rgba(15,10,22,0.7); backdrop-filter: blur(2px); }
+  .help-body { padding: 1.4rem 1.5rem; }
+  .help-body h2 { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--bronze); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 0.75rem; }
+  .help-body h3 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1rem; color: var(--white); letter-spacing: 0.04em; text-transform: uppercase; margin: 1rem 0 0.3rem; }
+  .help-body p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 0.5rem; }
+  .help-body strong { color: var(--white); }
+  .help-close { width: 100%; margin-top: 1.2rem; height: 42px; border-radius: var(--radius); border: none; background: var(--bronze); color: var(--bg); font-weight: 700; font-size: 0.95rem; cursor: pointer; }
+  .help-close:hover { background: #cda564; }
+
+  /* ══ TOAST ══ */
+  .toast {
+    position: fixed; left: 50%;
+    bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    transform: translateX(-50%) translateY(8px);
+    background: var(--surface); border: 1px solid var(--bronze-dim);
+    color: var(--white); font-size: 0.9rem;
+    padding: 0.6rem 1rem; border-radius: 10px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s; z-index: 95;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ══ DOWNLOAD OVERLAY ══ */
+  .dl-overlay { display: none; position: fixed; inset: 0; background: rgba(15,10,22,0.7); z-index: 100; align-items: center; justify-content: center; padding: 1rem; }
+  .dl-overlay.visible { display: flex; }
+  .dl-box { background: var(--surface); border: 1.5px solid var(--bronze); border-radius: 16px; padding: 1.6rem 1.8rem; width: 100%; max-width: 380px; text-align: center; }
+  .dl-box h2 { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 1.35rem; color: var(--bronze); text-transform: uppercase; margin-bottom: 0.9rem; }
+  .dl-progress { font-size: 0.9rem; color: var(--text-dim); margin-bottom: 0.9rem; min-height: 20px; }
+  .dl-file-list { text-align: left; font-size: 0.72rem; color: var(--text-dim); max-height: 130px; overflow-y: auto; margin: 0.9rem 0; font-family: monospace; border: 1px solid var(--bronze-dim); border-radius: 8px; padding: 0.5rem 0.6rem; background: var(--bg); display: none; }
+  .dl-file-list.has-items { display: block; }
+  .dl-file-entry { padding: 1px 0; }
+  .dl-file-entry.ok { color: var(--green); }
+  .dl-file-entry.err { color: var(--red); }
+
+  /* ══ FOOTER SUPPORT ROW ══ */
+  footer { margin-top: 2.5rem; }
+  .footer-buttons {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0.85rem; max-width: 400px; margin: 0 auto; padding: 0 1.25rem;
+  }
+  .footer-btn {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0.4rem; white-space: nowrap;
+    background: var(--surface); border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius); padding: 0.6rem 0.5rem;
+    color: var(--bronze); font-weight: 600; font-size: 0.8rem;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .footer-btn:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+  .footer-btn svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+  @media (min-width: 640px) { .footer-buttons { max-width: 380px; gap: 1rem; } }
+
+  /* ── focus + reduced motion ── */
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--bronze); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  }
+
+  ::-webkit-scrollbar { width: 7px; height: 7px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--bronze-dim); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<button class="help-btn" id="help-open" type="button" aria-label="Help">?</button>
+
+<div class="page">
+  <header class="tk-header">
+    <div class="logo-wrap">
+      <a class="logo-home" href="/" aria-label="Back to MTJawnny home">
+        <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+          <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+          <circle cx="24" cy="9"  r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+        </svg>
+        <span class="logo-home-label">home</span>
+      </a>
+
+      <h1>Token Grabber</h1>
+
+      <button class="logo-share" id="shareBtn" type="button" aria-label="Share this page">
+        <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+          <circle cx="24" cy="24" r="16" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+          <line x1="14.8" y1="24" x2="30.16" y2="17.16" stroke="#b8935a" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="14.8" y1="24" x2="30.16" y2="30.84" stroke="#b8935a" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="14.8"  cy="24"    r="3.4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="30.16" cy="17.16" r="3.4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+          <circle cx="30.16" cy="30.84" r="3.4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+        </svg>
+        <span class="logo-home-label">share</span>
+      </button>
+    </div>
+    <p class="tagline">Pull every token, emblem and helper card your deck makes, pick the art, and grab print-ready PNGs.</p>
+  </header>
+
+  <main>
+    <div class="workspace">
+
+      <!-- LEFT: controls + queue -->
+      <div class="col-controls">
+
+        <!-- Search / Import panel -->
+        <div class="panel">
+          <div class="tabs">
+            <button class="tab active" type="button" data-tab="search" onclick="switchTab('search')">Search</button>
+            <button class="tab" type="button" data-tab="import" onclick="switchTab('import')">Import Deck</button>
+          </div>
+
+          <!-- Search tab -->
+          <div class="tab-panel active" id="tab-search">
+            <div class="section-label">Search tokens &amp; emblems</div>
+            <div class="search-row">
+              <input type="text" id="searchInput" placeholder="Goblin, Treasure, Soldier, Emblem..." autocomplete="off">
+              <button class="act gold" id="searchBtn" onclick="doSearch()">Search</button>
+            </div>
+            <div class="statusbar" id="searchStatus"></div>
+            <div class="search-results" id="searchResults"></div>
+
+            <div class="helper-block">
+              <div class="section-label" style="margin-top:1rem;">Helper game objects</div>
+              <p class="hint" style="margin-bottom:0.5rem;">Markers &amp; dungeons that aren't creature tokens. Tap one to browse its art.</p>
+              <div class="helper-chips" id="helperChips"></div>
+            </div>
+          </div>
+
+          <!-- Import tab -->
+          <div class="tab-panel" id="tab-import">
+            <div class="section-label">Paste a decklist</div>
+            <p class="hint">From Moxfield: <strong>More</strong> &rarr; <strong>Export</strong> &rarr; plain text, then paste below. One <code>1 Card Name</code> per line. Set codes after the name are fine.</p>
+            <textarea id="decklistInput" placeholder="1 Krenko, Mob Boss&#10;1 Purphoros, God of the Forge&#10;1 Skullclamp&#10;..."></textarea>
+            <button class="act gold full" style="margin-top:0.6rem;" id="importBtn" onclick="importDecklist()">Find tokens in deck</button>
+            <div class="import-progress" id="importProgress" style="display:none;">
+              <div class="bar-track"><div class="bar-fill" id="importBar"></div></div>
+              <div class="statusbar" id="importStatus"></div>
+            </div>
+            <div id="importResultsSection" style="display:none; margin-top:1rem;">
+              <div class="import-results-head">
+                <div class="section-label" style="margin-bottom:0;">Tokens found</div>
+                <button class="act" id="importAddAll" type="button" onclick="addAllImported()" style="display:none;">Add all</button>
+              </div>
+              <div class="statusbar" id="importResultStatus"></div>
+              <div class="import-token-list" id="importTokenList"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Queue panel -->
+        <div class="panel panel-pad col-queue">
+          <div class="section-label">Download queue</div>
+          <div class="queue" id="queue">
+            <div class="queue-empty">No tokens queued yet. Search or import a deck, then add the printings you want.</div>
+          </div>
+
+          <div class="section-label" style="margin-top:1rem;">Save to folder <span style="font-weight:400; text-transform:none; letter-spacing:0; color:var(--text-dim);">(Chrome / Edge)</span></div>
+          <div class="folder-row" id="folderRow" onclick="pickFolder()">
+            <span aria-hidden="true">📁</span>
+            <span class="folder-name folder-none" id="folderName">Choose a folder...</span>
+            <span class="folder-change" id="folderChange"></span>
+          </div>
+
+          <div class="statusbar" id="dlStatus" style="margin-top:0.7rem;"></div>
+          <button class="act gold full" style="margin-top:0.3rem;" onclick="downloadAll()">Download all as PNGs</button>
+          <p class="hint" style="margin-top:0.5rem; margin-bottom:0;">Files are named <code>TokenName_N.png</code>, ready to drop into your proxy sheet layout.</p>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: printings -->
+      <div class="panel panel-pad" id="rightPanel">
+        <div class="right-empty">Search for a token or import a deck to browse printings, then add the art you like to the queue.</div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer style="margin-top:2.5rem;">
+    <div class="footer-buttons">
+      <a class="footer-btn" href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+        Tips Appreciated!
+      </a>
+      <a class="footer-btn" href="https://instagram.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        MTJawnny
+      </a>
+    </div>
+  </footer>
+</div>
+
+<!-- HELP DIALOG -->
+<dialog id="help">
+  <div class="help-body">
+    <h2>Token Grabber</h2>
+    <p>This pulls the tokens, emblems and helper cards your Commander deck makes straight from Scryfall, so you can print them on the same proxy sheets as the deck.</p>
+
+    <h3>Search</h3>
+    <p>Type a token name (<strong>Goblin</strong>, <strong>Treasure</strong>, <strong>Energy</strong>, <strong>The Ring</strong>). Click a result to see every printing, then add the art you like to the queue.</p>
+
+    <h3>Import deck</h3>
+    <p>Paste a plain-text decklist. The grabber looks up each card and lists every token, emblem and helper it can make. Click a token's name to browse its art, or hit <strong>Add</strong> for the latest printing.</p>
+
+    <h3>Download</h3>
+    <p>On Chrome or Edge you can pick a folder and the PNGs save straight into it. Everywhere else, each file downloads on its own. Files are named <code>TokenName_N.png</code> so duplicates stay tidy.</p>
+
+    <p style="margin-top:0.8rem;">Card data and art are pulled live from Scryfall. Nothing leaves your browser.</p>
+
+    <button class="help-close" id="help-close" type="button">Got it</button>
+  </div>
+</dialog>
+
+<!-- DOWNLOAD OVERLAY -->
+<div class="dl-overlay" id="dlOverlay">
+  <div class="dl-box">
+    <h2>Grabbing tokens</h2>
+    <div class="dl-progress" id="dlProgress">Preparing...</div>
+    <div class="bar-track" style="margin-bottom:1rem;"><div class="bar-fill" id="dlBarFill"></div></div>
+    <div class="dl-file-list" id="dlFileList"></div>
+    <button class="act gold full" id="dlDoneBtn" style="display:none;" onclick="closeDlOverlay()">Done</button>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ===== Tool logic ===== -->
+<script>
+// ── Card store ────────────────────────────────────────────────
+const cardStore = {};
+function storeCard(card) { if (card && card.id) cardStore[card.id] = card; return card; }
+
+// ── State ─────────────────────────────────────────────────────
+let queue = [];          // [{ id, name, set, setName, imgSmall, qty }]
+let dirHandle = null;
+const hasFSA = ('showDirectoryPicker' in window);
+let activeOracle = null; // oracle name currently shown in right panel
+let importRows = [];     // [{ card, sources }] from the last deck import
+
+// ── Helpers ───────────────────────────────────────────────────
+const SF = 'https://api.scryfall.com';
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// Retry transient failures (e.g. "Failed to fetch", 429/5xx) with a short backoff.
+async function withRetry(fn, tries, base) {
+  tries = tries || 3; base = base || 450;
+  let last;
+  for (let i = 0; i < tries; i++) {
+    try { return await fn(); }
+    catch (e) { last = e; if (i < tries - 1) await sleep(base * (i + 1)); }
+  }
+  throw last;
+}
+// Turn opaque fetch errors into something a person can act on.
+function netMsg(e) {
+  const m = (e && e.message) || '';
+  if (/failed to fetch|networkerror|load failed/i.test(m))
+    return 'Could not reach Scryfall. Check your connection and try again.';
+  return m || 'Something went wrong.';
+}
+function esc(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function safeName(str) { return String(str || 'token').replace(/[\\/:*?"<>|]/g, '').replace(/\s+/g, ' ').trim() || 'token'; }
+function setStatus(id, msg, type) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = msg || '';
+  el.className = 'statusbar' + (type ? ' ' + type : '');
+}
+
+async function sfFetch(url) {
+  return withRetry(async () => {
+    const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
+    if (r.status === 404) return { data: [] };            // "no results" is not an error
+    if (!r.ok) throw new Error('Scryfall HTTP ' + r.status);
+    return r.json();
+  });
+}
+
+// POST /cards/collection by an identifier key ("name" or "id"), 75 per call
+async function fetchCollection(values, key) {
+  const ids = values.map(v => { const o = {}; o[key] = v; return o; });
+  const chunks = [];
+  for (let i = 0; i < ids.length; i += 75) chunks.push(ids.slice(i, i + 75));
+  const found = [];
+  for (let c = 0; c < chunks.length; c++) {
+    const data = await withRetry(async () => {
+      const r = await fetch(SF + '/cards/collection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ identifiers: chunks[c] })
+      });
+      if (!r.ok) throw new Error('Scryfall HTTP ' + r.status);
+      return r.json();
+    });
+    found.push(...((data && data.data) || []));
+    if (c < chunks.length - 1) await sleep(100);
+  }
+  return found;
+}
+
+function getImageUrl(card, size) {
+  size = size || 'normal';
+  if (!card) return null;
+  if (card.image_uris) return card.image_uris[size] || card.image_uris.normal;
+  if (card.card_faces && card.card_faces[0] && card.card_faces[0].image_uris)
+    return card.card_faces[0].image_uris[size] || card.card_faces[0].image_uris.normal;
+  return null;
+}
+
+// Game objects only: tokens and emblems (no helper "Card" objects).
+const EXTRA_TYPES = ['token', 'emblem'];
+function typeClause() { return '(' + EXTRA_TYPES.map(t => 'type:' + t).join(' OR ') + ')'; }
+// -is:dfc drops double-faced tokens (e.g. "Goblin // Soldier") at the server.
+function buildSearchQuery(q) { return typeClause() + ' -is:dfc ' + q.trim(); }
+function buildExactQuery(oracleName) { return typeClause() + ' !"' + oracleName.replace(/"/g, '') + '"'; }
+
+// True only for plain single-faced cards; guards against any DFC the query misses.
+function isSingleFace(card) {
+  if (!card) return false;
+  if ((card.name || '').indexOf('//') !== -1) return false;
+  if (Array.isArray(card.card_faces) && card.card_faces.length > 1) return false;
+  return true;
+}
+
+async function searchTokens(query) {
+  // unique=cards returns one row per oracle object, so the many functionally-distinct
+  // tokens sharing a name (six different 1/1 "Goblin" tokens, etc.) all come back.
+  // We collapse them to one row per name here; the printings view still shows every art.
+  const q = encodeURIComponent(buildSearchQuery(query));
+  const data = await sfFetch(SF + '/cards/search?q=' + q + '&unique=cards&order=name');
+  const raw = data.data || [];
+  const seen = new Set();
+  const out = [];
+  for (const c of raw) {
+    if (!isSingleFace(c)) continue;
+    const key = (c.name || '').toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(c);
+  }
+  return out;
+}
+
+async function getAllPrintings(oracleName) {
+  const q = encodeURIComponent(buildExactQuery(oracleName));
+  const results = [];
+  let url = SF + '/cards/search?q=' + q + '&unique=prints&order=released&dir=desc';
+  while (url) {
+    const data = await sfFetch(url);
+    results.push(...(data.data || []));
+    url = data.has_more ? data.next_page : null;
+    if (url) await sleep(90);
+  }
+  return results;
+}
+
+// ── Tabs ──────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
+}
+
+// ── Folder picker ─────────────────────────────────────────────
+async function pickFolder() {
+  if (!hasFSA) { setStatus('dlStatus', 'Folder saving needs Chrome or Edge. Files will download individually instead.', 'err'); return; }
+  try {
+    dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+    const fn = document.getElementById('folderName');
+    fn.textContent = dirHandle.name;
+    fn.classList.remove('folder-none');
+    document.getElementById('folderChange').textContent = 'change';
+    setStatus('dlStatus', '');
+  } catch (e) {
+    if (e && e.name !== 'AbortError') setStatus('dlStatus', 'Could not open folder: ' + e.message, 'err');
+  }
+}
+
+// ── Search tab ────────────────────────────────────────────────
+async function doSearch() {
+  const term = document.getElementById('searchInput').value.trim();
+  if (!term) { setStatus('searchStatus', 'Type something to search for.', 'err'); return; }
+  const btn = document.getElementById('searchBtn');
+  btn.disabled = true;
+  setStatus('searchStatus', '<span class="spinner"></span>Searching Scryfall...');
+  document.getElementById('searchResults').innerHTML = '';
+  try {
+    const results = await searchTokens(term);
+    results.forEach(storeCard);
+    if (!results.length) { setStatus('searchStatus', 'No tokens or extras matched that.', 'err'); return; }
+    setStatus('searchStatus', results.length + ' result' + (results.length === 1 ? '' : 's') + '.', 'ok');
+    renderSearchResults(results);
+  } catch (e) {
+    setStatus('searchStatus', netMsg(e), 'err');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function renderSearchResults(cards) {
+  const box = document.getElementById('searchResults');
+  box.innerHTML = '';
+  cards.forEach(card => {
+    const row = document.createElement('div');
+    row.className = 'search-result-item';
+    const tline = (card.type_line || '').split('//')[0].trim();
+    row.innerHTML = '<span class="result-name">' + esc(card.name) + '</span>' +
+                    '<span class="result-type">' + esc(tline) + '</span>';
+    row.onclick = function () {
+      document.querySelectorAll('.search-result-item').forEach(r => r.classList.remove('active'));
+      row.classList.add('active');
+      showPrintings(card.name);
+    };
+    box.appendChild(row);
+  });
+}
+
+// ── Import tab ────────────────────────────────────────────────
+function parseDecklist(text) {
+  const names = [];
+  const seen = new Set();
+  text.split('\n').forEach(line => {
+    let s = line.trim();
+    if (!s || s.startsWith('//') || s.startsWith('#')) return;
+    s = s.replace(/^\s*\d+\s*[xX]?\s+/, '');     // strip leading "1 " / "4x "
+    s = s.replace(/\s*\([^)]*\)\s*\S*$/, '');      // strip trailing "(SET) 123"
+    s = s.replace(/\s*\[[^\]]*\]\s*$/, '');         // strip trailing "[FOIL]" etc
+    s = s.split(' // ')[0].trim();                   // front face name
+    if (!s) return;
+    const key = s.toLowerCase();
+    if (!seen.has(key)) { seen.add(key); names.push(s); }
+  });
+  return names;
+}
+
+async function importDecklist() {
+  const text = document.getElementById('decklistInput').value;
+  const names = parseDecklist(text);
+  const prog = document.getElementById('importProgress');
+  const bar = document.getElementById('importBar');
+  const btn = document.getElementById('importBtn');
+  if (!names.length) { setStatus('importStatus', 'Paste a decklist first.', 'err'); prog.style.display = 'block'; return; }
+
+  btn.disabled = true;
+  prog.style.display = 'block';
+  bar.style.width = '10%';
+  setStatus('importStatus', '<span class="spinner"></span>Looking up ' + names.length + ' cards...');
+  document.getElementById('importResultsSection').style.display = 'none';
+
+  try {
+    const cards = await fetchCollection(names, 'name');
+    bar.style.width = '45%';
+    setStatus('importStatus', '<span class="spinner"></span>Gathering token parts...');
+
+    // Collect unique token/emblem part ids from each card's all_parts
+    const partIds = new Set();
+    const sourcesByPart = {};   // partId -> Set(sourceCardName)
+    cards.forEach(card => {
+      if (!Array.isArray(card.all_parts)) return;
+      card.all_parts.forEach(p => {
+        if (!p || p.id === card.id) return;
+        const isToken = p.component === 'token';
+        const isEmblem = /emblem/i.test(p.type_line || '');
+        if (!isToken && !isEmblem) return;
+        partIds.add(p.id);
+        (sourcesByPart[p.id] = sourcesByPart[p.id] || new Set()).add(card.name);
+      });
+    });
+
+    if (!partIds.size) {
+      bar.style.width = '100%';
+      setStatus('importStatus', '');
+      setStatus('importResultStatus', 'None of those cards make tokens, emblems or helper cards.', 'err');
+      document.getElementById('importResultsSection').style.display = 'block';
+      document.getElementById('importTokenList').innerHTML = '';
+      return;
+    }
+
+    const tokenCards = await fetchCollection([...partIds], 'id');
+    tokenCards.forEach(storeCard);
+    bar.style.width = '100%';
+
+    // Keep single-faced game objects only (no double-faced tokens), dedupe by name.
+    const byName = {};
+    tokenCards.filter(isSingleFace).forEach(tc => {
+      const k = (tc.name || '').toLowerCase();
+      if (!byName[k]) byName[k] = { card: tc, sources: new Set() };
+      const srcs = sourcesByPart[tc.id];
+      if (srcs) srcs.forEach(s => byName[k].sources.add(s));
+    });
+    const rows = Object.values(byName).sort((a, b) => a.card.name.localeCompare(b.card.name));
+
+    setStatus('importStatus', '');
+    const addAllBtn = document.getElementById('importAddAll');
+    if (!rows.length) {
+      setStatus('importResultStatus', 'The only parts found were double-faced tokens, which are skipped.', 'err');
+      document.getElementById('importTokenList').innerHTML = '';
+      importRows = [];
+      addAllBtn.style.display = 'none';
+    } else {
+      setStatus('importResultStatus', rows.length + ' distinct token' + (rows.length === 1 ? '' : 's') + ' across the deck.', 'ok');
+      renderImportTokens(rows);
+      addAllBtn.style.display = 'inline-flex';
+    }
+    document.getElementById('importResultsSection').style.display = 'block';
+  } catch (e) {
+    document.getElementById('importBar').style.width = '0%';
+    setStatus('importStatus', 'Import failed. ' + netMsg(e), 'err');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function renderImportTokens(rows) {
+  importRows = rows;
+  updateAddAllLabel();
+  const list = document.getElementById('importTokenList');
+  list.innerHTML = '';
+  rows.forEach(({ card, sources }) => {
+    const row = document.createElement('div');
+    row.className = 'import-token-row';
+    if (queue.some(q => q.id === card.id)) row.classList.add('added');
+    const srcList = [...sources].sort().join(', ');
+    row.innerHTML =
+      '<div class="import-token-main">' +
+        '<div class="import-token-name">' + esc(card.name) + '</div>' +
+        '<div class="import-token-sources">from ' + esc(srcList || card.name) + '</div>' +
+      '</div>' +
+      '<button class="act import-token-btn" type="button">' + (row.classList.contains('added') ? 'Added' : 'Add') + '</button>';
+    row.querySelector('.import-token-main').onclick = function () { showPrintings(card.name); };
+    row.querySelector('.import-token-btn').onclick = function () {
+      addToQueue(card);
+      row.classList.add('added');
+      row.querySelector('.import-token-btn').textContent = 'Added';
+      updateAddAllLabel();
+    };
+    list.appendChild(row);
+  });
+}
+
+// Icons for the Add-all button (stacked "+" for adding, check for done).
+const ADDALL_ICON = '<svg class="addall-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2.5"/><path d="M4 15.5V6.5A2.5 2.5 0 0 1 6.5 4H15.5"/><path d="M14.2 11.5v6M11.2 14.5h6"/></svg>';
+const DONE_ICON  = '<svg class="addall-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>';
+
+// Label shows how many are still un-queued; flips to a green "All added" when done.
+function updateAddAllLabel() {
+  const btn = document.getElementById('importAddAll');
+  if (!btn || !importRows.length) return;
+  const remaining = importRows.filter(r => !queue.some(q => q.id === r.card.id)).length;
+  if (remaining) {
+    btn.innerHTML = ADDALL_ICON + '<span class="addall-txt">Add all</span><span class="addall-count">' + remaining + '</span>';
+    btn.disabled = false;
+  } else {
+    btn.innerHTML = DONE_ICON + '<span class="addall-txt">All added</span>';
+    btn.disabled = true;
+  }
+}
+
+function addAllImported() {
+  if (!importRows.length) return;
+  importRows.forEach(({ card }) => addToQueue(card));   // addToQueue skips duplicates
+  document.querySelectorAll('#importTokenList .import-token-row').forEach(row => {
+    row.classList.add('added');
+    const b = row.querySelector('.import-token-btn');
+    if (b) b.textContent = 'Added';
+  });
+  updateAddAllLabel();
+}
+
+// ── Printings (right panel) ───────────────────────────────────
+async function showPrintings(oracleName) {
+  activeOracle = oracleName;
+  const panel = document.getElementById('rightPanel');
+  panel.innerHTML = '<div class="right-empty"><span class="spinner"></span>Loading printings of ' + esc(oracleName) + '...</div>';
+  try {
+    const prints = await getAllPrintings(oracleName);
+    prints.forEach(storeCard);
+    if (!prints.length) { panel.innerHTML = '<div class="right-empty">No printings found for ' + esc(oracleName) + '.</div>'; return; }
+    renderPrintings(oracleName, prints);
+  } catch (e) {
+    panel.innerHTML = '<div class="right-empty">' + esc(netMsg(e)) + '</div>';
+  }
+}
+
+// ── Helper game objects (monarch, dungeons, the ring, etc.) ───
+// These aren't creature tokens, so they live behind their own quick-pick chips.
+const HELPER_TYPES = '(type:token OR type:emblem OR type:card OR type:dungeon)';
+const HELPERS = [
+  ['Monarch',        '!"The Monarch"'],
+  ['The Ring',       '!"The Ring"'],
+  ['The Initiative', '!"The Initiative"'],
+  ['Undercity',      '!"Undercity"'],
+  ['Energy',         '!"Energy Reserve"'],
+  ["City's Blessing",'!"City\'s Blessing"'],
+  ['Day // Night',   '!"Day // Night"'],
+  ['Radiation',      'radiation'],
+  ['Lost Mine',      '!"Lost Mine of Phandelver"'],
+  ['Mad Mage',       '!"Dungeon of the Mad Mage"'],
+  ['Tomb',           '!"Tomb of Annihilation"']
+];
+
+function buildHelperChips() {
+  const box = document.getElementById('helperChips');
+  if (!box) return;
+  HELPERS.forEach(([label, query]) => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'helper-chip';
+    chip.textContent = label;
+    chip.onclick = () => loadHelper(query, label);
+    box.appendChild(chip);
+  });
+}
+
+async function loadHelper(query, label) {
+  activeOracle = label;
+  const panel = document.getElementById('rightPanel');
+  panel.innerHTML = '<div class="right-empty"><span class="spinner"></span>Loading ' + esc(label) + '...</div>';
+  try {
+    const q = encodeURIComponent(HELPER_TYPES + ' ' + query);
+    const prints = [];
+    let url = SF + '/cards/search?q=' + q + '&unique=prints&order=released&dir=desc';
+    while (url) {
+      const data = await sfFetch(url);
+      prints.push(...(data.data || []));
+      url = data.has_more ? data.next_page : null;
+      if (url) await sleep(90);
+    }
+    prints.forEach(storeCard);
+    if (!prints.length) { panel.innerHTML = '<div class="right-empty">Couldn\'t find ' + esc(label) + ' on Scryfall.</div>'; return; }
+    renderPrintings(prints[0].name, prints);
+  } catch (e) {
+    panel.innerHTML = '<div class="right-empty">' + esc(netMsg(e)) + '</div>';
+  }
+}
+
+function renderPrintings(oracleName, prints) {
+  const panel = document.getElementById('rightPanel');
+  let html = '<div class="printings-head">' +
+    '<span class="printings-title">' + esc(oracleName) + '</span>' +
+    '<span class="printings-count">' + prints.length + ' printing' + (prints.length === 1 ? '' : 's') + '</span>' +
+    '</div><div class="printings-grid">';
+  prints.forEach(card => {
+    const inQ = queue.some(q => q.id === card.id);
+    const img = getImageUrl(card, 'normal');
+    const setLine = (card.set_name || card.set || '').toString();
+    html += '<div class="printing-card' + (inQ ? ' in-queue' : '') + '" data-id="' + esc(card.id) + '">' +
+      '<span class="in-queue-badge">In queue</span>' +
+      (img ? '<img loading="lazy" src="' + esc(img) + '" alt="' + esc(card.name) + '">'
+           : '<div class="printing-img-placeholder">No image</div>') +
+      '<div class="printing-meta">' +
+        '<div class="printing-set">' + esc(setLine) + (card.collector_number ? ' #' + esc(card.collector_number) : '') + '</div>' +
+        '<div class="printing-artist">' + esc(card.artist || 'Unknown artist') + '</div>' +
+      '</div>' +
+      '<button class="add-printing-btn" type="button" data-id="' + esc(card.id) + '">' + (inQ ? 'In queue ✓' : '+ Add') + '</button>' +
+    '</div>';
+  });
+  html += '</div>';
+  panel.innerHTML = html;
+  panel.querySelectorAll('.add-printing-btn').forEach(b => {
+    b.onclick = function () { toggleQueueFromCard(b.dataset.id); };
+  });
+}
+
+function toggleQueueFromCard(id) {
+  const card = cardStore[id];
+  if (!card) return;
+  if (queue.some(q => q.id === id)) removeFromQueue(id);
+  else addToQueue(card);
+}
+
+// ── Queue ─────────────────────────────────────────────────────
+function addToQueue(card) {
+  if (!card || queue.some(q => q.id === card.id)) return;
+  queue.push({
+    id: card.id,
+    name: card.name,
+    set: (card.set || '').toUpperCase(),
+    setName: card.set_name || '',
+    imgSmall: getImageUrl(card, 'small') || getImageUrl(card, 'normal') || '',
+    qty: 1
+  });
+  renderQueue();
+  refreshPrintingStates();
+}
+
+function removeFromQueue(id) {
+  queue = queue.filter(q => q.id !== id);
+  renderQueue();
+  refreshPrintingStates();
+  // reflect on import rows
+  document.querySelectorAll('.import-token-row.added').forEach(row => {
+    const name = row.querySelector('.import-token-name').textContent;
+    const stillQ = queue.some(q => cardStore[q.id] && cardStore[q.id].name === name);
+    if (!stillQ) { row.classList.remove('added'); const b = row.querySelector('.import-token-btn'); if (b) b.textContent = 'Add'; }
+  });
+  updateAddAllLabel();
+}
+
+function changeQty(id, delta) {
+  const item = queue.find(q => q.id === id);
+  if (!item) return;
+  item.qty = Math.max(1, Math.min(99, item.qty + delta));
+  renderQueue();
+}
+
+function renderQueue() {
+  const box = document.getElementById('queue');
+  if (!queue.length) {
+    box.innerHTML = '<div class="queue-empty">No tokens queued yet. Search or import a deck, then add the printings you want.</div>';
+    return;
+  }
+  box.innerHTML = '';
+  queue.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'queue-item';
+    row.innerHTML =
+      (item.imgSmall ? '<img class="queue-thumb" src="' + esc(item.imgSmall) + '" alt="">' : '<div class="queue-thumb"></div>') +
+      '<div class="queue-info">' +
+        '<div class="queue-name">' + esc(item.name) + '</div>' +
+        '<div class="queue-set">' + esc(item.set || item.setName || '') + '</div>' +
+      '</div>' +
+      '<div class="qty-control">' +
+        '<button class="act qty-btn" type="button" data-act="dec">−</button>' +
+        '<span class="qty-val">' + item.qty + '</span>' +
+        '<button class="act qty-btn" type="button" data-act="inc">+</button>' +
+      '</div>' +
+      '<button class="remove-btn" type="button" aria-label="Remove">✕</button>';
+    row.querySelector('[data-act="dec"]').onclick = () => changeQty(item.id, -1);
+    row.querySelector('[data-act="inc"]').onclick = () => changeQty(item.id, 1);
+    row.querySelector('.remove-btn').onclick = () => removeFromQueue(item.id);
+    box.appendChild(row);
+  });
+}
+
+function refreshPrintingStates() {
+  document.querySelectorAll('.printing-card').forEach(card => {
+    const id = card.dataset.id;
+    const inQ = queue.some(q => q.id === id);
+    card.classList.toggle('in-queue', inQ);
+    const btn = card.querySelector('.add-printing-btn');
+    if (btn) btn.textContent = inQ ? 'In queue ✓' : '+ Add';
+  });
+}
+
+// ── Download ──────────────────────────────────────────────────
+async function downloadAll() {
+  if (!queue.length) { setStatus('dlStatus', 'Queue is empty.', 'err'); return; }
+
+  const overlay = document.getElementById('dlOverlay');
+  const prog = document.getElementById('dlProgress');
+  const fill = document.getElementById('dlBarFill');
+  const fileList = document.getElementById('dlFileList');
+  const doneBtn = document.getElementById('dlDoneBtn');
+  overlay.classList.add('visible');
+  fileList.innerHTML = ''; fileList.classList.remove('has-items');
+  doneBtn.style.display = 'none';
+  fill.style.width = '0%';
+
+  // Expand queue into individual files honouring qty, de-collide names
+  const nameCount = {};
+  const jobs = [];
+  queue.forEach(item => {
+    for (let i = 0; i < item.qty; i++) {
+      const base = safeName(item.name);
+      nameCount[base] = (nameCount[base] || 0) + 1;
+      const n = nameCount[base];
+      jobs.push({ id: item.id, name: item.name, file: base + '_' + n + '.png' });
+    }
+  });
+
+  let done = 0, ok = 0, fail = 0;
+  for (const job of jobs) {
+    prog.textContent = 'Downloading ' + (done + 1) + ' of ' + jobs.length + '...';
+    const card = cardStore[job.id];
+    const url = getImageUrl(card, 'png') || getImageUrl(card, 'large') || getImageUrl(card, 'normal');
+    let entryOk = false;
+    try {
+      if (!url) throw new Error('no image');
+      const blob = await fetch(url).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.blob(); });
+      if (dirHandle) {
+        const fh = await dirHandle.getFileHandle(job.file, { create: true });
+        const w = await fh.createWritable();
+        await w.write(blob); await w.close();
+      } else {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = job.file;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+        await sleep(250);
+      }
+      entryOk = true; ok++;
+    } catch (e) {
+      fail++;
+    }
+    const entry = document.createElement('div');
+    entry.className = 'dl-file-entry ' + (entryOk ? 'ok' : 'err');
+    entry.textContent = (entryOk ? '✓ ' : '✕ ') + job.file;
+    fileList.appendChild(entry);
+    fileList.classList.add('has-items');
+    fileList.scrollTop = fileList.scrollHeight;
+    done++;
+    fill.style.width = Math.round((done / jobs.length) * 100) + '%';
+    await sleep(90); // Scryfall image courtesy delay
+  }
+
+  prog.textContent = 'Done. ' + ok + ' saved' + (fail ? ', ' + fail + ' failed' : '') + '.';
+  doneBtn.style.display = 'block';
+  setStatus('dlStatus', dirHandle ? ('Saved to ' + dirHandle.name + '.') : 'Check your downloads folder.', 'ok');
+}
+
+function closeDlOverlay() { document.getElementById('dlOverlay').classList.remove('visible'); }
+
+// Enter key triggers search
+document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+
+// Init
+renderQueue();
+buildHelperChips();
+</script>
+
+<!-- Help panel: auto-open first visit, dismissal persists -->
+<script>
+(function () {
+  var dlg = document.getElementById('help');
+  var openBtn = document.getElementById('help-open');
+  var closeBtn = document.getElementById('help-close');
+  var KEY = 'tg_help_seen';
+  function open() { if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open',''); }
+  function close() { if (typeof dlg.close === 'function') dlg.close(); else dlg.removeAttribute('open'); try { localStorage.setItem(KEY, '1'); } catch (e) {} }
+  openBtn.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  dlg.addEventListener('cancel', function () { try { localStorage.setItem(KEY, '1'); } catch (e) {} });
+  var seen = false;
+  try { seen = localStorage.getItem(KEY) === '1'; } catch (e) {}
+  if (!seen) open();
+})();
+</script>
+
+<!-- Share (canonical-driven, zero per-page config) -->
+<script>
+(function () {
+  var btn = document.getElementById('shareBtn');
+  if (!btn) return;
+  var canonical = document.querySelector('link[rel="canonical"]');
+  var url = (canonical && canonical.href) ? canonical.href : location.href;
+  var raw = document.title || '';
+  var title = raw.replace(/\s*[—·|-]\s*MTJawnny\s*$/i, '').trim() || raw;
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function () { t.classList.remove('show'); }, 1800);
+  }
+  function legacyCopy() {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = url; ta.setAttribute('readonly', '');
+      ta.style.position = 'absolute'; ta.style.left = '-9999px';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      showToast('Link copied');
+    } catch (e) { showToast('Copy not supported'); }
+  }
+  btn.addEventListener('click', function () {
+    if (navigator.share) { navigator.share({ title: title, url: url }).catch(function () {}); return; }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function () { showToast('Link copied'); }).catch(legacyCopy);
+    } else { legacyCopy(); }
+  });
+})();
+</script>
+
+<!-- ===== MTJawnny pip-ring footer nav ===== -->
+<style>
+  .mtjnav-wrap { padding: 0.75rem 1rem; display: flex; justify-content: center; }
+  .mtjnav, .mtjnav * { box-sizing: border-box; }
+  .mtjnav {
+    --size: min(94vw, 380px);
+    --R:    calc(var(--size) * 0.34);
+    --pip:  calc(var(--size) * 0.24);
+    position: relative; width: var(--size); height: var(--size);
+  }
+  .mtjnav-bg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .mtjnav-bg .back    { fill: #130e1b; stroke: #b8935a; stroke-width: 2; vector-effect: non-scaling-stroke; }
+  .mtjnav-bg .connect { fill: none;    stroke: #b8935a; stroke-width: 5; vector-effect: non-scaling-stroke; }
+  .mtjnav-pip { position: absolute; left: 50%; top: 50%; width: var(--pip); height: var(--pip); text-decoration: none; }
+  .mtjnav-pip.is-table   { transform: translate(calc(-50% + (-0.5878 * var(--R))), calc(-50% + (-0.8090 * var(--R)))); }
+  .mtjnav-pip.is-cards   { transform: translate(calc(-50% + ( 0.5878 * var(--R))), calc(-50% + (-0.8090 * var(--R)))); }
+  .mtjnav-pip.is-stack   { transform: translate(calc(-50% + ( 0.9511 * var(--R))), calc(-50% + ( 0.3090 * var(--R)))); }
+  .mtjnav-pip.is-tools   { transform: translate(calc(-50% + (-0.9511 * var(--R))), calc(-50% + ( 0.3090 * var(--R)))); }
+  .mtjnav-pip.is-coffers { transform: translate(-50%, calc(-50% + (1.0 * var(--R)))); }
+  .mtjnav-dot {
+    width: 100%; height: 100%; border-radius: 50%;
+    background: #261d33; border: 5px solid #b8935a;
+    display: grid; place-items: center;
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+  .mtjnav-dot svg { width: 44%; height: 44%; color: #b8935a; display: block; }
+  .mtjnav-dot .mtjnav-icon { width: auto; height: auto; max-width: 54%; max-height: 48%; object-fit: contain; display: block; }
+  .mtjnav-pip:hover .mtjnav-dot, .mtjnav-pip:focus-visible .mtjnav-dot {
+    border-color: #d8b27a; box-shadow: 0 0 14px rgba(184,147,90,0.35), 0 6px 18px rgba(0,0,0,0.4);
+    transform: translateY(-2px);
+  }
+  .mtjnav-pip:focus-visible { outline: none; }
+  .mtjnav-pip.is-current .mtjnav-dot { opacity: 0.45; }
+  .mtjnav-top {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: calc(var(--size) * 0.13); height: calc(var(--size) * 0.13);
+    min-width: 44px; min-height: 44px;
+    border-radius: 50%; cursor: pointer; padding: 0;
+    background: #261d33; border: 2px solid #8a6d42;
+    display: grid; place-items: center;
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+  .mtjnav-top svg { width: 42%; height: 42%; color: #b8935a; display: block; }
+  .mtjnav-top:hover { border-color: #b8935a; transform: translate(-50%, calc(-50% - 2px)); box-shadow: 0 4px 14px rgba(0,0,0,0.4); }
+  .mtjnav-top:focus-visible { outline: 2px solid #b8935a; outline-offset: 3px; }
+  @media (min-width: 640px) { .mtjnav { --size: min(72vw, 470px); } }
+  @media (prefers-reduced-motion: reduce) { .mtjnav-dot { transition: none; } }
+</style>
+
+<div class="mtjnav-wrap">
+  <nav class="mtjnav" aria-label="Site sections">
+    <svg class="mtjnav-bg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle class="back"    cx="50" cy="50" r="49"/>
+      <circle class="connect" cx="50" cy="50" r="34"/>
+    </svg>
+    <a class="mtjnav-pip is-table"   href="/table"   aria-label="Table"   data-i="table"><span class="mtjnav-dot"></span></a>
+    <a class="mtjnav-pip is-cards"   href="/cards"   aria-label="Cards"   data-i="cards"><span class="mtjnav-dot"></span></a>
+    <a class="mtjnav-pip is-stack"   href="/stack"   aria-label="Stack"   data-i="stack"><span class="mtjnav-dot"></span></a>
+    <a class="mtjnav-pip is-tools"   href="/tools"   aria-label="Tools"   data-i="tools"><span class="mtjnav-dot"></span></a>
+    <a class="mtjnav-pip is-coffers" href="/coffers" aria-label="Coffers" data-i="coffers"><span class="mtjnav-dot"></span></a>
+    <button class="mtjnav-top" type="button" aria-label="Back to top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>
+    </button>
+  </nav>
+</div>
+
+<script>
+(function () {
+  var G = {
+    table:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M9 5v14"/></svg>',
+    tools:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17v3h3l5.3-5.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.2-.6-.6-2.2 2.6-2.5Z"/></svg>',
+    cards:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="12" height="15" rx="2"/><path d="M8 6V4a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-2"/></svg>',
+    stack:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5-10-5ZM2 13l10 5 10-5M2 18l10 5 10-5"/></svg>',
+    coffers:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16l-1 11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1L4 8Z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/><circle cx="12" cy="14" r="2"/></svg>'
+  };
+  var seg = (location.pathname.split('/')[1] || '').toLowerCase();
+  document.querySelectorAll('.mtjnav-pip').forEach(function (a) {
+    var k = a.getAttribute('data-i');
+    var dot = a.querySelector('.mtjnav-dot');
+    var img = new Image();
+    img.className = 'mtjnav-icon'; img.alt = '';
+    img.onerror = function () { dot.innerHTML = G[k] || ''; };
+    img.src = '/icons/' + k + '.png';
+    dot.appendChild(img);
+    var s = (a.getAttribute('href').split('/')[1] || '').toLowerCase();
+    if (s && s === seg) { a.classList.add('is-current'); a.setAttribute('aria-current', 'page'); }
+  });
+})();
+</script>
+<script>
+(function () {
+  var b = document.querySelector('.mtjnav-top');
+  if (!b) return;
+  b.addEventListener('click', function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  });
+})();
+</script>
+<!-- ===== /MTJawnny pip-ring footer nav ===== -->
+
+</body>
+</html>
