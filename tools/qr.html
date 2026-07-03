@@ -392,61 +392,35 @@
   .act-btn.primary:hover { background: #c8a468; }
   .act-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
 
-  /* Help "?" button + dialog */
+  /* Help "?" button + dialog (mirrors tools/token-grabber.html) */
   .help-btn {
-    position: fixed;
-    top: calc(0.7rem + env(safe-area-inset-top));
-    right: 0.8rem;
-    z-index: 40;
-    width: 38px; height: 38px;
-    border-radius: 50%;
-    background: var(--surface);
-    border: 1px solid var(--bronze-dim);
-    color: var(--bronze);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800;
-    font-size: 1.25rem;
-    line-height: 1;
-    cursor: pointer;
-    transition: border-color 0.18s, background 0.18s;
+    position: fixed; right: 1rem;
+    bottom: calc(1.1rem + env(safe-area-inset-bottom));
+    width: 46px; height: 46px; border-radius: 50%;
+    background: var(--surface); border: 1.5px solid var(--bronze);
+    color: var(--bronze); font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.5rem; font-weight: 700; cursor: pointer; z-index: 80;
+    display: grid; place-items: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+    transition: background 0.15s, transform 0.15s;
   }
-  .help-btn:hover { border-color: var(--bronze); background: var(--bronze-glow); }
+  .help-btn:hover { background: var(--bronze-glow); transform: translateY(-2px); }
 
   dialog#help {
-    border: 1px solid var(--bronze-dim);
-    border-radius: 14px;
-    background: var(--surface);
-    color: var(--text);
-    max-width: 420px;
-    width: calc(100% - 2rem);
-    padding: 1.4rem 1.4rem 1.5rem;
+    max-width: 460px; width: calc(100% - 2rem);
+    background: var(--surface); color: var(--text);
+    border: 1.5px solid var(--bronze); border-radius: 16px;
+    padding: 0; margin: auto;
   }
-  dialog#help::backdrop { background: rgba(10,7,16,0.66); }
-  dialog#help h2 {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 900;
-    font-size: 1.5rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--bronze);
-    margin-bottom: 0.7rem;
-  }
-  dialog#help p { font-size: 0.9rem; line-height: 1.5; color: var(--text); margin-bottom: 0.7rem; }
-  dialog#help ul { list-style: none; margin: 0 0 0.9rem; }
-  dialog#help li { font-size: 0.88rem; line-height: 1.45; color: var(--text); padding-left: 1.1rem; position: relative; margin-bottom: 0.5rem; }
-  dialog#help li::before { content: "›"; position: absolute; left: 0; color: var(--bronze); font-weight: 700; }
-  dialog#help .help-close {
-    width: 100%;
-    background: var(--bronze);
-    color: var(--bg);
-    border: none;
-    border-radius: var(--radius);
-    font-weight: 700;
-    font-size: 0.92rem;
-    padding: 0.7rem;
-    cursor: pointer;
-    margin-top: 0.3rem;
-  }
+  dialog#help::backdrop { background: rgba(15,10,22,0.7); backdrop-filter: blur(2px); }
+  .help-body { padding: 1.4rem 1.5rem; }
+  .help-body h2 { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--bronze); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 0.75rem; }
+  .help-body p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 0.5rem; }
+  .help-body ul { list-style: none; margin: 0 0 0.9rem; }
+  .help-body li { font-size: 0.88rem; line-height: 1.45; color: var(--text-dim); padding-left: 1.1rem; position: relative; margin-bottom: 0.5rem; }
+  .help-body li::before { content: "›"; position: absolute; left: 0; color: var(--bronze); font-weight: 700; }
+  .help-close { width: 100%; margin-top: 1.2rem; height: 42px; border-radius: var(--radius); border: none; background: var(--bronze); color: var(--bg); font-weight: 700; font-size: 0.95rem; cursor: pointer; }
+  .help-close:hover { background: #cda564; }
 
   /* Toast */
   .toast {
@@ -519,7 +493,7 @@
 </head>
 <body>
 
-<button class="help-btn" id="help-open" aria-label="Help">?</button>
+<button class="help-btn" id="help-open" type="button" aria-label="Help">?</button>
 
 <div class="page">
 
@@ -822,18 +796,20 @@ https://mtjawnny.com/bog</textarea>
 
 </div>
 
-<!-- Help panel (help-panel-pattern.md): opens on the "?" button only, no first-visit splash -->
+<!-- Help panel: opens only when the user taps the ? button -->
 <dialog id="help">
-  <h2>QR Coder</h2>
-  <p>Type a link or any text, and a scannable QR code builds instantly. Drop it into a deckbox insert, a binder page, or print it next to a proxy.</p>
-  <ul>
-    <li>Quick-pick chips fill in MTJawnny pages for you.</li>
-    <li>The round frame adds a disc and an optional curved label. The code stays square inside, so nothing scannable is lost.</li>
-    <li>Batch mode turns a list of links into a zip of PNGs, each named by its slug.</li>
-    <li>The scannability meter weighs contrast, border, density, and styling. Test a real scan before printing when it dips below Good.</li>
-    <li>Download a crisp PNG, a scalable SVG, or copy straight to your clipboard.</li>
-  </ul>
-  <button class="help-close" id="help-close">Got it</button>
+  <div class="help-body">
+    <h2>QR Coder</h2>
+    <p>Type a link or any text, and a scannable QR code builds instantly. Drop it into a deckbox insert, a binder page, or print it next to a proxy.</p>
+    <ul>
+      <li>Quick-pick chips fill in MTJawnny pages for you.</li>
+      <li>The round frame adds a disc and an optional curved label. The code stays square inside, so nothing scannable is lost.</li>
+      <li>Batch mode turns a list of links into a zip of PNGs, each named by its slug.</li>
+      <li>The scannability meter weighs contrast, border, density, and styling. Test a real scan before printing when it dips below Good.</li>
+      <li>Download a crisp PNG, a scalable SVG, or copy straight to your clipboard.</li>
+    </ul>
+    <button class="help-close" id="help-close" type="button">Got it</button>
+  </div>
 </dialog>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -3659,8 +3635,10 @@ var qrcode = function() {
 
   // ---- help panel (opens only on the "?" button; no first-visit splash) ----
   var dlg = $('help');
-  $('help-open').addEventListener('click', function () { dlg.showModal(); });
-  $('help-close').addEventListener('click', function () { dlg.close(); });
+  function openHelp() { if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', ''); }
+  function closeHelp() { if (typeof dlg.close === 'function') dlg.close(); else dlg.removeAttribute('open'); }
+  $('help-open').addEventListener('click', openHelp);
+  $('help-close').addEventListener('click', closeHelp);
 
   // redraw once the display font loads (curved label metrics)
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(render);
