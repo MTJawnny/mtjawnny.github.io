@@ -519,6 +519,21 @@
   .suggest-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
   .suggest-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.4; }
 
+  /* ══ REPORT A BUG/FLUB ══ */
+  .report-cta { text-align: center; margin-top: 1.1rem; }
+  .report-btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    color: var(--text-dim);
+    font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 0.82rem;
+    text-decoration: none; padding: 0.5rem 0.9rem;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .report-btn:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+  .report-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
   /* ══ SOURCES LINKS ══ */
   .source-links { list-style: none; }
   .source-links li { margin-bottom: 0.5rem; font-size: 0.85rem; line-height: 1.4; }
@@ -837,6 +852,19 @@
       <li>EDHREC: <a href="https://edhrec.com/cards/bojuka-bog" target="_blank" rel="noopener">Bojuka Bog</a> — synergy partners and deck inclusion data.</li>
       <li>Wizards of the Coast: <a href="https://magic.wizards.com/en/rules" target="_blank" rel="noopener">Magic Comprehensive Rules</a> — the CR references listed under Governing Rules.</li>
     </ul>
+
+    <!-- ════════ REPORT A BUG/FLUB ════════ -->
+    <section class="report-cta">
+      <a class="report-btn" href="https://tally.so/r/lb5PPV?card=Bojuka%20Bog&page=bog.html" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        Report a bug or flub
+      </a>
+    </section>
+
 
   </main>
 
