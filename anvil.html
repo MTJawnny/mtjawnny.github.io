@@ -26,11 +26,11 @@
 <meta property="og:title" content="Anvil of Bogardan — How It Works">
 <meta property="og:description" content="No maximum hand size, and every player's draw step adds a draw-then-discard. The draw-step sequence, the response window, the tricks, the combos, and full rulings.">
 <meta property="og:url" content="https://mtjawnny.com/anvil">
-<meta property="og:image" content="https://mtjawnny.com/cardimages/anvil.jpg">
+<meta property="og:image" content="https://cdn.mtjawnny.com/cards/png/9deb2a0b-f40c-4d13-8321-41dc41448d24.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Anvil of Bogardan — How It Works">
 <meta name="twitter:description" content="No maximum hand size, plus a draw-then-discard on every draw step. The sequence, the response window, and the combos.">
-<meta name="twitter:image" content="https://mtjawnny.com/cardimages/anvil.jpg">
+<meta name="twitter:image" content="https://cdn.mtjawnny.com/cards/png/9deb2a0b-f40c-4d13-8321-41dc41448d24.png">
 
 <title>Anvil of Bogardan — How It Works — MTJawnny</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -613,10 +613,8 @@
     <div class="card-hero">
       <div class="card-img-wrap" id="cardWrap">
         <img class="card-img"
-             src="/cardimages/anvil.jpg"
              alt="Anvil of Bogardan — Magic: The Gathering card"
-             loading="eager" width="745" height="1040"
-             onerror="document.getElementById('cardWrap').classList.add('noart')">
+             loading="eager" width="745" height="1040">
         <div class="card-fallback" aria-hidden="true">
           <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
@@ -903,6 +901,26 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
+const CDN = "https://cdn.mtjawnny.com";
+// oracle_id-keyed, PNG-only. Fallback chain: R2 → Scryfall → .noart backdrop.
+// `face` is "" | "-front" | "-back". oracleId + scryfallUrl come from the
+// resolved manifest at build time — never derived from the slug, never guessed.
+function cardImg(el, oracleId, scryfallUrl, face = "") {
+  el.onerror = () => {
+    el.onerror = () => {
+      el.onerror = null;
+      el.closest(".card-img-wrap").classList.add("noart");
+    };
+    el.src = scryfallUrl;
+  };
+  el.src = `${CDN}/cards/png/${oracleId}${face}.png`;
+}
+cardImg(
+  document.querySelector('.card-img'),
+  '9deb2a0b-f40c-4d13-8321-41dc41448d24',
+  'https://cards.scryfall.io/png/front/7/f/7ff965dd-54b4-4f21-a52f-81c0dd1e691e.png?1782721279'
+);
+
 (function () {
   var btn = document.getElementById('shareBtn');
   if (!btn) return;
