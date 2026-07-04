@@ -365,24 +365,24 @@
      EDIT HERE — the card list. Add one object per card, any time.
        name  : shown to screen readers + used by the search box
        file  : the card's page, linked as  /<file>
-       image : tile art, served from /cardimages/
+       image : tile art, served from cdn.mtjawnny.com by oracle_id (see docs/cutover-manifest.md)
      (Image filename matches the page slug, e.g. saga.html → saga.jpg)
 ═════════════════════════════════════════════════════════════════════ -->
 <script>
 const CARDS = [
- { name: "Wheel of Misfortune", file: "wheel.html", image: "/cardimages/wheel.jpg" },
- { name: "Teferi's Protection", file: "tef.html", image: "/cardimages/tef.jpg" },
- { name: "Glacial Chasm", file: "chasm.html", image: "/cardimages/chasm.jpg" },
- { name: "Chains of Mephistopheles", file: "chains.html", image: "/cardimages/chains.jpg" },
- { name: "Prisoner's Dilemma", file: "pris.html", image: "/cardimages/pris.jpg" },
- { name: "Animate Dead", file: "dead.html", image: "/cardimages/dead.jpg" },
- { name: "Anvil of Bogardan", file: "anvil.html", image: "/cardimages/anvil.jpg" },
- { name: "Bojuka Bog", file: "bog.html", image: "/cardimages/bog.jpg" },
- { name: "Ragavan, Nimble Pilferer", file: "rag.html", image: "/cardimages/rag.jpg" },
- { name: "Blood Moon", file: "moon.html", image: "/cardimages/moon.jpg" },
- { name: "Trinisphere", file: "trin.html", image: "/cardimages/trin.jpg" },
- { name: "Uba Mask", file: "uba.html", image: "/cardimages/uba.jpg" }
-  // { name: "Card Name",   file: "slug.html", image: "/cardimages/slug.jpg" },
+ { name: "Wheel of Misfortune", file: "wheel.html", image: "https://cdn.mtjawnny.com/cards/png/10aff3f6-8347-4e1b-b8e7-c204c9e46657.png" },
+ { name: "Teferi's Protection", file: "tef.html", image: "https://cdn.mtjawnny.com/cards/png/0d4ecdb1-ec90-497f-a7a4-1c68092b8757.png" },
+ { name: "Glacial Chasm", file: "chasm.html", image: "https://cdn.mtjawnny.com/cards/png/73e7a2ad-d11c-4867-b97d-f971809da778.png" },
+ { name: "Chains of Mephistopheles", file: "chains.html", image: "https://cdn.mtjawnny.com/cards/png/eae87919-6322-4bd2-ae9c-b1ce25d686da.png" },
+ { name: "Prisoner's Dilemma", file: "pris.html", image: "https://cdn.mtjawnny.com/cards/png/fecbbc79-2f74-46b3-a049-45736f904f58.png" },
+ { name: "Animate Dead", file: "dead.html", image: "https://cdn.mtjawnny.com/cards/png/c0d8fef4-65f4-4769-982d-b397d2b7e977.png" },
+ { name: "Anvil of Bogardan", file: "anvil.html", image: "https://cdn.mtjawnny.com/cards/png/9deb2a0b-f40c-4d13-8321-41dc41448d24.png" },
+ { name: "Bojuka Bog", file: "bog.html", image: "https://cdn.mtjawnny.com/cards/png/04b7362d-0490-4cb0-b5d7-2a7732f659ce.png" },
+ { name: "Ragavan, Nimble Pilferer", file: "rag.html", image: "https://cdn.mtjawnny.com/cards/png/37108cd4-bbab-4ce3-9ed6-f60e8422e703.png" },
+ { name: "Blood Moon", file: "moon.html", image: "https://cdn.mtjawnny.com/cards/png/94fac5fe-97d5-4c12-a80c-8efff9d853ae.png" },
+ { name: "Trinisphere", file: "trin.html", image: "https://cdn.mtjawnny.com/cards/png/69d994f2-b8f6-425f-9655-977c2144d40c.png" },
+ { name: "Uba Mask", file: "uba.html", image: "https://cdn.mtjawnny.com/cards/png/766c644c-04fe-4b01-93dd-09a50d78d01f.png" }
+  // { name: "Card Name",   file: "slug.html", image: "https://cdn.mtjawnny.com/cards/png/<oracle_id>.png" },
 ];
 
 // Card-submission tool.
