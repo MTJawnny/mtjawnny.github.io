@@ -17,11 +17,11 @@
 <meta property="og:title" content="Chains of Mephistopheles — How It Works">
 <meta property="og:description" content="Every draw outside your normal turn draw costs a discard, or a mill if your hand is empty. The draw step exemption, the combos, and full rulings.">
 <meta property="og:url" content="https://mtjawnny.com/chains">
-<meta property="og:image" content="https://mtjawnny.com/cardimages/chains.jpg">
+<meta property="og:image" content="https://cdn.mtjawnny.com/cards/png/eae87919-6322-4bd2-ae9c-b1ce25d686da.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Chains of Mephistopheles — How It Works">
 <meta name="twitter:description" content="Every draw outside your normal turn draw costs a discard, or a mill if your hand is empty. The exemption, the combos, and full rulings.">
-<meta name="twitter:image" content="https://mtjawnny.com/cardimages/chains.jpg">
+<meta name="twitter:image" content="https://cdn.mtjawnny.com/cards/png/eae87919-6322-4bd2-ae9c-b1ce25d686da.png">
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-WKH3Y62H5H"></script>
@@ -639,10 +639,8 @@
     <div class="card-hero">
       <div class="card-img-wrap" id="cardWrap">
         <img class="card-img"
-             src="/cardimages/chains.jpg"
              alt="Chains of Mephistopheles — Magic: The Gathering card"
-             loading="eager" width="745" height="1040"
-             onerror="document.getElementById('cardWrap').classList.add('noart')">
+             loading="eager" width="745" height="1040">
         <div class="card-fallback" aria-hidden="true">
           <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
@@ -930,6 +928,26 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
+const CDN = "https://cdn.mtjawnny.com";
+// oracle_id-keyed, PNG-only. Fallback chain: R2 → Scryfall → .noart backdrop.
+// `face` is "" | "-front" | "-back". oracleId + scryfallUrl come from the
+// resolved manifest at build time — never derived from the slug, never guessed.
+function cardImg(el, oracleId, scryfallUrl, face = "") {
+  el.onerror = () => {
+    el.onerror = () => {
+      el.onerror = null;
+      el.closest(".card-img-wrap").classList.add("noart");
+    };
+    el.src = scryfallUrl;
+  };
+  el.src = `${CDN}/cards/png/${oracleId}${face}.png`;
+}
+cardImg(
+  document.querySelector('.card-img'),
+  'eae87919-6322-4bd2-ae9c-b1ce25d686da',
+  'https://cards.scryfall.io/png/front/f/2/f2edb3a6-8506-4885-b332-eca381940ce8.png?1782753865'
+);
+
 (function () {
   var btn = document.getElementById('shareBtn');
   if (!btn) return;
