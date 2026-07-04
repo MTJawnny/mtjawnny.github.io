@@ -26,11 +26,11 @@
 <meta property="og:title" content="Uba Mask — How It Works">
 <meta property="og:description" content="Every drawn card is exiled face up instead, and you can only play it the turn it was exiled. The replacement effect, the timing rules, the Drannith Magistrate lock, and full rulings.">
 <meta property="og:url" content="https://mtjawnny.com/uba">
-<meta property="og:image" content="https://mtjawnny.com/cardimages/uba.jpg">
+<meta property="og:image" content="https://cdn.mtjawnny.com/cards/png/766c644c-04fe-4b01-93dd-09a50d78d01f.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Uba Mask — How It Works">
 <meta name="twitter:description" content="Every drawn card is exiled face up instead, playable only the turn it was exiled. The replacement effect, the timing rules, and the Drannith Magistrate lock.">
-<meta name="twitter:image" content="https://mtjawnny.com/cardimages/uba.jpg">
+<meta name="twitter:image" content="https://cdn.mtjawnny.com/cards/png/766c644c-04fe-4b01-93dd-09a50d78d01f.png">
 
 <title>Uba Mask — How It Works — MTJawnny</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -613,10 +613,8 @@
     <div class="card-hero">
       <div class="card-img-wrap" id="cardWrap">
         <img class="card-img"
-             src="/cardimages/uba.jpg"
              alt="Uba Mask — Magic: The Gathering card"
-             loading="eager" width="745" height="1040"
-             onerror="document.getElementById('cardWrap').classList.add('noart')">
+             loading="eager" width="745" height="1040">
         <div class="card-fallback" aria-hidden="true">
           <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
@@ -869,6 +867,26 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
+const CDN = "https://cdn.mtjawnny.com";
+// oracle_id-keyed, PNG-only. Fallback chain: R2 → Scryfall → .noart backdrop.
+// `face` is "" | "-front" | "-back". oracleId + scryfallUrl come from the
+// resolved manifest at build time — never derived from the slug, never guessed.
+function cardImg(el, oracleId, scryfallUrl, face = "") {
+  el.onerror = () => {
+    el.onerror = () => {
+      el.onerror = null;
+      el.closest(".card-img-wrap").classList.add("noart");
+    };
+    el.src = scryfallUrl;
+  };
+  el.src = `${CDN}/cards/png/${oracleId}${face}.png`;
+}
+cardImg(
+  document.querySelector('.card-img'),
+  '766c644c-04fe-4b01-93dd-09a50d78d01f',
+  'https://cards.scryfall.io/png/front/f/a/fa3ecb4e-d08f-4fac-8842-c3e772b95bd5.png?1782718146'
+);
+
 (function () {
   var btn = document.getElementById('shareBtn');
   if (!btn) return;
