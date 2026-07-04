@@ -26,11 +26,11 @@
 <meta property="og:title" content="Ragavan, Nimble Pilferer — How It Works">
 <meta property="og:description" content="The combat-damage trigger that makes a Treasure and exiles the top card of an opponent's library for you to cast, the Dash mode, the casting-window traps, the combos, and full rulings.">
 <meta property="og:url" content="https://mtjawnny.com/rag">
-<meta property="og:image" content="https://mtjawnny.com/cardimages/rag.jpg">
+<meta property="og:image" content="https://cdn.mtjawnny.com/cards/png/37108cd4-bbab-4ce3-9ed6-f60e8422e703.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Ragavan, Nimble Pilferer — How It Works">
 <meta name="twitter:description" content="Connect once: a Treasure, the top card of their library to cast, and a casting window most players misread. The rules and the combos.">
-<meta name="twitter:image" content="https://mtjawnny.com/cardimages/rag.jpg">
+<meta name="twitter:image" content="https://cdn.mtjawnny.com/cards/png/37108cd4-bbab-4ce3-9ed6-f60e8422e703.png">
 
 <title>Ragavan, Nimble Pilferer — How It Works — MTJawnny</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -615,10 +615,8 @@
     <div class="card-hero">
       <div class="card-img-wrap" id="cardWrap">
         <img class="card-img"
-             src="/cardimages/rag.jpg"
              alt="Ragavan, Nimble Pilferer — Magic: The Gathering card"
-             loading="eager" width="745" height="1040"
-             onerror="document.getElementById('cardWrap').classList.add('noart')">
+             loading="eager" width="745" height="1040">
         <div class="card-fallback" aria-hidden="true">
           <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
@@ -899,6 +897,26 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
+const CDN = "https://cdn.mtjawnny.com";
+// oracle_id-keyed, PNG-only. Fallback chain: R2 → Scryfall → .noart backdrop.
+// `face` is "" | "-front" | "-back". oracleId + scryfallUrl come from the
+// resolved manifest at build time — never derived from the slug, never guessed.
+function cardImg(el, oracleId, scryfallUrl, face = "") {
+  el.onerror = () => {
+    el.onerror = () => {
+      el.onerror = null;
+      el.closest(".card-img-wrap").classList.add("noart");
+    };
+    el.src = scryfallUrl;
+  };
+  el.src = `${CDN}/cards/png/${oracleId}${face}.png`;
+}
+cardImg(
+  document.querySelector('.card-img'),
+  '37108cd4-bbab-4ce3-9ed6-f60e8422e703',
+  'https://cards.scryfall.io/png/front/a/9/a9738cda-adb1-47fb-9f4c-ecd930228c4d.png?1782704654'
+);
+
 (function () {
   var btn = document.getElementById('shareBtn');
   if (!btn) return;
