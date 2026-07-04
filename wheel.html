@@ -26,11 +26,11 @@
 <meta property="og:title" content="Wheel of Misfortune — How It Works">
 <meta property="og:description" content="Everyone secretly bids a number. The highest bid takes damage, the middle bids refill to seven, and the lowest bid keeps its hand. Tricks, misplays, and full rulings.">
 <meta property="og:url" content="https://mtjawnny.com/wheel">
-<meta property="og:image" content="https://mtjawnny.com/cardimages/wheel.jpg">
+<meta property="og:image" content="https://cdn.mtjawnny.com/cards/png/10aff3f6-8347-4e1b-b8e7-c204c9e46657.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Wheel of Misfortune — How It Works">
 <meta name="twitter:description" content="Everyone secretly bids a number. The highest bid takes damage, the middle bids refill to seven, and the lowest bid keeps its hand.">
-<meta name="twitter:image" content="https://mtjawnny.com/cardimages/wheel.jpg">
+<meta name="twitter:image" content="https://cdn.mtjawnny.com/cards/png/10aff3f6-8347-4e1b-b8e7-c204c9e46657.png">
 
 <title>Wheel of Misfortune — How It Works — MTJawnny</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -606,10 +606,8 @@
     <div class="card-hero">
       <div class="card-img-wrap" id="cardWrap">
         <img class="card-img"
-             src="/cardimages/wheel.jpg"
              alt="Wheel of Misfortune — Magic: The Gathering card"
-             loading="eager" width="745" height="1040"
-             onerror="document.getElementById('cardWrap').classList.add('noart')">
+             loading="eager" width="745" height="1040">
         <div class="card-fallback" aria-hidden="true">
           <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
@@ -871,6 +869,26 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
+const CDN = "https://cdn.mtjawnny.com";
+// oracle_id-keyed, PNG-only. Fallback chain: R2 → Scryfall → .noart backdrop.
+// `face` is "" | "-front" | "-back". oracleId + scryfallUrl come from the
+// resolved manifest at build time — never derived from the slug, never guessed.
+function cardImg(el, oracleId, scryfallUrl, face = "") {
+  el.onerror = () => {
+    el.onerror = () => {
+      el.onerror = null;
+      el.closest(".card-img-wrap").classList.add("noart");
+    };
+    el.src = scryfallUrl;
+  };
+  el.src = `${CDN}/cards/png/${oracleId}${face}.png`;
+}
+cardImg(
+  document.querySelector('.card-img'),
+  '10aff3f6-8347-4e1b-b8e7-c204c9e46657',
+  'https://cards.scryfall.io/png/front/7/4/74177b51-a300-49d9-8ea7-557b19cf80c7.png?1782705965'
+);
+
 (function () {
   var btn = document.getElementById('shareBtn');
   if (!btn) return;
