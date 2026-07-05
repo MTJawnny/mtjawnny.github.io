@@ -49,7 +49,7 @@ not just legal positioning.
 - No auto-open help panels — button-only (?), no localStorage first-visit logic
 
 ## Hard rules
-- Em-dash banned in body copy. Permitted only in <title> tags, CSS comments,
+- Em-dash banned in body copy. Permitted only in <title> tags, CSS and inline script comments,
   Governing Rules label cells, and share-title script variables.
 - All card data (oracle text, rulings, CR citations, legality) must be
   independently verified against Scryfall/Gatherer and local
