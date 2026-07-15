@@ -63,11 +63,15 @@
     height: 100dvh;
     overflow-y: auto;
     background: var(--bg);
+    /* Single source of truth for the table-diagram width — the player
+       selector / life chips / turn-control rows all match it so their
+       left/right edges line up with the tile grid below. */
+    --setup-w: min(92vw, 420px);
   }
   .splash-hero {
     /* No forced full-viewport height — the page has enough content now
        (table diagram + format guides) that it just flows naturally. */
-    padding: 0.25rem 0 8px;
+    padding: 0.25rem 0 4px;
     position: relative;
   }
   /* ── Left title pip doubles as the home/back link (site-wide pattern) ── */
@@ -142,7 +146,7 @@
     grid-template-columns: 1fr 1fr;
     gap: 0.85rem;
     max-width: 400px;
-    margin: 0.6rem auto 0;
+    margin: 0.35rem auto 0;
     padding: 0 1.25rem;
   }
   .footer-btn {
@@ -177,34 +181,45 @@
      grid. Seats double as the color picker; the center circle is the same
      object as the in-game pass-turn button, so Start reads as "this
      miniature becomes the real table." ── */
+  /* Player-selector and life-chip rows share a width with the table
+     diagram (--setup-w) and each pair with a direction dial on the right,
+     so both rows' outer edges line up with the tile grid's edges. */
+  .setup-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px;
+    width: var(--setup-w);
+    margin: 0 auto 0.6rem;
+  }
+  .setup-row.centered { justify-content: center; }
+
   .seg-players {
-    display: flex; justify-content: center;
-    gap: 6px;
-    margin: 0 auto 0.9rem;
+    display: flex;
+    gap: 4px;
     width: fit-content;
     background: var(--surface);
     border: 1.5px solid var(--bronze-dim);
     border-radius: 999px;
-    padding: 6px;
+    padding: 5px;
   }
   .seg-btn {
     background: transparent; border: none; color: var(--text-dim);
     font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800; font-size: 1.3rem;
-    letter-spacing: 0.02em; text-transform: uppercase;
-    padding: 17px 26px; border-radius: 999px; cursor: pointer;
+    font-weight: 800; font-size: clamp(0.85rem, 3.6vw, 1.05rem);
+    letter-spacing: 0.01em; text-transform: uppercase;
+    white-space: nowrap;
+    padding: 11px clamp(8px, 2.8vw, 14px); border-radius: 999px; cursor: pointer;
     transition: background 0.18s, color 0.18s;
   }
   .seg-btn.sel { background: var(--bronze); color: var(--bg); }
   .seg-btn:not(.sel):hover { color: var(--white); }
 
-  .life-chips { display: flex; justify-content: center; gap: 14px; padding: 0 1.5rem; margin-bottom: 1rem; }
+  .life-chips { display: flex; gap: clamp(6px, 2vw, 10px); width: fit-content; }
   .chip {
-    width: 76px; height: 76px; border-radius: 50%;
+    width: clamp(50px, 15vw, 64px); height: clamp(50px, 15vw, 64px); border-radius: 50%;
     background: var(--surface); border: 2px solid var(--bronze-dim);
     color: var(--text-dim);
     font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800; font-size: 1.4rem;
+    font-weight: 800; font-size: clamp(1rem, 4vw, 1.25rem);
     cursor: pointer;
     transition: background 0.18s, color 0.18s, border-color 0.18s;
   }
@@ -214,7 +229,7 @@
   .table-wrap { display: flex; justify-content: center; padding: 0 1.4rem; }
   .table-diagram {
     position: relative;
-    width: min(92vw, 420px);
+    width: var(--setup-w);
     aspect-ratio: 1;
   }
   .setup-seat-grid {
@@ -298,16 +313,16 @@
     box-shadow: 0 0 0 5px var(--bg), 0 3px 12px rgba(0,0,0,0.5);
   }
 
-  /* Turn-direction dial (and, 3-player only, the Rotate Seats dial beside
-     it) float above the diagram, no box around the pair. */
-  .turn-control-row {
-    display: flex; justify-content: center; align-items: flex-start;
-    gap: 34px;
-    margin-top: 1rem;
+  /* Turn-direction dial rides the right edge of the player-selector row;
+     the (3-player only) Rotate Seats dial rides the right edge of the
+     life-chips row directly below it. Both shrunk to fit that row. */
+  .turn-item {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    width: clamp(56px, 16vw, 72px);
+    flex-shrink: 0;
   }
-  .turn-item { display: flex; flex-direction: column; align-items: center; gap: 10px; }
   .dir-btn {
-    width: 96px; height: 96px;
+    width: clamp(44px, 13vw, 56px); height: clamp(44px, 13vw, 56px);
     border-radius: 50%;
     border: 2px solid var(--bronze-dim);
     background: var(--surface);
@@ -319,14 +334,14 @@
     transition: border-color 0.18s, background 0.18s, transform 0.5s ease;
   }
   .dir-btn:hover { border-color: var(--bronze); background: var(--bronze-glow); }
-  .dir-btn svg { width: 45px; height: 45px; }
+  .dir-btn svg { width: clamp(20px, 6vw, 26px); height: clamp(20px, 6vw, 26px); }
   .dir-btn.ccw svg { transform: scaleX(-1); }
   .dir-word {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 1.05rem; font-weight: 800;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--white);
-    line-height: 1.2;
+    font-size: 0.8rem; font-weight: 800;
+    letter-spacing: 0.03em; text-transform: uppercase;
+    color: var(--text-dim);
+    line-height: 1.15;
     text-align: center;
   }
 
@@ -356,7 +371,7 @@
   }
 
   .splash-more {
-    padding: 10px 24px 56px;
+    padding: 6px 24px 56px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1270,38 +1285,31 @@
       </div>
     </header>
 
-    <div class="seg-players" role="group" aria-label="Player count">
-      <button id="p2" class="seg-btn" onclick="selP(2)">1v1</button>
-      <button id="p3" class="seg-btn" onclick="selP(3)">3 Player</button>
-      <button id="p4" class="seg-btn sel" onclick="selP(4)">4 Player</button>
-    </div>
-
-    <div class="life-chips" role="group" aria-label="Starting life">
-      <button id="l20" class="chip" onclick="selLife(20)">20</button>
-      <button id="l25" class="chip" onclick="selLife(25)">25</button>
-      <button id="l30" class="chip" onclick="selLife(30)">30</button>
-      <button id="l40" class="chip sel" onclick="selLife(40)">40</button>
-    </div>
-
-    <div class="table-wrap">
-      <div class="table-diagram">
-        <div id="color-map" class="setup-seat-grid"></div>
-        <button id="start-btn" onclick="startGame()"><span>Start</span><span>Game</span></button>
+    <div class="setup-row" id="row-players">
+      <div class="seg-players" role="group" aria-label="Player count">
+        <button id="p2" class="seg-btn" onclick="selP(2)">1v1</button>
+        <button id="p3" class="seg-btn" onclick="selP(3)">3 Player</button>
+        <button id="p4" class="seg-btn sel" onclick="selP(4)">4 Player</button>
       </div>
-    </div>
-
-    <div class="turn-control-row">
       <div class="turn-item" id="dir-group">
-        <span class="dir-word" id="dir-word">Clockwise</span>
         <button id="dir-toggle" class="dir-btn" onclick="toggleDir()" aria-label="Toggle turn direction">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
             <path d="M21 3v5h-6"/>
           </svg>
         </button>
+        <span class="dir-word" id="dir-word">Clockwise</span>
+      </div>
+    </div>
+
+    <div class="setup-row centered" id="row-life">
+      <div class="life-chips" role="group" aria-label="Starting life">
+        <button id="l20" class="chip" onclick="selLife(20)">20</button>
+        <button id="l25" class="chip" onclick="selLife(25)">25</button>
+        <button id="l30" class="chip" onclick="selLife(30)">30</button>
+        <button id="l40" class="chip sel" onclick="selLife(40)">40</button>
       </div>
       <div class="turn-item" id="rotate-item" style="display:none">
-        <span class="dir-word">Rotate Seats</span>
         <button id="rotate-btn" class="dir-btn" onclick="rotateSetupSeats()" aria-label="Rotate seat colors">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20 12a8 8 0 1 1-8-8c2.3 0 4.4.9 6 2.4"/>
@@ -1309,6 +1317,14 @@
             <rect x="9" y="9" width="6" height="6" rx="1.5" fill="currentColor" stroke="none"/>
           </svg>
         </button>
+        <span class="dir-word">Rotate Seats</span>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-diagram">
+        <div id="color-map" class="setup-seat-grid"></div>
+        <button id="start-btn" onclick="startGame()"><span>Start</span><span>Game</span></button>
       </div>
     </div>
   </section>
@@ -1791,10 +1807,12 @@ function selP(n) {
   // Turn order is meaningless with two players
   const dg = document.getElementById('dir-group');
   if (dg) dg.style.display = n === 2 ? 'none' : '';
+  document.getElementById('row-players')?.classList.toggle('centered', n === 2);
   // Rotate Seats (reassign which color holds the wide/top-BL-BR roles) only
   // makes sense for the 3-player shape.
   const ri = document.getElementById('rotate-item');
   if (ri) ri.style.display = n === 3 ? 'flex' : 'none';
+  document.getElementById('row-life')?.classList.toggle('centered', n !== 3);
   S.setupLayout3 = 0; // Rotate Seats always starts fresh with the wide seat on top
   selLife(n === 2 ? 20 : 40); // sensible default; user can still override after — also re-renders the diagram
 }
