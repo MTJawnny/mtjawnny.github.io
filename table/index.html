@@ -2565,7 +2565,6 @@ function openTrackers() {
   if (S.phase === 'setup') return;
   closeOverlays();
   buildTrackerRows();
-  orientOverlay('trackers-card');
   document.getElementById('trackers-overlay').classList.add('open');
   document.getElementById('tab-toggles').classList.add('active');
 }
@@ -2827,11 +2826,6 @@ document.addEventListener('click', e => {
 }, true);
 
 // ══ OVERLAY HELPERS ═══════════════════════════════════
-/* Rotate overlay content toward the active player's seat (upright in desktop). */
-function orientOverlay(cardId) {
-  const rot = S.active >= 0 ? effRot(S.active) : 0;
-  document.getElementById(cardId).style.transform = `rotate(${rot}deg)`;
-}
 function closeOverlays() {
   document.querySelectorAll('.overlay').forEach(o => o.classList.remove('open'));
   document.getElementById('tab-mana').classList.remove('active');
