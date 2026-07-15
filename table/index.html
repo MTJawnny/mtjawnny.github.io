@@ -65,8 +65,9 @@
     background: var(--bg);
   }
   .splash-hero {
-    min-height: 100dvh;
-    padding: 0.25rem 0 76px;
+    /* No forced full-viewport height — the page has enough content now
+       (table diagram + format guides) that it just flows naturally. */
+    padding: 0.25rem 0 24px;
     position: relative;
   }
   /* ── Left title pip doubles as the home/back link (site-wide pattern) ── */
@@ -172,145 +173,169 @@
     flex-shrink: 0;
   }
 
-  /* ── SETUP GRID (mirrors nav-grid) ── */
-  .setup-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.85rem;
-    max-width: 480px;
-    margin: 0.85rem auto 0;
-    padding: 0 1.25rem;
-  }
-  .setup-tile {
+  /* ── SETUP — a live miniature of the table replaces the settings-box
+     grid. Seats double as the color picker; the center circle is the same
+     object as the in-game pass-turn button, so Start reads as "this
+     miniature becomes the real table." ── */
+  .seg-players {
+    display: flex; justify-content: center;
+    gap: 6px;
+    margin: 0 auto 1.6rem;
+    width: fit-content;
     background: var(--surface);
-    border: 1px solid var(--bronze-dim);
-    border-radius: 10px;
-    padding: 1.1rem 0.85rem 1rem;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0.7rem;
-    transition: border-color 0.2s, background 0.2s;
+    border: 1.5px solid var(--bronze-dim);
+    border-radius: 999px;
+    padding: 6px;
   }
-  .setup-tile:hover { border-color: var(--bronze); }
-  .tile-label {
+  .seg-btn {
+    background: transparent; border: none; color: var(--text-dim);
     font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 1.1rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--bronze);
+    font-weight: 800; font-size: 1.3rem;
+    letter-spacing: 0.02em; text-transform: uppercase;
+    padding: 17px 26px; border-radius: 999px; cursor: pointer;
+    transition: background 0.18s, color 0.18s;
   }
-  /* Segmented control — one connected bar, equal widths */
-  .seg {
-    display: flex;
-    width: 100%;
-    border: 2px solid var(--bronze-dim);
-    border-radius: 10px;
+  .seg-btn.sel { background: var(--bronze); color: var(--bg); }
+  .seg-btn:not(.sel):hover { color: var(--white); }
+
+  .life-chips { display: flex; justify-content: center; gap: 14px; padding: 0 1.5rem; margin-bottom: 1.8rem; }
+  .chip {
+    width: 76px; height: 76px; border-radius: 50%;
+    background: var(--surface); border: 2px solid var(--bronze-dim);
+    color: var(--text-dim);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800; font-size: 1.4rem;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s, border-color 0.18s;
+  }
+  .chip.sel { background: var(--bronze); border-color: var(--bronze); color: var(--bg); }
+  .chip:not(.sel):hover { border-color: var(--bronze); color: var(--white); }
+
+  .seat-hint {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.75rem; font-weight: 800;
+    letter-spacing: 0.01em;
+    line-height: 1.15;
+    color: var(--bronze);
+    text-align: center;
+    margin: 0 auto 1.5rem;
+    padding: 0 0.5rem;
+    max-width: 380px;
+  }
+
+  .table-wrap { display: flex; justify-content: center; padding: 0 1.4rem; }
+  .table-diagram {
+    position: relative;
+    width: min(92vw, 420px);
+    aspect-ratio: 1;
+  }
+  .setup-seat-grid {
+    position: absolute; inset: 0;
+    display: grid; gap: 12px;
+  }
+  .setup-seat-grid.n4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+  .setup-seat-grid.n3 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+  .setup-seat-grid.n3 .setup-seat:first-child { grid-column: 1 / 3; }
+  .setup-seat-grid.n2 { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
+
+  .setup-seat {
+    position: relative;
+    border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 14px;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 3px 12px rgba(0,0,0,0.35);
+    transition: transform 0.15s;
+    -webkit-tap-highlight-color: transparent;
     overflow: hidden;
   }
-  .seg button {
-    flex: 1;
-    background: transparent;
-    border: none;
-    border-left: 1.5px solid var(--bronze-dim);
-    padding: 12px 0;
-    font-size: 16px; font-weight: 700;
-    letter-spacing: 0.05em; text-transform: uppercase;
-    color: var(--white);
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-    white-space: nowrap;
+  .setup-seat:active { transform: scale(0.97); }
+  /* Only used on "standalone" tiles — both seats in 1v1, and the wide seat
+     in 3-player — where a full tile's worth of empty space otherwise sits
+     between the life total and the Start circle. Pushes content toward
+     that tile's own outer edge, away from the shared center. */
+  .setup-seat[data-vpos="start"] { align-items: flex-start; }
+  .setup-seat[data-vpos="end"]   { align-items: flex-end; }
+  .setup-seat-inner {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
   }
-  .seg button:first-child { border-left: none; }
-  .seg button.sel { background: var(--bronze); color: var(--bg); }
-  /* Vertical variant — stacks options for the square tiles */
-  .seg-v { flex-direction: column; }
-  .seg-v button {
-    border-left: none;
-    border-top: 1.5px solid var(--bronze-dim);
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .setup-seat-life {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(28px, 9vw, 44px);
+    color: rgba(255,255,255,0.94);
+    text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    line-height: 1;
   }
-  .seg-v button:first-child { border-top: none; }
-  /* 2×2 grid variant — starting life */
-  .seg-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-auto-rows: 1fr;
+  .setup-seat-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px; font-weight: 800;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: rgba(255,255,255,0.62);
   }
-  .seg-grid button {
-    border-left: none;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .seg-grid button:nth-child(2),
-  .seg-grid button:nth-child(4) { border-left: 1.5px solid var(--bronze-dim); }
-  .seg-grid button:nth-child(3),
-  .seg-grid button:nth-child(4) { border-top: 1.5px solid var(--bronze-dim); }
-  /* Shared height — Life & Turn Order boxes mirror the Players box */
-  .setup-tile .seg-v,
-  .setup-tile .seg-grid,
-  .setup-tile .dir-wrap { height: 132px; }
+  .setup-seat[data-mana="white"] { background: linear-gradient(160deg, #c8b896, #a8936e); }
+  .setup-seat[data-mana="blue"]  { background: linear-gradient(160deg, #2a6fa8, #1a4870); }
+  .setup-seat[data-mana="black"] { background: linear-gradient(160deg, #3a2d50, #1e1530); }
+  .setup-seat[data-mana="red"]   { background: linear-gradient(160deg, #8e2b20, #4a120c); }
+  .setup-seat[data-mana="green"] { background: linear-gradient(160deg, #256b3e, #143d22); }
+  .setup-seat[data-mana="orange"]  { background: linear-gradient(160deg, #b35a1f, #6e3410); }
+  .setup-seat[data-mana="teal"]    { background: linear-gradient(160deg, #1f7a72, #0e423d); }
+  .setup-seat[data-mana="pink"]    { background: linear-gradient(160deg, #b14b7f, #6b2549); }
+  .setup-seat[data-mana="skyblue"] { background: linear-gradient(160deg, #4a93c7, #25567a); }
 
-  /* Circular turn-direction toggle */
-  .dir-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
+  #start-btn {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 136px; height: 136px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, #d9473a, #9b1f14);
+    border: 5px solid #6b1209;
+    box-shadow: 0 0 0 6px var(--bg), 0 10px 30px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.15);
+    color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800; font-size: 23px;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    line-height: 1.2;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 20;
+    transition: transform 0.12s, box-shadow 0.12s;
   }
+  #start-btn:active {
+    transform: translate(-50%, -50%) scale(0.94);
+    box-shadow: 0 0 0 5px var(--bg), 0 3px 12px rgba(0,0,0,0.5);
+  }
+
+  /* Turn-direction dial (and, 3-player only, the Rotate Seats dial beside
+     it) float above the diagram, no box around the pair. */
+  .turn-control-row {
+    display: flex; justify-content: center; align-items: flex-start;
+    gap: 34px;
+    margin-top: 1.7rem;
+  }
+  .turn-item { display: flex; flex-direction: column; align-items: center; gap: 10px; }
   .dir-btn {
-    width: 110px; height: 110px;
+    width: 96px; height: 96px;
     border-radius: 50%;
     border: 2px solid var(--bronze-dim);
-    background: transparent;
+    background: var(--surface);
     color: var(--bronze);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
+    transition: border-color 0.18s, background 0.18s, transform 0.5s ease;
   }
   .dir-btn:hover { border-color: var(--bronze); background: var(--bronze-glow); }
-  .dir-btn:active { background: rgba(184,147,90,0.28); }
-  .dir-btn svg {
-    width: 62px; height: 62px;
-    transition: transform 0.25s ease;
-  }
+  .dir-btn svg { width: 45px; height: 45px; }
   .dir-btn.ccw svg { transform: scaleX(-1); }
   .dir-word {
-    font-size: 13px; font-weight: 700;
-    letter-spacing: 0.07em; text-transform: uppercase;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.05rem; font-weight: 800;
+    letter-spacing: 0.08em; text-transform: uppercase;
     color: var(--white);
     line-height: 1.2;
-  }
-
-  .colors-row #color-map { align-self: center; }
-  .setup-sub {
-    font-family: 'Barlow', sans-serif;
-    font-size: 11px; color: var(--text-dim);
-    letter-spacing: 0.04em;
     text-align: center;
   }
-
-  /* ── START BUTTON — original red, centered under the grid ── */
-  #start-btn {
-    display: block;
-    width: min(420px, calc(100% - 2.5rem));
-    margin: 0.85rem auto 0;
-    background: var(--red); border: none; color: var(--white);
-    font-size: 21px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
-    padding: 17px 0; border-radius: 12px; cursor: pointer;
-  }
-  #start-btn:active { background: var(--red-bright); }
 
   /* ── DESKTOP (mirrors index.html breakpoint) ── */
   .toast {
@@ -334,23 +359,9 @@
 
 @media (min-width: 640px) {
     .tk-header { padding: 0 2rem; }
-    .setup-grid { max-width: 560px; gap: 1rem; }
-    .setup-tile { padding: 1.5rem 1.25rem 1.35rem; }
-    .tile-label { font-size: 1.2rem; }
-    #start-btn { margin-top: 1rem; }
     .tk-links { max-width: 380px; gap: 1rem; }
   }
 
-  .scroll-hint {
-    position: absolute;
-    bottom: 16px; left: 50%;
-    transform: translateX(-50%);
-    font-size: 16px; font-weight: 700;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--muted);
-    text-align: center;
-    line-height: 1.5;
-  }
   .splash-more {
     padding: 32px 24px 56px;
     display: flex;
@@ -359,73 +370,87 @@
     gap: 18px;
   }
   .splash-more h2 {
-    font-size: clamp(1.9rem, 8vw, 2.8rem);
-    font-weight: 900;
-    letter-spacing: 0.04em; text-transform: uppercase;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: clamp(1.7rem, 8vw, 2.3rem);
+    letter-spacing: 0.03em; text-transform: uppercase;
     color: var(--bronze);
     line-height: 1;
   }
-  .more-grid {
+  /* Format guide cards — card-proportioned tiles (5:7) in a responsive
+     grid, one per format page. Reads like cards laid out on the table
+     rather than a settings list. */
+  .format-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px;
+    /* 180px keeps this reliably 2-across on phones — the long-form
+       description + stats need that room; 142px let mobile viewports
+       squeeze in a 3rd column and clip the stats row (overflow: hidden). */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
     width: min(560px, 100%);
   }
-  .more-card {
+  .format-btn {
+    aspect-ratio: 5 / 7;
+    position: relative;
+    overflow: hidden;
+    background: var(--surface);
     border: 1.5px solid var(--bronze-dim);
     border-radius: 14px;
-    padding: 16px 12px;
+    padding: 18px 15px 16px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    text-align: center;
-    gap: 8px;
-    transition: border-color 0.2s, background 0.2s;
+    text-align: left;
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s, transform 0.18s;
   }
-  .more-card:hover { border-color: var(--bronze); background: var(--bronze-glow); }
-  .more-card .mc-name {
-    font-size: 14px; font-weight: 800;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    line-height: 1.15;
+  .format-btn::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--bronze-dim), var(--bronze), var(--bronze-dim));
   }
-  .more-card .mc-desc {
-    font-size: 11.5px; color: var(--muted);
-    margin-top: 3px; line-height: 1.3;
+  .format-btn:hover, .format-btn:focus-visible {
+    border-color: var(--bronze); background: var(--bronze-glow); transform: translateY(-3px);
   }
-  .more-card .mc-tag {
-    font-size: 10px; font-weight: 800;
-    letter-spacing: 0.12em; text-transform: uppercase;
+  .format-btn:active { transform: translateY(-1px); }
+  .format-btn .fb-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 1.22rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
     color: var(--bronze);
-    border: 1.5px solid var(--bronze-dim);
-    border-radius: 7px;
-    padding: 4px 8px;
-    white-space: nowrap;
+    line-height: 1.12;
+    margin-top: 8px;
+  }
+  .format-btn .fb-tag {
+    margin-top: 10px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 500;
+    font-size: 16.5px;
+    line-height: 1.44;
+    color: rgba(240,236,230,0.85);
+  }
+  .fb-stats {
     margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid var(--bronze-dim);
+    display: flex; gap: 18px;
+  }
+  .fb-stat { display: flex; flex-direction: column; }
+  .fb-stat-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800; font-size: 1.2rem;
+    color: var(--bronze);
+    line-height: 1;
+  }
+  .fb-stat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 9.5px;
+    letter-spacing: 0.07em; text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 3px;
   }
 
   /* Tile color picker — a mini table map; tap a seat to cycle its color */
-  #color-map {
-    display: grid;
-    gap: 6px;
-  }
-  .cm-cell {
-    width: 44px; height: 44px;
-    border-radius: 11px;
-    border: 2px solid rgba(255,255,255,0.25);
-    cursor: pointer;
-    transition: transform 0.1s;
-  }
-  .cm-cell:active { transform: scale(0.92); }
-  .cm-cell[data-c="white"] { background: linear-gradient(160deg, #c8b896, #a8936e); }
-  .cm-cell[data-c="blue"]  { background: linear-gradient(160deg, #2a6fa8, #1a4870); }
-  .cm-cell[data-c="black"] { background: linear-gradient(160deg, #3a2d50, #1e1530); }
-  .cm-cell[data-c="red"]   { background: linear-gradient(160deg, #8e2b20, #4a120c); }
-  .cm-cell[data-c="green"] { background: linear-gradient(160deg, #256b3e, #143d22); }
-  .cm-cell[data-c="orange"]  { background: linear-gradient(160deg, #b35a1f, #6e3410); }
-  .cm-cell[data-c="teal"]    { background: linear-gradient(160deg, #1f7a72, #0e423d); }
-  .cm-cell[data-c="pink"]    { background: linear-gradient(160deg, #b14b7f, #6b2549); }
-  .cm-cell[data-c="skyblue"] { background: linear-gradient(160deg, #4a93c7, #25567a); }
   /* .opt-btn kept — used by the overlay/confirm dialogs */
   .opt-btn {
     background: transparent;
@@ -434,6 +459,7 @@
     font-size: 17px; font-weight: 700;
     letter-spacing: 0.06em; text-transform: uppercase;
     padding: 12px 24px; border-radius: 8px; cursor: pointer;
+    text-decoration: none;
     transition: all 0.15s;
   }
   .opt-btn.sel { border-color: var(--bronze); background: var(--bronze); color: var(--bg); }
@@ -476,12 +502,14 @@
                 0 0 0 3px var(--bronze),
                 0 4px 20px rgba(184,147,90,0.35);
   }
-  .panel.inactive { filter: saturate(0.45); }
+  /* Lighter than a hard dim — with pass-turn easy to forget, a waiting
+     player's life total still needs to stay readable at a glance. */
+  .panel.inactive { filter: saturate(0.65); }
   .panel.inactive::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(10,8,18,0.5);
+    background: rgba(10,8,18,0.28);
     z-index: 1;
     border-radius: var(--panel-r);
     pointer-events: none;
@@ -547,17 +575,40 @@
 
   /* Life row: [−  number  +] */
   .life-row {
+    position: relative;
     display: none;
     align-items: center;
     gap: 18px;
   }
   .life-num {
-    font-size: clamp(56px, 18vw, 104px);
+    font-size: clamp(68px, 22vw, 132px);
     font-weight: 800;
     color: rgba(255,255,255,0.92);
     text-shadow: 0 2px 8px rgba(0,0,0,0.5);
     min-width: 1.4em;
     text-align: center;
+  }
+
+  /* Floating +N/-N pop that plays over the life number on every change */
+  .life-delta {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 26px;
+    font-weight: 800;
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  }
+  .life-delta.pos { color: #6fd67f; }
+  .life-delta.neg { color: var(--red-bright); }
+  .life-delta.show { animation: lifeDeltaPop 0.9s ease-out; }
+  @keyframes lifeDeltaPop {
+    0%   { opacity: 0; transform: translateX(-50%) translateY(6px) scale(0.85); }
+    18%  { opacity: 1; transform: translateX(-50%) translateY(-8px) scale(1); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-42px) scale(1); }
   }
 
   /* Life +/− tap zones — full-width bands at each end of the panel
@@ -892,6 +943,17 @@
     transform: none;
   }
 
+  /* 1v1 on mobile: the two seats face top/bottom (0°/180°), not left/right,
+     so the vertical text meant for side-seated players would read sideways
+     to them. Keep the rotate(0)/(180) swing and spin between passes (still
+     reused via .side-l/.side-r/.spin-*), just switch the text to horizontal
+     like desktop so whichever seat is active can actually read it. */
+  #pass-btn.duo { flex-direction: row; }
+  #pass-btn.duo .btn-line {
+    writing-mode: horizontal-tb;
+    transform: none;
+  }
+
   /* ══ NAV ════════════════════════════════════════════ */
   #bottom-nav {
     position: fixed; bottom: 0; left: 0; right: 0;
@@ -985,6 +1047,14 @@
   }
   .overlay-actions { display: flex; gap: 12px; }
   .overlay-actions .opt-btn { padding: 10px 22px; font-size: 14px; }
+
+  /* Quick links out to Cards/Stack — for mid-game lookups without losing the gadget flow */
+  .quick-links-row { display: flex; gap: 10px; }
+  .quick-links-row .opt-btn {
+    padding: 9px 16px; font-size: 13px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .quick-links-row .opt-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
 
   /* Gadget view toggle + helper tokens */
   .gadget-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
@@ -1180,73 +1250,105 @@
       </div>
     </header>
 
-    <!-- SETUP GRID — mirrors nav-grid -->
-    <div class="setup-grid">
-      <div class="setup-tile">
-        <span class="tile-label">Players</span>
-        <div class="seg seg-v">
-          <button id="p2" onclick="selP(2)">1v1</button>
-          <button id="p3" onclick="selP(3)">3 Player</button>
-          <button id="p4" class="sel" onclick="selP(4)">4 Player</button>
-        </div>
-      </div>
-      <div class="setup-tile">
-        <span class="tile-label">Starting Life</span>
-        <div class="seg seg-grid">
-          <button id="l20" onclick="selLife(20)">20</button>
-          <button id="l25" onclick="selLife(25)">25</button>
-          <button id="l30" onclick="selLife(30)">30</button>
-          <button id="l40" class="sel" onclick="selLife(40)">40</button>
-        </div>
-      </div>
-      <div class="setup-tile colors-row">
-        <span class="tile-label">Tile Colors</span>
-        <div id="color-map"></div>
-        <div class="setup-sub">Tap a seat to change its color</div>
-      </div>
-      <div class="setup-tile" id="dir-group">
-        <span class="tile-label">Turn Order</span>
-        <div class="dir-wrap">
-          <button id="dir-toggle" class="dir-btn" onclick="toggleDir()" aria-label="Toggle turn direction">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
-              <path d="M21 3v5h-6"/>
-            </svg>
-          </button>
-          <span class="dir-word" id="dir-word">Clockwise</span>
-        </div>
+    <div class="seg-players" role="group" aria-label="Player count">
+      <button id="p2" class="seg-btn" onclick="selP(2)">1v1</button>
+      <button id="p3" class="seg-btn" onclick="selP(3)">3 Player</button>
+      <button id="p4" class="seg-btn sel" onclick="selP(4)">4 Player</button>
+    </div>
+
+    <div class="life-chips" role="group" aria-label="Starting life">
+      <button id="l20" class="chip" onclick="selLife(20)">20</button>
+      <button id="l25" class="chip" onclick="selLife(25)">25</button>
+      <button id="l30" class="chip" onclick="selLife(30)">30</button>
+      <button id="l40" class="chip sel" onclick="selLife(40)">40</button>
+    </div>
+
+    <div class="seat-hint">Tap a seat to change its color</div>
+
+    <div class="table-wrap">
+      <div class="table-diagram">
+        <div id="color-map" class="setup-seat-grid"></div>
+        <button id="start-btn" onclick="startGame()"><span>Start</span><span>Game</span></button>
       </div>
     </div>
 
-    <button id="start-btn" onclick="startGame()">Start Game</button>
-
-    <div class="scroll-hint">More table tools<br>↓</div>
+    <div class="turn-control-row">
+      <div class="turn-item" id="dir-group">
+        <button id="dir-toggle" class="dir-btn" onclick="toggleDir()" aria-label="Toggle turn direction">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
+            <path d="M21 3v5h-6"/>
+          </svg>
+        </button>
+        <span class="dir-word" id="dir-word">Clockwise</span>
+      </div>
+      <div class="turn-item" id="rotate-item" style="display:none">
+        <button id="rotate-btn" class="dir-btn" onclick="rotateSetupSeats()" aria-label="Rotate seat colors">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 12a8 8 0 1 1-8-8c2.3 0 4.4.9 6 2.4"/>
+            <path d="M20 3v5h-5"/>
+            <rect x="9" y="9" width="6" height="6" rx="1.5" fill="currentColor" stroke="none"/>
+          </svg>
+        </button>
+        <span class="dir-word">Rotate Seats</span>
+      </div>
+    </div>
   </section>
 
   <section class="splash-more">
-    <h2>Table Guides & Tools</h2>
-    <div class="more-grid">
-      <div class="more-card">
-        <div>
-          <div class="mc-name">Format Guides</div>
-          <div class="mc-desc">Commander, Draft &amp; Sealed cheat sheets</div>
-        </div>
-        <span class="mc-tag">Soon</span>
-      </div>
-      <div class="more-card">
-        <div>
-          <div class="mc-name">Draft Timer</div>
-          <div class="mc-desc">Pick clocks with audio cues</div>
-        </div>
-        <span class="mc-tag">Soon</span>
-      </div>
-      <div class="more-card">
-        <div>
-          <div class="mc-name">Dice Roller</div>
-          <div class="mc-desc">Coin flips &amp; planar dice</div>
-        </div>
-        <span class="mc-tag">Soon</span>
-      </div>
+    <h2>Format Guides</h2>
+
+    <div class="format-grid">
+      <a class="format-btn" href="/table/start">
+        <span class="fb-name">Getting Started</span>
+        <span class="fb-tag">Your very first game, explained plainly: turns, mulligans, summoning sickness, and how the stack works.</span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">1v1</span><span class="fb-stat-label">Best Start</span></span></span>
+      </a>
+      <a class="format-btn" href="/table/sealed">
+        <span class="fb-name">Sealed Deck</span>
+        <span class="fb-tag">Crack six fresh boosters and build a 40-card deck on the spot, battling with cards nobody has seen before.</span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">40</span><span class="fb-stat-label">Min Deck</span></span></span>
+      </a>
+      <a class="format-btn" href="/table/draft">
+        <span class="fb-name">Booster Draft</span>
+        <span class="fb-tag">Open a pack, take a card, pass the rest. Repeat until your pool becomes a 40-card deck.</span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">40</span><span class="fb-stat-label">Min Deck</span></span></span>
+      </a>
+      <a class="format-btn" href="/table/commander">
+        <span class="fb-name">Commander</span>
+        <span class="fb-tag">Build a 100-card singleton deck around your commander and battle free-for-all in pods of three to five.</span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">40</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">100</span><span class="fb-stat-label">Singleton</span></span></span>
+      </a>
+      <a class="format-btn" href="/table/standard">
+        <span class="fb-name">Standard</span>
+        <span class="fb-tag">Only the newest sets are legal, keeping the card pool fresh with a yearly rotation.</span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">60</span><span class="fb-stat-label">Min Deck</span></span></span>
+      </a>
+      <a class="format-btn" href="/table/pioneer">
+        <span class="fb-name">Pioneer</span>
+        <span class="fb-tag">Nonrotating and built from Return to Ravnica forward, a deep pool without Modern's full history.</span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">60</span><span class="fb-stat-label">Min Deck</span></span></span>
+      </a>
+      <a class="format-btn" href="/table/modern">
+        <span class="fb-name">Modern</span>
+        <span class="fb-tag">Every card legal from 8th Edition onward, deep deck-building with two decades of sets to draw from.</span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">60</span><span class="fb-stat-label">Min Deck</span></span></span>
+      </a>
+      <a class="format-btn" href="/table/legacy">
+        <span class="fb-name">Legacy</span>
+        <span class="fb-tag">An eternal format where almost anything goes, drawing from Magic's earliest sets onward.</span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">60</span><span class="fb-stat-label">Min Deck</span></span></span>
+      </a>
+      <a class="format-btn" href="/table/vintage">
+        <span class="fb-name">Vintage</span>
+        <span class="fb-tag">Magic's original eternal format: the entire card pool is legal, restricted list and all.</span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">60</span><span class="fb-stat-label">Min Deck</span></span></span>
+      </a>
+      <a class="format-btn" href="/table/pauper">
+        <span class="fb-name">Pauper</span>
+        <span class="fb-tag">Commons only. Magic's cheapest constructed format, and one of its most skill-testing.</span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">60</span><span class="fb-stat-label">Min Deck</span></span></span>
+      </a>
     </div>
   </section>
 
@@ -1374,6 +1476,16 @@
       <div class="overlay-title" id="gadget-title">Mana Pool</div>
       <div class="mana-grid" id="mana-grid"></div>
       <div class="token-grid" id="token-grid" style="display:none"></div>
+      <div class="quick-links-row">
+        <a class="opt-btn" href="/cards/index.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="12" height="15" rx="2"/><path d="M8 6V4a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-2"/></svg>
+          Cards
+        </a>
+        <a class="opt-btn" href="/stack/index.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5-10-5ZM2 13l10 5 10-5M2 18l10 5 10-5"/></svg>
+          Stack
+        </a>
+      </div>
       <div class="overlay-actions">
         <button class="opt-btn" id="mana-clear-btn" onclick="clearMana()">Clear</button>
         <button class="opt-btn sel" onclick="closeOverlays()">Close</button>
@@ -1521,6 +1633,17 @@ const MANA_TYPES = ['w','u','b','r','g','c'];
 const MANA_LABEL = { w:'W', u:'U', b:'B', r:'R', g:'G', c:'C' };
 
 // ══ STATE ═════════════════════════════════════════════
+/* A device with a fine pointer (mouse/trackpad) and real hover is treated as
+   desktop; touch-only devices are not, regardless of screen size. Only used
+   to pick the starting default for a brand-new game — once a game exists,
+   the saved/explicit desktopMode choice always wins (see load()). */
+function detectDesktop() {
+  try {
+    return window.matchMedia('(pointer: fine)').matches &&
+           window.matchMedia('(hover: hover)').matches;
+  } catch (e) { return false; }
+}
+
 function freshState() {
   return {
     playerCount: 4,
@@ -1536,8 +1659,9 @@ function freshState() {
     playerLabels: [],
     lifeOn: true,
     life: [],
-    desktopMode: false,
+    desktopMode: detectDesktop(),
     cmdOn: false,
+    cmdMiniOn: false, // whether the per-panel CMD damage mini-map button shows at all
     cmdDmg: [],   // cmdDmg[receiver][source] — damage taken FROM each opponent
     trackersOn: { poison: false, exp: false, energy: false },
     trackerVals: { poison: [], exp: [], energy: [] },
@@ -1581,9 +1705,14 @@ function seatSet() {
 function getSeat(i) { return seatSet()[i] ?? seatSet()[0]; }
 
 /* Effective rotation for on-panel UI. In desktop mode everything is forced
-   upright (0°) so a single viewer facing the screen reads every panel normally.
-   Otherwise use the seat's table-facing rotation. */
-function effRot(i) { return S.desktopMode ? 0 : getSeat(i).rot; }
+   upright (0°) for a single viewer facing the screen — except 1v1, where two
+   people are usually sitting side by side sharing that screen, so each
+   player's panel turns 90° to face them instead of stacking both upright.
+   Off desktop, use the seat's table-facing rotation as normal. */
+function effRot(i) {
+  if (S.desktopMode) return S.playerCount === 2 ? (i === 0 ? 90 : 270) : 0;
+  return getSeat(i).rot;
+}
 
 // ══ GAME LOG ══════════════════════════════════════════
 /* Every tracked action is appended with the turn number and whose turn it
@@ -1625,11 +1754,14 @@ function clearSpin(btn) {
 function selP(n) {
   S.playerCount = n;
   [2,3,4].forEach(x => document.getElementById('p'+x).classList.toggle('sel', x===n));
-  selLife(n === 2 ? 20 : 40); // sensible default; user can still override after
   // Turn order is meaningless with two players
   const dg = document.getElementById('dir-group');
   if (dg) dg.style.display = n === 2 ? 'none' : '';
-  buildColorMap();
+  // Rotate Seats (reassign which color holds the wide/top-BL-BR roles) only
+  // makes sense for the 3-player shape.
+  const ri = document.getElementById('rotate-item');
+  if (ri) ri.style.display = n === 3 ? 'flex' : 'none';
+  selLife(n === 2 ? 20 : 40); // sensible default; user can still override after — also re-renders the diagram
 }
 function selDir(d) {
   S.dir = d;
@@ -1637,6 +1769,7 @@ function selDir(d) {
   const w = document.getElementById('dir-word');
   if (t) t.classList.toggle('ccw', d === 'ccw');
   if (w) w.textContent = d === 'cw' ? 'Clockwise' : 'Counter';
+  buildColorMap(); // setup-preview seat numbers are direction-aware
 }
 function toggleDir() {
   selDir(S.dir === 'cw' ? 'ccw' : 'cw');
@@ -1644,25 +1777,54 @@ function toggleDir() {
 function selLife(n) {
   S.startLife = n;
   [20,25,30,40].forEach(x => document.getElementById('l'+x)?.classList.toggle('sel', x===n));
+  buildColorMap(); // setup-preview life totals track the chosen starting life
 }
 
-// ══ TILE COLOR PICKER ═════════════════════════════════
-/* A mini table map on the splash; tapping a seat cycles its color through
-   WUBRG, skipping colors another active seat is already wearing. */
+// ══ SETUP TABLE DIAGRAM ═══════════════════════════════
+/* A live miniature of the real in-game table on the splash; tapping a seat
+   cycles its color through WUBRG (+ the extra tile colors), same as the old
+   color-map, but now also previews life total and seat number. Seat numbers
+   start at bottom-left = Seat 1 and count around the table in whichever
+   direction is currently selected, so they flip live with the dial. */
+const SETUP_SEAT_LABELS = {
+  2: { cw: [2, 1],       ccw: [2, 1]       },
+  3: { cw: [2, 1, 3],    ccw: [3, 1, 2]    },
+  4: { cw: [2, 3, 1, 4], ccw: [4, 3, 1, 2] },
+};
 function buildColorMap() {
   const map = document.getElementById('color-map');
   if (!map) return;
   const n = S.playerCount;
-  map.style.gridTemplateColumns = n >= 3 ? '1fr 1fr' : '1fr';
+  map.className = 'setup-seat-grid n' + n;
+  const labels = SETUP_SEAT_LABELS[n][S.dir];
   map.innerHTML = Array.from({ length: n }, (_, i) => {
-    const span3 = (n === 3 && i === 0) ? 'grid-column:1/3;justify-self:center;width:44px;' : '';
-    return `<div class="cm-cell" data-c="${tileColor(i)}" style="${span3}"
-                 onclick="cycleColor(${i})"></div>`;
+    const rot = getSeat(i).rot;
+    // "Standalone" tiles — both seats in 1v1, and the wide seat in
+    // 3-player — get their content biased toward the tile's own outer
+    // edge, away from the Start circle sitting between/among them.
+    let bias = '';
+    if (n === 2) bias = i === 0 ? ' data-vpos="start"' : ' data-vpos="end"';
+    else if (n === 3 && i === 0) bias = ' data-vpos="start"';
+    return `<div class="setup-seat" data-mana="${tileColor(i)}"${bias} onclick="cycleColor(${i})">
+              <div class="setup-seat-inner" style="transform:rotate(${rot}deg)">
+                <span class="setup-seat-life">${S.startLife}</span>
+                <span class="setup-seat-name">Seat ${labels[i]}</span>
+              </div>
+            </div>`;
   }).join('');
 }
 function cycleColor(i) {
   const idx = COLOR_ORDER.indexOf(S.tileColors[i]);
   S.tileColors[i] = COLOR_ORDER[(idx + 1) % COLOR_ORDER.length];
+  buildColorMap();
+}
+/* 3-player only: reassigns which color holds which of the table's three
+   fixed roles (top/bottom-left/bottom-right — the same shape the in-game
+   screen uses), so seating can match wherever people are actually sitting. */
+function rotateSetupSeats() {
+  if (S.playerCount !== 3) return;
+  const c = S.tileColors;
+  S.tileColors = [c[2], c[0], c[1], c[3]]; // keep the unused 4th slot intact
   buildColorMap();
 }
 
@@ -1784,6 +1946,7 @@ function buildGrid(container) {
         <div class="ko-tag" id="ko-${i}">KO</div>
         <div class="life-row" id="liferow-${i}">
           <span class="life-num" id="life-${i}"></span>
+          <span class="life-delta" id="delta-${i}"></span>
         </div>
         <div class="badge-col" id="badges-${i}"></div>
       </div>
@@ -1865,6 +2028,20 @@ function applyLife(i, d) {
   S.life[i] += d;
   logEv('life', { who: i, d, val: S.life[i] });
   render(); save();
+  popLifeDelta(i, d);
+}
+
+/* Floating +N/-N over the life total — restarts the CSS animation on every
+   call (rapid taps each get their own pop) by forcing a reflow between
+   removing and re-adding the .show class. */
+function popLifeDelta(i, d) {
+  if (d === 0) return;
+  const el = document.getElementById('delta-' + i);
+  if (!el) return;
+  el.textContent = (d > 0 ? '+' : '−') + Math.abs(d);
+  el.classList.remove('show', 'pos', 'neg');
+  void el.offsetWidth;
+  el.classList.add('show', d > 0 ? 'pos' : 'neg');
 }
 
 function chooseFirst(i) {
@@ -1930,7 +2107,9 @@ function passTurn() {
 
   if (crossed && !S.desktopMode) {
     const btn = document.getElementById('pass-btn');
-    const toRight = sideOf(next) === 'R';
+    // Duo mobile (1v1, top/bottom seating): rest on whichever side class
+    // matches the newly active seat's own rotation, same mapping as render().
+    const toRight = S.playerCount === 2 ? effRot(next) === 180 : sideOf(next) === 'R';
     // Spin in the direction the turn is actually traveling around the table:
     // cw games always rotate clockwise on screen, ccw games counterclockwise.
     const spinClass = S.dir === 'cw'
@@ -2334,6 +2513,12 @@ function buildTrackerRows() {
       <div class="tr-switch ${S.lifeOn ? 'on' : ''}"
            onclick="flipLife(this)"></div>
     </div>`;
+  const cmdRow = `
+    <div class="tracker-row">
+      <span class="tr-name">Commander Damage</span>
+      <div class="tr-switch ${S.cmdMiniOn ? 'on' : ''}"
+           onclick="flipCmdMini(this)"></div>
+    </div>`;
   const trackerRows = TRACKER_DEFS.map(t => `
     <div class="tracker-row">
       <span class="tr-name">${t.name}</span>
@@ -2341,14 +2526,14 @@ function buildTrackerRows() {
            onclick="flipTracker('${t.key}', this)"></div>
     </div>
   `).join('');
-  c.innerHTML = lifeRow + trackerRows;
+  c.innerHTML = lifeRow + cmdRow + trackerRows;
   syncMaster();
 }
 
 /* Master switch is ON only when every toggle is on. Clicking it:
    all on → turn everything off; anything off → turn everything on. */
 function allTogglesOn() {
-  return S.lifeOn && TRACKER_DEFS.every(t => S.trackersOn[t.key]);
+  return S.lifeOn && S.cmdMiniOn && TRACKER_DEFS.every(t => S.trackersOn[t.key]);
 }
 function syncMaster() {
   document.getElementById('master-switch')?.classList.toggle('on', allTogglesOn());
@@ -2356,6 +2541,7 @@ function syncMaster() {
 function flipMaster() {
   const target = !allTogglesOn();
   S.lifeOn = target;
+  S.cmdMiniOn = target;
   if (!target) S.cmdOn = false;
   TRACKER_DEFS.forEach(t => S.trackersOn[t.key] = target);
   buildTrackerRows();
@@ -2366,6 +2552,13 @@ function flipLife(el) {
   S.lifeOn = !S.lifeOn;
   if (!S.lifeOn) S.cmdOn = false; // mini-map (the CMD button) hides with life
   el.classList.toggle('on', S.lifeOn);
+  syncMaster();
+  render(); save();
+}
+function flipCmdMini(el) {
+  S.cmdMiniOn = !S.cmdMiniOn;
+  if (!S.cmdMiniOn) S.cmdOn = false; // close the damage overlay if it was open
+  el.classList.toggle('on', S.cmdMiniOn);
   syncMaster();
   render(); save();
 }
@@ -2443,7 +2636,7 @@ function bumpTracker(e, key, i, d) {
    other cell tracks damage taken FROM the player at that position.
    Cell layout never rotates (it's a map); text rotates to the owner. */
 function toggleCmd() {
-  if (S.phase === 'setup') return;
+  if (S.phase === 'setup' || !S.cmdMiniOn) return;
   S.cmdOn = !S.cmdOn;
   if (!S.cmdOn) closeAllPops();
   render(); save();
@@ -2456,7 +2649,7 @@ function miniClick(e) {
 }
 
 function renderCmdWidgets() {
-  const show = S.cmdOn && S.phase === 'playing';
+  const show = S.cmdOn && S.cmdMiniOn && S.phase === 'playing';
   for (let i = 0; i < S.playerCount; i++) {
     const w = document.getElementById('cmd-' + i);
     if (!w) continue;
@@ -2526,6 +2719,7 @@ function bumpCmd(e, i, j, d) {
   const v = document.getElementById('tpval-' + i);
   if (v) v.textContent = S.cmdDmg[i][j];
   render(); save();
+  if (applied !== 0) popLifeDelta(i, -applied);
 }
 
 /* Exit the overlay via your own tile-colored CMD cell */
@@ -2616,14 +2810,15 @@ function render() {
     panel.querySelectorAll('.life-zone').forEach(z =>
       z.style.display = showLife ? 'flex' : 'none');
 
-    // CMD summary mini-map: visible with life totals, doubles as the
-    // CMD overlay button. Cells mirror the table; own seat is dimmed.
+    // CMD summary mini-map: visible with life totals AND its own toggle,
+    // doubles as the CMD overlay button. Cells mirror the table; own seat is dimmed.
+    const showMini = showLife && S.cmdMiniOn;
     const mini   = document.getElementById('cmdmini-'    + i);
     const miniIn = document.getElementById('cmdmini-in-' + i);
     if (mini && miniIn) {
-      mini.classList.toggle('show', showLife);
+      mini.classList.toggle('show', showMini);
       mini.classList.toggle('cmd-open', S.cmdOn);
-      if (showLife) {
+      if (showMini) {
         const n   = S.playerCount;
         const rot = effRot(i);
         miniIn.style.gridTemplateColumns = n >= 3 ? '1fr 1fr' : '1fr';
@@ -2678,7 +2873,9 @@ function render() {
   const btn = document.getElementById('pass-btn');
   l1.textContent = waiting ? 'Random' : 'Pass';
   l2.textContent = waiting ? 'Player' : 'Turn';
+  const duoMobile = S.playerCount === 2 && !S.desktopMode;
   btn.classList.toggle('desktop', S.desktopMode);
+  btn.classList.toggle('duo', duoMobile);
   if (S.desktopMode) {
     clearSpin(btn);
     btn.classList.remove('side-r','side-l');
@@ -2687,7 +2884,10 @@ function render() {
     btn.classList.remove('side-r','side-l');
     btn.classList.add('side-l');
   } else {
-    const rightSide = sideOf(S.active) === 'R';
+    // In duo mobile the seats sit at 0°/180° (top/bottom), so which side
+    // class to rest on follows the active seat's own rotation directly
+    // rather than the left/right sideOf() mapping used for 3p/4p tables.
+    const rightSide = duoMobile ? effRot(S.active) === 180 : sideOf(S.active) === 'R';
     if (!btn.classList.contains('spin-r') && !btn.classList.contains('spin-l') &&
         !btn.classList.contains('spin-l-cw') && !btn.classList.contains('spin-r-ccw')) {
       btn.classList.remove('side-r','side-l');
@@ -2740,9 +2940,8 @@ function doReset() {
   ['turn-pill-l','turn-pill-r','turn-pill-t','turn-pill-b'].forEach(id =>
     document.getElementById(id).style.display = 'none');
   document.getElementById('setup-screen').style.display = 'block';
-  // restore setup button highlights
+  // restore setup button highlights (selLife() re-renders the diagram)
   selP(S.playerCount); selDir(S.dir); selLife(S.startLife);
-  buildColorMap();
 }
 
 // ══ KEYBOARD — spacebar passes turn ═══════════════════

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1e1728">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Legacy Guide">
+<meta name="description" content="Legacy format rules in plain language: the full card pool, the banned list, and what to know before sitting down at an eternal table.">
+
+<link rel="icon" href="/favicon.ico">
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="https://mtjawnny.com/table/legacy">
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WKH3Y62H5H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-WKH3Y62H5H');
+</script>
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MTJawnny">
+<meta property="og:title" content="Legacy Format Guide">
+<meta property="og:description" content="The rules of Legacy, the eternal format with every Magic set in its pool.">
+<meta property="og:url" content="https://mtjawnny.com/table/legacy">
+<meta property="og:image" content="https://mtjawnny.com/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Legacy Format Guide">
+<meta name="twitter:description" content="The rules of Legacy, the eternal format with every Magic set in its pool.">
+<meta name="twitter:image" content="https://mtjawnny.com/og-cover.png">
+
+<title>Legacy Format Guide — MTJawnny</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Legacy Format Guide",
+  "description": "Legacy format rules in plain language: the full card pool, the banned list, and what to know before sitting down at an eternal table.",
+  "author": { "@type": "Organization", "name": "MTJawnny" },
+  "publisher": { "@type": "Organization", "name": "MTJawnny" },
+  "mainEntityOfPage": "https://mtjawnny.com/table/legacy",
+  "datePublished": "2026-07-08",
+  "dateModified": "2026-07-08"
+}
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #1e1728;
+    --surface:     #261d33;
+    --bronze:      #b8935a;
+    --bronze-dim:  #7a5e35;
+    --bronze-glow: rgba(184,147,90,0.15);
+    --text-dim:    #9b8fb0;
+    --white:       #f0ece6;
+    --muted:       #6b5f7a;
+    --green:       #5aab6e;  /* tips */
+    --red:         #e06060;  /* misplays */
+    --radius:      10px;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button { font-family: inherit; }
+
+  /* Whole page lives in one centred mobile-width column (site-wide pattern) */
+  .page {
+    max-width: 520px;
+    margin: 0 auto;
+    padding-bottom: calc(2.5rem + env(safe-area-inset-bottom));
+  }
+
+  /* ══ TOPBAR ══ */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem 0;
+  }
+  .logo-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--bronze);
+    border-radius: 10px;
+    padding: 6px 8px;
+    margin: -6px -8px;
+    transition: background 0.15s;
+  }
+  .logo-back:hover, .logo-back:active { background: var(--bronze-glow); }
+  .logo-back .logo-pip-ring { width: 38px; height: 38px; flex-shrink: 0; display: block; }
+  .logo-back .back-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 10px;
+    padding: 0.4rem 0.7rem;
+    color: var(--bronze);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .share-btn:hover { border-color: var(--bronze); background: var(--bronze-glow); }
+  .share-btn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; flex-shrink: 0; }
+
+  /* ══ MAIN ══ */
+  main { padding: 0 1.25rem; }
+
+  .hero { text-align: center; margin-top: 1.6rem; }
+  .hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.2rem, 12vw, 3.2rem);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--bronze);
+    line-height: 1;
+  }
+  .hero .tagline {
+    margin-top: 0.45rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .lede {
+    margin-top: 1.2rem;
+    color: var(--text-dim);
+    font-size: 0.98rem;
+  }
+  .lede strong { color: var(--white); font-weight: 600; }
+
+  h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    border-bottom: 1px solid var(--bronze-dim);
+    padding-bottom: 0.3rem;
+    margin: 2.5rem 0 1rem;
+  }
+  p { margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  /* ══ AT-A-GLANCE GRID (format vitals) ══ */
+  .glance {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-top: 1.4rem;
+  }
+  .glance-cell {
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 0.75rem 0.4rem 0.65rem;
+    text-align: center;
+  }
+  .glance-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1.45rem;
+    line-height: 1;
+    color: var(--bronze);
+  }
+  .glance-label {
+    margin-top: 0.3rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    line-height: 1.2;
+  }
+  @media (max-width: 360px) { .glance { grid-template-columns: repeat(2, 1fr); } }
+
+  /* ══ DETAILS BULLETS ══ */
+  ul.details-list { list-style: none; margin-bottom: 0; }
+  ul.details-list li {
+    position: relative; padding-left: 1.25rem; margin-bottom: 0.85rem;
+    font-size: 0.95rem;
+  }
+  ul.details-list li:last-child { margin-bottom: 0; }
+  ul.details-list li::before {
+    content: "•"; position: absolute; left: 0; top: 0;
+    color: var(--bronze); font-weight: bold;
+  }
+  ul.details-list strong { color: var(--white); font-weight: 600; }
+  .cr { color: var(--text-dim); font-size: 0.85em; white-space: nowrap; }
+
+  /* ══ CALLOUTS (tips / misplays) ══ */
+  .callout {
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    padding: 1rem 1.1rem;
+    margin-bottom: 1rem;
+  }
+  .callout:last-child { margin-bottom: 0; }
+  .callout.tip     { background: rgba(90,171,110,0.06); border-color: var(--green); }
+  .callout.misplay { background: rgba(224,96,96,0.06); border-color: var(--red); }
+  .callout-title {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 1.08rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+    margin-bottom: 0.4rem;
+  }
+  .callout.tip .callout-title     { color: var(--green); }
+  .callout.misplay .callout-title { color: var(--red); }
+  .callout .mark {
+    flex-shrink: 0; width: 1.3rem; height: 1.3rem; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 800;
+  }
+  .callout.tip .mark     { background: var(--green); color: var(--bg); }
+  .callout.misplay .mark { background: var(--red); color: var(--bg); }
+  .callout p { font-size: 0.93rem; }
+
+  /* ══ BANS PANEL ══ */
+  .bans-panel {
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 1rem 1.1rem;
+  }
+  .bans-panel p { font-size: 0.93rem; color: var(--text-dim); }
+  .bans-panel p strong { color: var(--white); font-weight: 600; }
+  .bans-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    margin-top: 0.75rem;
+    background: var(--bronze); color: var(--bg);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 0.95rem;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    text-decoration: none; padding: 0.5rem 1rem;
+    border-radius: 10px; transition: filter 0.15s, transform 0.15s;
+  }
+  .bans-link:hover { filter: brightness(1.08); transform: translateY(-1px); }
+
+  /* ══ GOVERNING-RULES CITATION BOX ══ */
+  .sources-box {
+    background: rgba(184, 147, 90, 0.05);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 1rem;
+  }
+  .sources-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 0.9rem;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--bronze); margin-bottom: 0.6rem;
+  }
+  .sources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 0.5rem; font-size: 0.84rem; color: var(--text-dim);
+  }
+  .verified { margin-top: 0.9rem; font-size: 0.72rem; color: var(--text-dim); }
+
+  /* ══ SEE-ALSO CHIPS ══ */
+  .chip-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .chip {
+    display: inline-flex; align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 999px;
+    padding: 0.4rem 0.85rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 0.85rem;
+    letter-spacing: 0.02em; text-transform: uppercase;
+    color: var(--bronze); text-decoration: none;
+    transition: border-color 0.18s, background 0.18s, transform 0.15s;
+  }
+  .chip:hover { border-color: var(--bronze); background: var(--bronze-glow); transform: translateY(-1px); }
+
+  /* ══ FOOTER ══ */
+  footer { text-align: center; padding: 2.5rem 1.5rem 0.5rem; }
+  .footer-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  .footer-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.5rem;
+    color: var(--bronze);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .footer-btn:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+  .footer-btn svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+
+  /* ══ TOAST ══ */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    transform: translateX(-50%) translateY(8px);
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 100;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── Quality floor: visible keyboard focus ── */
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--bronze);
+    outline-offset: 2px;
+  }
+
+  /* ── Quality floor: respect reduced motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+    .chip:hover, .bans-link:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <!-- Topbar (child pages: single pip + back label to /table) -->
+  <div class="topbar">
+    <a class="logo-back" href="/table" aria-label="Back to Table">
+      <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+        <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+        <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+        <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+      </svg>
+      <span class="back-label">← All Formats</span>
+    </a>
+
+    <button class="share-btn" id="shareBtn" type="button" aria-label="Share this page">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/>
+      </svg>
+      Share
+    </button>
+  </div>
+
+  <main>
+
+    <div class="hero">
+      <h1>Legacy</h1>
+      <p class="tagline">Constructed · Eternal</p>
+    </div>
+
+    <p class="lede">Legacy welcomes cards from <strong>every Magic set ever printed</strong>, kept in line by a long banned list. Decades old staples define the format. So, fair warning, does its price of entry.</p>
+
+    <section aria-label="Format vitals at a glance">
+      <div class="glance">
+        <div class="glance-cell"><div class="glance-num">60</div><div class="glance-label">Card minimum</div></div>
+        <div class="glance-cell"><div class="glance-num">4</div><div class="glance-label">Copies max</div></div>
+        <div class="glance-cell"><div class="glance-num">20</div><div class="glance-label">Starting life</div></div>
+        <div class="glance-cell"><div class="glance-num">15</div><div class="glance-label">Card sideboard</div></div>
+        <div class="glance-cell"><div class="glance-num">1v1</div><div class="glance-label">Head to head</div></div>
+        <div class="glance-cell"><div class="glance-num">All</div><div class="glance-label">Sets, ever</div></div>
+      </div>
+    </section>
+
+    <h2>The Rules</h2>
+    <ul class="details-list">
+      <li><strong>60 card minimum.</strong> There’s no maximum, but nearly everyone plays exactly 60 so their best cards show up more often. <span class="cr">(CR 100.2a)</span></li>
+      <li><strong>Up to 4 copies</strong> of any one card, except basic lands, which have no limit. <span class="cr">(CR 100.2a)</span></li>
+      <li><strong>20 starting life.</strong> <span class="cr">(CR 103.4)</span></li>
+      <li><strong>15 card sideboard</strong> in tournament play. The 4 copy limit counts deck and sideboard together. <span class="cr">(CR 100.4a)</span></li>
+      <li><strong>Matches are usually best of three.</strong> Between games you can swap cards with your sideboard, as long as the deck stays legal.</li>
+      <li><strong>Everything is in the pool</strong> except the banned list. Cards from 1993 sit next to cards from this year.</li>
+    </ul>
+
+    <h2>Deck Makeup</h2>
+    <ul class="details-list">
+      <li>Legacy decks lean on <strong>the most efficient spells in the game’s history</strong>: one mana answers, free interaction, and mana bases full of original dual lands.</li>
+      <li><strong>Games are fast and interactive.</strong> Expect a fight over every spell from turn one.</li>
+    </ul>
+
+    <h2>Tips</h2>
+    <div class="callout tip">
+      <div class="callout-title"><span class="mark" aria-hidden="true">✓</span>Ask about proxies before you invest</div>
+      <p>Some of Legacy’s core cards sit on the Reserved List and cost more than the rest of the deck combined. Lots of casual Legacy tables welcome playtest proxies so people can actually play the format. Just ask the table or the store first. Sanctioned events don’t allow them.</p>
+    </div>
+    <div class="callout tip">
+      <div class="callout-title"><span class="mark" aria-hidden="true">✓</span>Watch before you buy</div>
+      <p>Legacy punishes unfamiliarity harder than most formats. A few matches of the top decks on video will show you what the format really fights over.</p>
+    </div>
+
+    <h2>Watch Out For</h2>
+    <div class="callout misplay">
+      <div class="callout-title"><span class="mark" aria-hidden="true">✗</span>Vintage restricted usually means Legacy banned</div>
+      <p>The cards Vintage merely restricts, Legacy tends to ban outright. A Vintage deck is rarely one swap away from Legacy legal.</p>
+    </div>
+    <div class="callout misplay">
+      <div class="callout-title"><span class="mark" aria-hidden="true">✗</span>Old doesn’t mean legal</div>
+      <p>Some of the most famous cards ever printed are banned here. Check every card against the current list.</p>
+    </div>
+
+    <h2>Banned Cards</h2>
+    <div class="bans-panel">
+      <p>Legacy’s banned list is long and includes many of the game’s most famous cards. <strong>Check everything.</strong> We don’t list banned cards here on purpose: banlists change, and a stale list is worse than none.</p>
+      <a class="bans-link" href="https://magic.wizards.com/en/banned-restricted-list" target="_blank" rel="noopener">Official Banned &amp; Restricted List</a>
+    </div>
+
+    <h2>Governing Rules</h2>
+    <div class="sources-box">
+      <div class="sources-title">Comprehensive Rules Cited</div>
+      <div class="sources-grid">
+        <div>CR 100.2a — 60 minimum, 4 copy limit</div>
+        <div>CR 100.4a — 15 card sideboard</div>
+        <div>CR 103.4 — 20 starting life</div>
+      </div>
+      <div class="verified">Rules citations verified against the Magic Comprehensive Rules effective June 19, 2026.</div>
+    </div>
+
+    <h2>See Also</h2>
+    <div class="chip-row">
+      <a class="chip" href="/table/vintage">Vintage</a>
+      <a class="chip" href="/table/modern">Modern</a>
+      <a class="chip" href="/table/commander">Commander</a>
+    </div>
+
+  </main>
+
+<footer>
+  <div class="footer-buttons">
+    <a class="footer-btn" href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+      Tips Appreciated!
+    </a>
+    <a class="footer-btn" href="https://instagram.com/mtjawnny" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      MTJawnny
+    </a>
+  </div>
+</footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  var btn = document.getElementById('shareBtn');
+  if (!btn) return;
+  var canonical = document.querySelector('link[rel="canonical"]');
+  var url = (canonical && canonical.href) ? canonical.href : location.href;
+  var raw = document.title || '';
+  var title = raw.replace(/\s*[\u2014\u00b7|-]\s*MTJawnny\s*$/i, '').trim() || raw;
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function () { t.classList.remove('show'); }, 2000);
+  }
+  function legacyCopy() {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = url; ta.setAttribute('readonly', '');
+      ta.style.position = 'absolute'; ta.style.left = '-9999px';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      showToast('Link copied');
+    } catch (e) { showToast('Copy not supported'); }
+  }
+  btn.addEventListener('click', function () {
+    if (navigator.share) { navigator.share({ title: title, url: url }).catch(function () {}); return; }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function () { showToast('Link copied'); }).catch(legacyCopy);
+    } else { legacyCopy(); }
+  });
+})();
+</script>
+
+<!-- ===== MTJawnny pip-ring footer nav ===== -->
+<style>
+  .mtjnav-wrap { padding: 0.75rem 1rem; display: flex; justify-content: center; }
+  .mtjnav, .mtjnav * { box-sizing: border-box; }
+  .mtjnav {
+    --size: min(94vw, 380px);
+    --R:    calc(var(--size) * 0.34);
+    --pip:  calc(var(--size) * 0.24);
+    position: relative; width: var(--size); height: var(--size);
+  }
+  .mtjnav-bg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .mtjnav-bg .back    { fill: #130e1b; stroke: #b8935a; stroke-width: 2; vector-effect: non-scaling-stroke; }
+  .mtjnav-bg .connect { fill: none;    stroke: #b8935a; stroke-width: 5; vector-effect: non-scaling-stroke; }
+  .mtjnav-pip { position: absolute; left: 50%; top: 50%; width: var(--pip); height: var(--pip); text-decoration: none; }
+  .mtjnav-pip.is-table   { transform: translate(calc(-50% + (-0.5878 * var(--R))), calc(-50% + (-0.8090 * var(--R)))); } /* top-left */
+  .mtjnav-pip.is-cards   { transform: translate(calc(-50% + ( 0.5878 * var(--R))), calc(-50% + (-0.8090 * var(--R)))); } /* top-right */
+  .mtjnav-pip.is-stack   { transform: translate(calc(-50% + ( 0.9511 * var(--R))), calc(-50% + ( 0.3090 * var(--R)))); } /* bottom-right */
+  .mtjnav-pip.is-tools   { transform: translate(calc(-50% + (-0.9511 * var(--R))), calc(-50% + ( 0.3090 * var(--R)))); } /* bottom-left */
+  .mtjnav-pip.is-coffers { transform: translate(-50%, calc(-50% + (1.0 * var(--R)))); } /* apex */
+  .mtjnav-dot {
+    width: 100%; height: 100%; border-radius: 50%;
+    background: #261d33; border: 5px solid #b8935a;
+    display: grid; place-items: center;
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+  .mtjnav-dot svg { width: 44%; height: 44%; color: #b8935a; display: block; }
+  .mtjnav-dot .mtjnav-icon { width: auto; height: auto; max-width: 54%; max-height: 48%; object-fit: contain; display: block; }
+  .mtjnav-pip:hover .mtjnav-dot, .mtjnav-pip:focus-visible .mtjnav-dot {
+    border-color: #d8b27a; box-shadow: 0 0 14px rgba(184,147,90,0.35), 0 6px 18px rgba(0,0,0,0.4);
+    transform: translateY(-2px);
+  }
+  .mtjnav-pip:focus-visible { outline: none; }
+  .mtjnav-pip.is-current .mtjnav-dot { opacity: 0.45; }
+  .mtjnav-top {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: calc(var(--size) * 0.13); height: calc(var(--size) * 0.13);
+    min-width: 44px; min-height: 44px;
+    border-radius: 50%; cursor: pointer; padding: 0;
+    background: #261d33; border: 2px solid #8a6d42;
+    display: grid; place-items: center;
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+  .mtjnav-top svg { width: 42%; height: 42%; color: #b8935a; display: block; }
+  .mtjnav-top:hover { border-color: #b8935a; transform: translate(-50%, calc(-50% - 2px)); box-shadow: 0 4px 14px rgba(0,0,0,0.4); }
+  .mtjnav-top:focus-visible { outline: 2px solid #b8935a; outline-offset: 3px; }
+  @media (min-width: 640px) { .mtjnav { --size: min(72vw, 470px); } }
+  @media (prefers-reduced-motion: reduce) { .mtjnav-dot { transition: none; } }
+</style>
+
+<div class="mtjnav-wrap">
+  <nav class="mtjnav" aria-label="Site sections">
+    <svg class="mtjnav-bg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle class="back"    cx="50" cy="50" r="49"/>
+      <circle class="connect" cx="50" cy="50" r="34"/>
+    </svg>
+    <a class="mtjnav-pip is-table"   href="/table"   aria-label="Table"   data-i="table"><span class="mtjnav-dot"></span></a>
+    <a class="mtjnav-pip is-cards"   href="/cards"   aria-label="Cards"   data-i="cards"><span class="mtjnav-dot"></span></a>
+    <a class="mtjnav-pip is-stack"   href="/stack"   aria-label="Stack"   data-i="stack"><span class="mtjnav-dot"></span></a>
+    <a class="mtjnav-pip is-tools"   href="/tools"   aria-label="Tools"   data-i="tools"><span class="mtjnav-dot"></span></a>
+    <a class="mtjnav-pip is-coffers" href="/coffers" aria-label="Coffers" data-i="coffers"><span class="mtjnav-dot"></span></a>
+    <button class="mtjnav-top" type="button" aria-label="Back to top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>
+    </button>
+  </nav>
+</div>
+
+<script>
+(function () {
+  var G = {
+    table:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M9 5v14"/></svg>',
+    tools:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17v3h3l5.3-5.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.2-.6-.6-2.2 2.6-2.5Z"/></svg>',
+    cards:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="12" height="15" rx="2"/><path d="M8 6V4a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-2"/></svg>',
+    stack:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5-10-5ZM2 13l10 5 10-5M2 18l10 5 10-5"/></svg>',
+    coffers:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16l-1 11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1L4 8Z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/><circle cx="12" cy="14" r="2"/></svg>'
+  };
+  var seg = (location.pathname.split('/')[1] || '').toLowerCase();
+  document.querySelectorAll('.mtjnav-pip').forEach(function (a) {
+    var k = a.getAttribute('data-i');
+    var dot = a.querySelector('.mtjnav-dot');
+    var img = new Image();
+    img.className = 'mtjnav-icon'; img.alt = '';
+    img.onerror = function () { dot.innerHTML = G[k] || ''; };
+    img.src = '/icons/' + k + '.png';
+    dot.appendChild(img);
+    var s = (a.getAttribute('href').split('/')[1] || '').toLowerCase();
+    if (s && s === seg) { a.classList.add('is-current'); a.setAttribute('aria-current', 'page'); }
+  });
+})();
+</script>
+<script>
+(function () {
+  var b = document.querySelector('.mtjnav-top');
+  if (!b) return;
+  b.addEventListener('click', function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  });
+})();
+</script>
+<!-- ===== /MTJawnny pip-ring footer nav ===== -->
+</body>
+</html>
