@@ -364,6 +364,39 @@
     }
     .tile:hover, .tile:active, .suggest-btn:hover { transform: none; }
   }
+
+  /* ══ DESKTOP SCALE-UP — search bar, divider, card grid ══════════════ */
+  @media (min-width: 900px) {
+    .page { max-width: 1240px; }
+
+    .controls {
+      padding: 1.6rem 2.5rem 1.4rem;
+      border-bottom-width: 3px;
+    }
+    .search-icon { left: 22px; width: 24px; height: 24px; }
+    #search {
+      font-size: 1.2rem;
+      padding: 1.05rem 3.6rem 1.05rem 3.8rem;
+      border-radius: 16px;
+      border-width: 2px;
+    }
+    .clear-btn { right: 12px; width: 40px; height: 40px; }
+    .clear-btn svg { width: 20px; height: 20px; }
+
+    .suggest-panel { padding: 1.3rem 1.5rem; border-radius: 18px; }
+    .suggest-panel p { font-size: 1.1rem; }
+    .suggest-btn { font-size: 1.15rem; padding: 0.7rem 1.4rem; }
+
+    .grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.75rem;
+      padding: 2.25rem 2.5rem 0;
+    }
+    .tile { border-radius: 16px; border-width: 2px; }
+    .tile-fallback { gap: 0.75rem; }
+    .tile-fallback .fb-name { font-size: 1.15rem; }
+    .tile-fallback .fb-pip { width: 32px; height: 32px; }
+  }
 </style>
 </head>
 <body>
