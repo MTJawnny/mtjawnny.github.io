@@ -1195,6 +1195,19 @@
   .tr-switch.on { background: var(--bronze-dim); border-color: var(--bronze); }
   .tr-switch.on::after { left: 23px; background: var(--bronze); }
 
+  /* Desktop: the Toggles overlay is sized for a phone panel by default —
+     scale the whole card up for a full monitor. */
+  .desktop #trackers-card { padding: 30px 36px; gap: 22px; }
+  .desktop #trackers-card .overlay-title { font-size: 20px; }
+  .desktop #trackers-card .overlay-title-row { gap: 16px; }
+  .desktop #trackers-card .tracker-rows { width: 320px; gap: 14px; }
+  .desktop #trackers-card .tracker-row { padding: 14px 20px; border-radius: 12px; }
+  .desktop #trackers-card .tr-name { font-size: 18px; }
+  .desktop #trackers-card .tr-switch { width: 60px; height: 32px; border-radius: 16px; }
+  .desktop #trackers-card .tr-switch::after { width: 22px; height: 22px; top: 3px; left: 3px; }
+  .desktop #trackers-card .tr-switch.on::after { left: 32px; }
+  .desktop #trackers-card .opt-btn { padding: 14px 28px; font-size: 17px; }
+
   /* ══ UPKEEP POPUP — centered over pass button (no screen dim) ══ */
   #upkeep-overlay {
     position: fixed; inset: 0;
@@ -2849,6 +2862,7 @@ function closeOverlays() {
 // ══ RENDER ════════════════════════════════════════════
 function render() {
   checkKO();
+  document.body.classList.toggle('desktop', S.desktopMode);
   const showLife = S.lifeOn && S.phase === 'playing';
 
   for (let i = 0; i < S.playerCount; i++) {
