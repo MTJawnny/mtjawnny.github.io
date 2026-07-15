@@ -762,6 +762,66 @@
     .frame-grid { grid-template-columns: repeat(3, 1fr); }
     .footer-buttons { max-width: 380px; gap: 1rem; }
   }
+
+  /* ── DESKTOP SCALE-UP — from the "Mana Symbols" group down gets bigger.
+       Hero title, the "Free stuff..." intro copy, nav ring, and footer
+       buttons are untouched (own rules above/elsewhere). ── */
+  @media (min-width: 900px) {
+    .page { max-width: 900px; }
+
+    .group-head h3 { font-size: 1.4rem; margin-top: 1.8rem; }
+    .what-you-get { font-size: 0.88rem; }
+
+    .pip-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 1rem; }
+    .asset-tile { padding: 0.85rem 0.7rem 0.75rem; }
+    .pip-thumb { width: 76px; height: 76px; margin-bottom: 0.6rem; }
+    .pip-thumb.ph { font-size: 1.4rem; }
+    .asset-name { font-size: 1.1rem; margin-bottom: 0.6rem; }
+    .fmt-btn { font-size: 1.02rem; padding: 0.55rem 0.5rem; }
+    .coming-note { font-size: 0.9rem; }
+
+    .back-card { gap: 1.7rem; padding: 1.5rem; }
+    .back-thumb { width: 220px; }
+    .back-meta .asset-name { font-size: 1.85rem; }
+    .back-meta .fmt-row { max-width: 360px; }
+    .back-meta .fmt-btn { padding: 0.65rem 1.4rem; }
+    .maxres-link { font-size: 1.15rem; }
+
+    .style-name { font-size: 1.25rem; padding: 0.6rem 0.4rem; }
+    .style-chevron { width: 18px; height: 18px; }
+    .frame-grid { grid-template-columns: repeat(4, 1fr); gap: 0.9rem; }
+    .frame-card { padding: 0.7rem; }
+    .frame-color { font-size: 0.9rem; }
+
+    .free-banner { padding: 1.2rem 1.3rem; margin-top: 1rem; margin-bottom: 1.5rem; }
+    .free-count { font-size: 1.05rem; }
+    .license-line { font-size: 1rem; }
+    .credit-chip { font-size: 0.9rem; padding: 0.5rem 0.8rem; }
+    .dl-all { font-size: 1.05rem; padding: 0.7rem 1.25rem; }
+
+    .crosslinks { gap: 0.8rem; margin-top: 1.9rem; }
+    .crosslink { font-size: 1.1rem; padding: 0.65rem 1.3rem; }
+
+    .support { margin-top: 1.4rem; }
+    .support .section-head h2 { font-size: 2.1rem; }
+    .merch-list { gap: 1rem; }
+    .merch-card { padding: 1.1rem; gap: 1.1rem; }
+    .merch-thumb { width: 90px; height: 90px; }
+    .merch-title { font-size: 1.2rem; }
+    .merch-desc { font-size: 0.95rem; }
+    .price { font-size: 1.2rem; }
+    .buy-btn { font-size: 0.95rem; padding: 0.55rem 1.1rem; }
+    .soon-badge { font-size: 0.8rem; padding: 0.3rem 0.65rem; }
+
+    .bundle-preview-head { font-size: 0.82rem; }
+    .bundle-strip { gap: 0.8rem; }
+    .bundle-ig { font-size: 0.92rem; }
+
+    .tip-row { padding: 1rem 1.2rem; gap: 0.9rem; }
+    .tip-text strong { font-size: 1.02rem; }
+    .tip-text span { font-size: 0.88rem; }
+    .tip-btn { font-size: 0.95rem; padding: 0.55rem 1.1rem; }
+  }
 </style>
 </head>
 <body id="top">
