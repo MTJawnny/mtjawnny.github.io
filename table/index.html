@@ -1054,9 +1054,14 @@
     background: transparent;
     color: var(--muted);
     font-size: 28px; cursor: pointer; line-height: 1;
-    transition: border-color 0.15s, color 0.15s;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
   }
   .mana-minus:active { border-color: var(--bronze); color: var(--bronze); }
+  .mana-minus.has-mana {
+    border-color: var(--bronze);
+    color: var(--bronze);
+    background: rgba(184, 147, 90, 0.16);
+  }
   .overlay-actions { display: flex; gap: 12px; }
   .overlay-actions .opt-btn { padding: 10px 22px; font-size: 14px; }
 
@@ -2400,7 +2405,7 @@ function buildManaGrid() {
     <div class="mana-cell">
       <div class="mana-orb" data-m="${m}" onclick="bumpMana('${m}',1)"><img class="mana-sym" src="/manasymbols/${m.toUpperCase()}.svg" alt="${MANA_LABEL[m]} mana" onerror="this.remove()"><span class="mana-letter">${MANA_LABEL[m]}</span></div>
       <div class="mana-count" id="mc-${m}">${S.mana[m]}</div>
-      <button class="mana-minus" onclick="bumpMana('${m}',-1)">−</button>
+      <button class="mana-minus${S.mana[m] > 0 ? ' has-mana' : ''}" id="mm-${m}" onclick="bumpMana('${m}',-1)">−</button>
     </div>
   `).join('');
 }
@@ -2410,6 +2415,7 @@ function bumpMana(m, d) {
   const applied = S.mana[m] - before;
   if (applied !== 0) logEv('mana', { m, d: applied });
   document.getElementById('mc-' + m).textContent = S.mana[m];
+  document.getElementById('mm-' + m).classList.toggle('has-mana', S.mana[m] > 0);
   if (applied > 0) litUpOrb(m);
   save();
 }
