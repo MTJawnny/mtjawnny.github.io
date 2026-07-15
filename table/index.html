@@ -469,6 +469,10 @@
   [id^="grid-"] { width: 100%; height: 100%; gap: var(--panel-gap); display: grid; }
   #grid-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
   #grid-2 { grid-template-rows: 1fr 1fr; }
+  /* Desktop 1v1: two people sharing one screen, seated at opposite ends of
+     a table rotated 90° into a left/right split instead of stacked
+     top/bottom — giant tile left, giant tile right (see effRot()). */
+  #grid-2.desktop { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
   #grid-3 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
 
   /* ══ PANEL ══════════════════════════════════════════ */
@@ -1699,12 +1703,13 @@ function seatSet() {
 function getSeat(i) { return seatSet()[i] ?? seatSet()[0]; }
 
 /* Effective rotation for on-panel UI. In desktop mode everything is forced
-   upright (0°) for a single viewer facing the screen — except 1v1, where two
-   people are usually sitting side by side sharing that screen, so each
-   player's panel turns 90° to face them instead of stacking both upright.
+   upright (0°) for a single viewer facing the screen — except 1v1, which
+   splits into a left/right pair of panels (see #grid-2.desktop) and uses
+   the same opposite-sides-of-the-table rotation as mobile 1v1 (SEAT2:
+   180/0), just arranged left-right instead of stacked top-bottom.
    Off desktop, use the seat's table-facing rotation as normal. */
 function effRot(i) {
-  if (S.desktopMode) return S.playerCount === 2 ? (i === 0 ? 90 : 270) : 0;
+  if (S.desktopMode) return S.playerCount === 2 ? (i === 0 ? 180 : 0) : 0;
   return getSeat(i).rot;
 }
 
@@ -1930,6 +1935,7 @@ function buildGrid(container) {
   const n = S.playerCount;
   const grid = document.createElement('div');
   grid.id = 'grid-' + n;
+  grid.classList.toggle('desktop', S.desktopMode);
 
   for (let i = 0; i < n; i++) {
     const rot = effRot(i);
