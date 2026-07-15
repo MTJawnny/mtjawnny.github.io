@@ -258,18 +258,12 @@
     text-shadow: 0 2px 6px rgba(0,0,0,0.5);
     line-height: 1;
   }
-  .setup-seat-name {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 22px; font-weight: 800;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    color: rgba(255,255,255,0.62);
-  }
   .setup-seat-hint {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 19px; font-weight: 700;
+    font-size: 24px; font-weight: 700;
     letter-spacing: 0.04em; text-transform: uppercase;
     color: rgba(255,255,255,0.55);
-    margin-top: 5px;
+    margin-top: 6px;
   }
   .setup-seat[data-mana="white"] { background: linear-gradient(160deg, #c8b896, #a8936e); }
   .setup-seat[data-mana="blue"]  { background: linear-gradient(160deg, #2a6fa8, #1a4870); }
@@ -430,12 +424,14 @@
     margin-top: auto;
     padding-top: 9px;
     border-top: 1px solid var(--bronze-dim);
-    display: flex; gap: 18px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
   }
-  .fb-stat { display: flex; flex-direction: column; }
+  .fb-stat { display: flex; flex-direction: column; min-width: 0; }
   .fb-stat-num {
     font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800; font-size: 1.2rem;
+    font-weight: 800; font-size: 1.05rem;
     color: var(--bronze);
     line-height: 1;
   }
@@ -1298,52 +1294,52 @@
       <a class="format-btn" href="/table/start">
         <span class="fb-name">Getting Started</span>
         <span class="fb-tag">Your very first game, explained plainly: turns, mulligans, summoning sickness, and how the stack works.</span>
-        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">1v1</span><span class="fb-stat-label">Best Start</span></span></span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">1v1</span><span class="fb-stat-label">Best Start</span></span><span class="fb-stat"><span class="fb-stat-num">0</span><span class="fb-stat-label">Rules Memorized</span></span></span>
       </a>
       <a class="format-btn" href="/table/sealed">
         <span class="fb-name">Sealed Deck</span>
         <span class="fb-tag">Crack six fresh boosters and build a 40-card deck on the spot, battling with cards nobody has seen before.</span>
-        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">40</span><span class="fb-stat-label">Min Deck</span></span></span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">40</span><span class="fb-stat-label">Min Deck</span></span><span class="fb-stat"><span class="fb-stat-num">6</span><span class="fb-stat-label">Boosters Each</span></span></span>
       </a>
       <a class="format-btn" href="/table/draft">
         <span class="fb-name">Booster Draft</span>
         <span class="fb-tag">Open a pack, take a card, pass the rest. Repeat until your pool becomes a 40-card deck.</span>
-        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">40</span><span class="fb-stat-label">Min Deck</span></span></span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">40</span><span class="fb-stat-label">Min Deck</span></span><span class="fb-stat"><span class="fb-stat-num">3</span><span class="fb-stat-label">Boosters Each</span></span></span>
       </a>
       <a class="format-btn" href="/table/commander">
         <span class="fb-name">Commander</span>
         <span class="fb-tag">Build a 100-card singleton deck around your commander and battle free-for-all in pods of three to five.</span>
-        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">40</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">100</span><span class="fb-stat-label">Singleton</span></span></span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">40</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">100</span><span class="fb-stat-label">Singleton</span></span><span class="fb-stat"><span class="fb-stat-num">21</span><span class="fb-stat-label">Cmdr Damage</span></span></span>
       </a>
       <a class="format-btn" href="/table/standard">
         <span class="fb-name">Standard</span>
         <span class="fb-tag">Only the newest sets are legal, keeping the card pool fresh with a yearly rotation.</span>
-        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">60</span><span class="fb-stat-label">Min Deck</span></span></span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">60</span><span class="fb-stat-label">Min Deck</span></span><span class="fb-stat"><span class="fb-stat-num">~3 yrs</span><span class="fb-stat-label">Recent Sets</span></span></span>
       </a>
       <a class="format-btn" href="/table/pioneer">
         <span class="fb-name">Pioneer</span>
         <span class="fb-tag">Nonrotating and built from Return to Ravnica forward, a deep pool without Modern's full history.</span>
-        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">60</span><span class="fb-stat-label">Min Deck</span></span></span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">60</span><span class="fb-stat-label">Min Deck</span></span><span class="fb-stat"><span class="fb-stat-num">2012+</span><span class="fb-stat-label">Card Pool</span></span></span>
       </a>
       <a class="format-btn" href="/table/modern">
         <span class="fb-name">Modern</span>
         <span class="fb-tag">Every card legal from 8th Edition onward, deep deck-building with two decades of sets to draw from.</span>
-        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">60</span><span class="fb-stat-label">Min Deck</span></span></span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">60</span><span class="fb-stat-label">Min Deck</span></span><span class="fb-stat"><span class="fb-stat-num">2003+</span><span class="fb-stat-label">Card Pool</span></span></span>
       </a>
       <a class="format-btn" href="/table/legacy">
         <span class="fb-name">Legacy</span>
         <span class="fb-tag">An eternal format where almost anything goes, drawing from Magic's earliest sets onward.</span>
-        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">60</span><span class="fb-stat-label">Min Deck</span></span></span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">60</span><span class="fb-stat-label">Min Deck</span></span><span class="fb-stat"><span class="fb-stat-num">All</span><span class="fb-stat-label">Sets Ever</span></span></span>
       </a>
       <a class="format-btn" href="/table/vintage">
         <span class="fb-name">Vintage</span>
         <span class="fb-tag">Magic's original eternal format: the entire card pool is legal, restricted list and all.</span>
-        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">60</span><span class="fb-stat-label">Min Deck</span></span></span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">60</span><span class="fb-stat-label">Min Deck</span></span><span class="fb-stat"><span class="fb-stat-num">1</span><span class="fb-stat-label">If Restricted</span></span></span>
       </a>
       <a class="format-btn" href="/table/pauper">
         <span class="fb-name">Pauper</span>
         <span class="fb-tag">Commons only. Magic's cheapest constructed format, and one of its most skill-testing.</span>
-        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">60</span><span class="fb-stat-label">Min Deck</span></span></span>
+        <span class="fb-stats"><span class="fb-stat"><span class="fb-stat-num">20</span><span class="fb-stat-label">Life</span></span><span class="fb-stat"><span class="fb-stat-num">60</span><span class="fb-stat-label">Min Deck</span></span><span class="fb-stat"><span class="fb-stat-num">C</span><span class="fb-stat-label">Commons Only</span></span></span>
       </a>
     </div>
   </section>
@@ -1781,14 +1777,7 @@ function selLife(n) {
 // ══ SETUP TABLE DIAGRAM ═══════════════════════════════
 /* A live miniature of the real in-game table on the splash; tapping a seat
    cycles its color through WUBRG (+ the extra tile colors), same as the old
-   color-map, but now also previews life total and seat number. Seat numbers
-   start at bottom-left = Seat 1 and count around the table in whichever
-   direction is currently selected, so they flip live with the dial. */
-const SETUP_SEAT_LABELS = {
-  2: { cw: [2, 1],       ccw: [2, 1]       },
-  3: { cw: [2, 1, 3],    ccw: [3, 1, 2]    },
-  4: { cw: [2, 3, 1, 4], ccw: [4, 3, 1, 2] },
-};
+   color-map, but now also previews life total. */
 /* 3-player setup preview only: the wide tile (always slot 0) can sit on any
    of the table's 4 edges. Rotate Seats cycles top → right → bottom → left,
    so the big tile visibly moves around the table instead of just the colors
@@ -1817,7 +1806,6 @@ function buildColorMap() {
   if (!map) return;
   const n = S.playerCount;
   map.className = 'setup-seat-grid n' + n;
-  const labels = SETUP_SEAT_LABELS[n][S.dir];
 
   if (n === 3) {
     const layout = LAYOUT3[S.setupLayout3];
@@ -1832,7 +1820,6 @@ function buildColorMap() {
       return `<div class="setup-seat" data-mana="${tileColor(i)}"${bias} onclick="cycleColor(${i})" style="grid-column:${col};grid-row:${row}">
                 <div class="setup-seat-inner" style="transform:rotate(${rot}deg)">
                   <span class="setup-seat-life">${S.startLife}</span>
-                  <span class="setup-seat-name">Seat ${labels[i]}</span>
                   <span class="setup-seat-hint">Tap to change color</span>
                 </div>
               </div>`;
@@ -1849,7 +1836,6 @@ function buildColorMap() {
     return `<div class="setup-seat" data-mana="${tileColor(i)}"${bias} onclick="cycleColor(${i})">
               <div class="setup-seat-inner" style="transform:rotate(${rot}deg)">
                 <span class="setup-seat-life">${S.startLife}</span>
-                <span class="setup-seat-name">Seat ${labels[i]}</span>
                 <span class="setup-seat-hint">Tap to change color</span>
               </div>
             </div>`;
