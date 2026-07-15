@@ -376,27 +376,23 @@
   }
   /* Format guide cards — uniform tiles in a responsive grid, one per
      format page. Reads like cards laid out on the table rather than a
-     settings list. Height is a fixed value (below), sized to the
-     tallest real card content at the narrowest column width (the
-     2-line "Getting Started" title) so nothing clips — every other
-     card just has a little less footer whitespace than that one. */
+     settings list. Always exactly 2 columns, on phones and up — no
+     height clamp; each row auto-sizes to its own tallest card (CSS
+     Grid's default row-stretch) instead of every card carrying the
+     worst-case height of the whole set. */
   .format-grid {
     display: grid;
-    /* 180px keeps this reliably 2-across on phones — the long-form
-       description + stats need that room; 142px let mobile viewports
-       squeeze in a 3rd column and clip the stats row (overflow: hidden). */
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
     width: min(560px, 100%);
   }
   .format-btn {
     position: relative;
-    height: 340px;
     overflow: hidden;
     background: var(--surface);
     border: 1.5px solid var(--bronze-dim);
     border-radius: 14px;
-    padding: 18px 15px 16px;
+    padding: 14px 13px 12px;
     display: flex;
     flex-direction: column;
     text-align: left;
@@ -420,19 +416,19 @@
     text-transform: uppercase;
     color: var(--bronze);
     line-height: 1.12;
-    margin-top: 8px;
+    margin-top: 5px;
   }
   .format-btn .fb-tag {
-    margin-top: 10px;
+    margin-top: 7px;
     font-family: 'Barlow', sans-serif;
     font-weight: 500;
     font-size: 18.5px;
-    line-height: 1.42;
+    line-height: 1.32;
     color: rgba(240,236,230,0.85);
   }
   .fb-stats {
     margin-top: auto;
-    padding-top: 12px;
+    padding-top: 9px;
     border-top: 1px solid var(--bronze-dim);
     display: flex; gap: 18px;
   }
