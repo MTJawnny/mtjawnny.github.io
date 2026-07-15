@@ -438,28 +438,41 @@
     text-transform: uppercase;
     color: var(--bronze);
   }
-  /* The "+" reads as a separator between name lines, not part of a sentence */
-  .plus {
-    display: block;
-    margin: 0.22rem 0;
+  /* Size tiers -- picked per-tile (JS) from the longest name it holds, so
+     a short single word ("Ward") reads big while a long phrase ("When a
+     Player Leaves") steps down instead of overflowing or forcing wraps.
+     All names within one tile share a tier so stacked layers stay even. */
+  .entry-name--xl { font-size: 1.35rem; }
+  .entry-name--lg { font-size: 1.15rem; }
+  .entry-name--md { font-size: 1rem; }
+  .entry-name--sm { font-size: 0.88rem; }
+  .entry-name--xs { font-size: 0.8rem; }
+
+  /* Layered template for multi-name tiles ("Trample + Deathtouch",
+     "Indestructible vs -X/-X"): each name is its own band, divided by a
+     flanking-line rule so up to three stacked names read as distinct
+     layers rather than a plain sentence break. */
+  .plus, .vs {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    gap: 0.5rem;
+    margin: 0.3rem 0;
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
-    font-size: 0.82rem;
     line-height: 1;
     color: var(--text-dim);
   }
-  /* "VS" separator — for oppositional interactions (which beats which) */
-  .vs {
-    display: block;
-    margin: 0.26rem 0;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 0.78rem;
-    line-height: 1;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-dim);
+  .plus::before, .plus::after,
+  .vs::before, .vs::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--bronze-dim);
+    opacity: 0.6;
   }
+  .plus { font-size: 0.82rem; }
+  .vs { font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; }
 
   .visually-hidden {
     position: absolute !important;
@@ -605,8 +618,13 @@
     .tile-bar { top: -8px; gap: 5px; }
     .tile-bar > span { width: 16px; height: 16px; }
     .entry-name { font-size: 1.3rem; }
-    .plus { font-size: 1rem; margin: 0.3rem 0; }
-    .vs { font-size: 0.95rem; }
+    .entry-name--xl { font-size: 1.7rem; }
+    .entry-name--lg { font-size: 1.45rem; }
+    .entry-name--md { font-size: 1.3rem; }
+    .entry-name--sm { font-size: 1.12rem; }
+    .entry-name--xs { font-size: 1rem; }
+    .plus { font-size: 1rem; margin: 0.4rem 0; }
+    .vs { font-size: 0.95rem; margin: 0.4rem 0; }
     .empty-note { font-size: 1.05rem; }
   }
 </style>
@@ -622,7 +640,7 @@
 <script>
 const ENTRIES = [
   {
-    names: ["Protection"],
+    names: ["Protection From"],
     slug: "protection",
     cat: "targeting"
   },
@@ -905,9 +923,13 @@ const SUBMISSION_URL = "https://tally.so/r/rjqMJp";
       const sepCls  = isVs ? 'vs'  : 'plus';            // visible marker class
       const sepSym  = isVs ? 'vs'  : '+';               // visible marker text (.vs upper-cases it)
       const label = e.names.join(' ' + sepWord + ' ') + ' — view interaction';
+      // Size tier picked from the tile's longest name, shared by every
+      // stacked layer so a 2- or 3-name tile stays visually even.
+      const longest = Math.max(...e.names.map(n => n.length));
+      const sizeCls = longest <= 5 ? 'xl' : longest <= 9 ? 'lg' : longest <= 14 ? 'md' : longest <= 19 ? 'sm' : 'xs';
       const inner = e.names.map((n, i) =>
         (i > 0 ? '<span class="' + sepCls + '" aria-hidden="true">' + sepSym + '</span>' : '') +
-        '<span class="entry-name">' + esc(n) + '</span>'
+        '<span class="entry-name entry-name--' + sizeCls + '">' + esc(n) + '</span>'
       ).join('');
       const cats = catList(e);
       const bar = cats.length
