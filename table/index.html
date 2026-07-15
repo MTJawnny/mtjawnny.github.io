@@ -469,9 +469,9 @@
   [id^="grid-"] { width: 100%; height: 100%; gap: var(--panel-gap); display: grid; }
   #grid-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
   #grid-2 { grid-template-rows: 1fr 1fr; }
-  /* Desktop 1v1: two people sharing one screen, seated at opposite ends of
-     a table rotated 90° into a left/right split instead of stacked
-     top/bottom — giant tile left, giant tile right (see effRot()). */
+  /* Desktop 1v1: two people sharing one screen — giant tile left, giant
+     tile right instead of stacked top/bottom. Both stay upright
+     (see effRot()); nothing renders upside down in a browser window. */
   #grid-2.desktop { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
   #grid-3 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
 
@@ -1703,13 +1703,13 @@ function seatSet() {
 function getSeat(i) { return seatSet()[i] ?? seatSet()[0]; }
 
 /* Effective rotation for on-panel UI. In desktop mode everything is forced
-   upright (0°) for a single viewer facing the screen — except 1v1, which
-   splits into a left/right pair of panels (see #grid-2.desktop) and uses
-   the same opposite-sides-of-the-table rotation as mobile 1v1 (SEAT2:
-   180/0), just arranged left-right instead of stacked top-bottom.
+   upright (0°) — a browser window is read from one side, never passed
+   around like a phone, so no panel should ever render upside down. 1v1
+   still splits into a left/right pair of panels (see #grid-2.desktop),
+   just both stay upright instead of one flipping to face an opposite seat.
    Off desktop, use the seat's table-facing rotation as normal. */
 function effRot(i) {
-  if (S.desktopMode) return S.playerCount === 2 ? (i === 0 ? 180 : 0) : 0;
+  if (S.desktopMode) return 0;
   return getSeat(i).rot;
 }
 
