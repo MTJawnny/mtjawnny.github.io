@@ -260,8 +260,8 @@
   }
   .setup-seat-hint {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 24px; font-weight: 700;
-    letter-spacing: 0.04em; text-transform: uppercase;
+    font-size: 15px; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
     text-align: center;
     color: rgba(255,255,255,0.55);
     margin-top: 6px;
@@ -1826,7 +1826,7 @@ function buildColorMap() {
       return `<div class="setup-seat" data-mana="${tileColor(i)}"${bias} onclick="cycleColor(${i})" style="grid-column:${col};grid-row:${row}">
                 <div class="setup-seat-inner" style="transform:rotate(${rot}deg)">
                   <span class="setup-seat-life">${S.startLife}</span>
-                  <span class="setup-seat-hint">Tap to change color</span>
+                  <span class="setup-seat-hint">Tap to pick color</span>
                 </div>
               </div>`;
     }).join('');
@@ -1842,7 +1842,7 @@ function buildColorMap() {
     return `<div class="setup-seat" data-mana="${tileColor(i)}"${bias} onclick="cycleColor(${i})">
               <div class="setup-seat-inner" style="transform:rotate(${rot}deg)">
                 <span class="setup-seat-life">${S.startLife}</span>
-                <span class="setup-seat-hint">Tap to change color</span>
+                <span class="setup-seat-hint">Tap to pick color</span>
               </div>
             </div>`;
   }).join('');
