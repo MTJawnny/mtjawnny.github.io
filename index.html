@@ -129,7 +129,7 @@
       width: 160px;
       height: 160px;
       border-radius: 50%;
-      background: #000;
+      background: var(--surface);
       border: 5px solid var(--bronze);
       position: relative;
       flex-shrink: 0;
@@ -338,6 +338,27 @@
       height: 16px;
       fill: currentColor;
       flex-shrink: 0;
+    }
+
+    /* ── MOBILE-ONLY LAYOUT TWEAKS (phones, < 640px) ──
+       Scoped with max-width so the tablet grid (>=640px) and the desktop
+       pentagon (>=900px) stay untouched. Position nudges reuse the same
+       translate idiom as the base stagger above; the three lower CTAs swap
+       to black here (nav-circle plum fill is the shared base default). */
+    @media (max-width: 639.98px) {
+      /* Table + Cards pulled in toward each other horizontally. */
+      .nav-tile.is-table { transform: translate(14px, -10px); }
+      .nav-tile.is-cards { transform: translate(-14px, -10px); }
+
+      /* Coffers lifted vertically -- only Coffers moves (positioned nudge). */
+      .nav-tile.is-coffers { transform: translate(0, -24px); }
+
+      /* The three lower CTAs (Discord, Tips, Instagram): plum -> black... */
+      .big-btn,
+      .footer-btn { background: #000; }
+
+      /* ...and the whole cluster lifted slightly as one unit. */
+      .discord-section { margin-top: 1rem; }
     }
 
     /* ── DESKTOP ── */
