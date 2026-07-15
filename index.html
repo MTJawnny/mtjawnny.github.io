@@ -436,32 +436,28 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 0.15rem;
+        gap: 0.3rem;
         position: absolute;
         left: 50%;
         top: var(--pentagon-top);
         transform: translate(-50%, -50%);
-        width: calc(var(--circle) * 0.76);
-        height: calc(var(--circle) * 0.76);
-        border-radius: 50%;
-        background: var(--surface);
-        border: 2.5px solid var(--bronze-dim);
+        padding: 0.5rem;
         color: var(--bronze);
         text-decoration: none;
         -webkit-tap-highlight-color: transparent;
-        transition: border-color 0.2s, transform 0.15s;
+        transition: color 0.2s, transform 0.15s;
       }
 
       .lucky-die {
-        width: 27px;
-        height: 27px;
+        width: 40px;
+        height: 40px;
         display: block;
       }
 
       .lucky-text {
         font-family: 'Barlow Condensed', sans-serif;
         font-weight: 900;
-        font-size: 0.8rem;
+        font-size: 1.1rem;
         line-height: 1;
         letter-spacing: 0.04em;
         text-transform: uppercase;
@@ -470,7 +466,7 @@
 
       .lucky-btn:hover,
       .lucky-btn:focus-visible {
-        border-color: var(--bronze);
+        color: #d8b27a;
         transform: translate(-50%, -50%) scale(1.06);
       }
 
