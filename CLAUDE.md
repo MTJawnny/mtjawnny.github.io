@@ -98,6 +98,15 @@ not just legal positioning.
 4. GA4 tag count check: grep -c G-WKH3Y62H5H <file>
 5. Functional smoke test of any interactive tool changed
 
+## Git / environment notes
+- Remote branches CANNOT be deleted from the Claude Code environment: the
+  git relay blocks delete-pushes (403) and the GitHub MCP exposes no
+  delete-branch/delete-ref tool. After a PR merges, only the user can
+  delete the branch (PR page "Delete branch" button, or the repo's
+  Branches list). Don't promise automatic branch cleanup; when a merged
+  branch is left behind, tell the user it's harmless and hand them the
+  one-click deletion step.
+
 ## Reference docs (read before large changes)
 - MTJAWNNY-MASTER.md — overall architecture and standards
 - card-build-master.md — card page build pipeline
