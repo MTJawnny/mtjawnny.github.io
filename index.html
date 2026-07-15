@@ -350,12 +350,13 @@
        the desktop pentagon (>=900px) are untouched. */
     @media (max-width: 639.98px) {
       .orbit-field {
-        /* The pentagon spans 1.9022*R + one circle across, so --R is capped
-           off viewport width to keep the side pips (Tools/Stack) on screen.
-           84px floor keeps 96px circles clear of overlap (no-overlap needs
-           R >= 0.851 * 96 = 81.7px). --half is the circle's half-height,
-           the mobile analogue of desktop's fixed 87.5px. */
-        --R: max(84px, min(31vw, 128px));
+        /* --R solved so the side pips (Tools/Stack) just kiss the screen
+           edges: their centers sit at 0.9511*R from the midline, plus the
+           48px circle radius, and that must equal 50vw -- so
+           R = (50vw - 48px) / 0.9511. The ring fills the full phone width
+           at every size. --half is the circle's half-height, the mobile
+           analogue of desktop's fixed 87.5px. */
+        --R: calc((50vw - 48px) / 0.9511);
         --half: 48px;
         --pentagon-top: calc(0.8090 * var(--R) + var(--half));
         position: relative;
