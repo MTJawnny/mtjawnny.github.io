@@ -70,7 +70,9 @@ not just legal positioning.
 
 ## Design system
 - Palette: plum/bronze/cream — CSS vars --surface, --bronze, --bronze-dim
-- Fonts: Barlow / Barlow Condensed
+- Fonts: Barlow / Barlow Condensed, self-hosted (see Hard rules) —
+  '@font-face' via /fonts/fonts.css, weights 400/500/600 (Barlow) and
+  400/600/700/800/900 (Barlow Condensed)
 - Flat surfaces over gradients — deliberate anti-AI-template aesthetic
 - h1 clamp standard: clamp(2.4rem, 14vw, 3.6rem)
 - Body/long-form text floor (2026-07): 1.06rem minimum for anything read
@@ -79,6 +81,14 @@ not just legal positioning.
   citations) stays smaller, ~0.8-0.95rem. Canonical reference: pris.html
   (cards), stack/the-stack.html (stack pages), table/pauper.html (format
   guides) — clone bases already carry this; don't shrink it back down.
+- Header tagline standard (2026-07): the `.tagline` line under an h1 (e.g.
+  home's "Your Free Magic: The Gathering Toolbox!") is 1.2rem, sitting a
+  flat 12px below the h1's bottom edge — tune margin-top per page to hit
+  that gap since logo-wrap's own margin-bottom varies (pages with
+  home/share pip labels reserve more space than the homepage). Canonical
+  reference: index.html, cards/index.html, stack/index.html,
+  tools/index.html. Coffers has no page-level tagline; its equivalent is
+  `.section-head .sub` under "Free stuff from me to you!", same 1.2rem.
 - No auto-open help panels — button-only (?), no localStorage first-visit logic
 
 ## Hard rules
@@ -91,6 +101,12 @@ not just legal positioning.
   libraries inline. (Card image/media delivery via cdn.mtjawnny.com is
   the exception and always carries a Scryfall-CDN fallback — see CDN &
   media URLs section. A missing image degrades; missing JS bricks.)
+- Fonts are self-hosted (2026-07): every page links `/fonts/fonts.css`
+  for Barlow / Barlow Condensed. NEVER reintroduce a
+  fonts.googleapis.com/fonts.gstatic.com @import or <link> — the woff2
+  files already live in /fonts/. Adding a new weight means downloading
+  the latin-subset woff2 into /fonts/ and adding an @font-face block to
+  fonts.css, not pointing back at Google's CDN.
 - Card-page image references come from the RESOLVED manifest (oracle_id +
   fallback URL), never from an agent guessing/fuzzy-matching a card name.
   See "Card authoring — the two-field handoff" below.
