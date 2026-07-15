@@ -379,9 +379,12 @@
     color: var(--bronze);
     line-height: 1;
   }
-  /* Format guide cards — card-proportioned tiles (5:7) in a responsive
-     grid, one per format page. Reads like cards laid out on the table
-     rather than a settings list. */
+  /* Format guide cards — uniform tiles in a responsive grid, one per
+     format page. Reads like cards laid out on the table rather than a
+     settings list. Height is a fixed value (below), sized to the
+     tallest real card content at the narrowest column width (the
+     2-line "Getting Started" title) so nothing clips — every other
+     card just has a little less footer whitespace than that one. */
   .format-grid {
     display: grid;
     /* 180px keeps this reliably 2-across on phones — the long-form
@@ -392,8 +395,8 @@
     width: min(560px, 100%);
   }
   .format-btn {
-    aspect-ratio: 5 / 7;
     position: relative;
+    height: 340px;
     overflow: hidden;
     background: var(--surface);
     border: 1.5px solid var(--bronze-dim);
@@ -417,7 +420,7 @@
   .format-btn .fb-name {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 800;
-    font-size: 1.22rem;
+    font-size: 1.42rem;
     letter-spacing: 0.02em;
     text-transform: uppercase;
     color: var(--bronze);
@@ -428,8 +431,8 @@
     margin-top: 10px;
     font-family: 'Barlow', sans-serif;
     font-weight: 500;
-    font-size: 16.5px;
-    line-height: 1.44;
+    font-size: 18.5px;
+    line-height: 1.42;
     color: rgba(240,236,230,0.85);
   }
   .fb-stats {
