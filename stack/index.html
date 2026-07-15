@@ -565,10 +565,22 @@
     .page { max-width: 900px; }
 
     .pinned { margin-top: 3.2rem; padding: 0 2.5rem 0.75rem; }
-    .pin-stack-row { margin-top: 3.2rem; }
-    .pin-anchor { max-width: 330px; padding: 3.3rem 1.2rem 1.9rem; }
-    .pin-phase-row { max-width: 720px; margin: 3rem auto 0; gap: 1.1rem; }
+
+    /* Stack card physically overlaps the phase row below it (offset
+       playing-card stack): negative margin pulls the phase row up
+       under the Stack card, z-index keeps Stack on top, and each
+       phase tile shifts sideways so its medallion clears the Stack
+       card's edges instead of hiding underneath it. */
+    .pin-stack-row { margin-top: 3.2rem; position: relative; z-index: 2; }
+    .pin-anchor {
+      max-width: 330px;
+      padding: 3.3rem 1.2rem 1.9rem;
+      box-shadow: inset 0 1px 0 rgba(240,236,230,0.045), 0 14px 28px -12px rgba(0,0,0,0.7);
+    }
+    .pin-phase-row { max-width: 720px; margin: -3rem auto 0; gap: 1.1rem; position: relative; z-index: 1; }
     .pin-phase-row .pin-tile { padding: 2.7rem 1.1rem 1.5rem; }
+    .pin-phase-row .pin-tile:first-child { left: -28px; }
+    .pin-phase-row .pin-tile:last-child { left: 28px; }
     .pin-anchor .pin-icon { width: 5.4rem; height: 5.4rem; transform: translate(-50%, -62%); }
     .pin-anchor .pin-icon svg { width: 38px; height: 38px; }
     .pin-anchor .pin-icon img { height: 42px; }
