@@ -1100,5 +1100,48 @@ cardImg(
 })();
 </script>
 <!-- ===== /MTJawnny pip-ring footer nav ===== -->
+
+<!-- ══ TABLEKEEP "BACK TO GAME" FLOATER (shown only when a game is in progress) ══ -->
+<style>
+  #tk-back-floater {
+    display: none;
+    position: fixed;
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    z-index: 90;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--bronze);
+    color: var(--bg);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.95rem 1.4rem;
+    border-radius: 999px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+    transition: transform 0.15s, filter 0.15s;
+  }
+  #tk-back-floater:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  #tk-back-floater svg { width: 20px; height: 20px; flex-shrink: 0; }
+</style>
+<a id="tk-back-floater" href="/table">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M11 18l-6-6 6-6"/></svg>
+  Back to Game
+</a>
+<script>
+(function () {
+  try {
+    var raw = localStorage.getItem('mtj-tablekeep-v1');
+    if (!raw) return;
+    var s = JSON.parse(raw);
+    if (s && s.phase && s.phase !== 'setup')
+      document.getElementById('tk-back-floater').style.display = 'inline-flex';
+  } catch (e) {}
+})();
+</script>
+<!-- ══ /TABLEKEEP "BACK TO GAME" FLOATER ══ -->
 </body>
 </html>
