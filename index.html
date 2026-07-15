@@ -103,7 +103,8 @@
     }
 
     .pentagon-ring,
-    .pent-center {
+    .pent-center,
+    .lucky-btn {
       display: none;
     }
 
@@ -423,6 +424,63 @@
       .pip-label {
         font-size: 1.2rem;
         top: 75%;
+      }
+
+      /* Center "Feeling Lucky?" -- a random-jump button that occupies the
+         void (mobile only; base rule keeps it hidden on tablet/desktop where
+         the interior is the social cluster). Sits at the pentagon centroid
+         (ring center) and is sized off --circle so its gap to the
+         surrounding pips stays constant across phone widths. */
+      .lucky-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.15rem;
+        position: absolute;
+        left: 50%;
+        top: var(--pentagon-top);
+        transform: translate(-50%, -50%);
+        width: calc(var(--circle) * 0.76);
+        height: calc(var(--circle) * 0.76);
+        border-radius: 50%;
+        background: var(--surface);
+        border: 2.5px solid var(--bronze-dim);
+        color: var(--bronze);
+        text-decoration: none;
+        -webkit-tap-highlight-color: transparent;
+        transition: border-color 0.2s, transform 0.15s;
+      }
+
+      .lucky-die {
+        width: 27px;
+        height: 27px;
+        display: block;
+      }
+
+      .lucky-text {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-weight: 900;
+        font-size: 0.8rem;
+        line-height: 1;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        text-align: center;
+      }
+
+      .lucky-btn:hover,
+      .lucky-btn:focus-visible {
+        border-color: var(--bronze);
+        transform: translate(-50%, -50%) scale(1.06);
+      }
+
+      .lucky-btn:active {
+        transform: translate(-50%, -50%) scale(0.97);
+      }
+
+      .lucky-btn:focus-visible {
+        outline: 2px solid var(--bronze);
+        outline-offset: 2px;
       }
 
       /* The three lower CTAs (Discord, Tips, Instagram): plum -> black... */
@@ -781,6 +839,19 @@
       </span>
     </a>
 
+    <a class="lucky-btn" id="luckyBtn" href="/cards/" aria-label="Feeling lucky? Jump to a random page">
+      <svg class="lucky-die" viewBox="0 0 24 24" aria-hidden="true" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3.5" y="3.5" width="17" height="17" rx="4" stroke="currentColor" stroke-width="1.8"/>
+        <circle cx="8.5" cy="8.5" r="1.45" fill="currentColor"/>
+        <circle cx="15.5" cy="8.5" r="1.45" fill="currentColor"/>
+        <circle cx="8.5" cy="12" r="1.45" fill="currentColor"/>
+        <circle cx="15.5" cy="12" r="1.45" fill="currentColor"/>
+        <circle cx="8.5" cy="15.5" r="1.45" fill="currentColor"/>
+        <circle cx="15.5" cy="15.5" r="1.45" fill="currentColor"/>
+      </svg>
+      <span class="lucky-text">Feeling<br>Lucky?</span>
+    </a>
+
     <div class="pent-center">
       <a class="pent-social-btn is-instagram" href="https://instagram.com/mtjawnny" target="_blank" rel="noopener" aria-label="Follow MTJawnny on Instagram">
         <svg viewBox="0 0 24 24" style="fill:currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
@@ -842,6 +913,28 @@
       </a>
     </div>
   </footer>
+
+  <script>
+    // "Feeling Lucky?" center button (mobile): jump to a random destination.
+    // Progressive enhancement -- the anchor's href is the no-JS fallback.
+    // Edit the list below to change where it can land.
+    (function () {
+      var btn = document.getElementById('luckyBtn');
+      if (!btn) return;
+      var dests = [
+        '/pris.html', '/anvil.html', '/bog.html', '/chains.html',
+        '/chasm.html', '/dead.html', '/moon.html', '/rag.html',
+        '/tef.html', '/trin.html', '/uba.html', '/wheel.html',
+        '/tools/qr.html', '/tools/tag-grabber.html', '/tools/token-grabber.html',
+        '/stack/the-stack.html', '/stack/protection.html', '/stack/ward.html',
+        '/table/commander.html', '/table/pauper.html'
+      ];
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        window.location.href = dests[Math.floor(Math.random() * dests.length)];
+      });
+    })();
+  </script>
 
 </body>
 </html>
