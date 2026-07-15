@@ -46,6 +46,12 @@ not just legal positioning.
 - Fonts: Barlow / Barlow Condensed
 - Flat surfaces over gradients — deliberate anti-AI-template aesthetic
 - h1 clamp standard: clamp(2.4rem, 14vw, 3.6rem)
+- Body/long-form text floor (2026-07): 1.06rem minimum for anything read
+  mid-game — oracle text, tips/misplays, combos, rulings, stack-visual body
+  copy, format-guide rule bullets. UI chrome (buttons, badges, small labels,
+  citations) stays smaller, ~0.8-0.95rem. Canonical reference: pris.html
+  (cards), stack/the-stack.html (stack pages), table/pauper.html (format
+  guides) — clone bases already carry this; don't shrink it back down.
 - No auto-open help panels — button-only (?), no localStorage first-visit logic
 
 ## Hard rules
