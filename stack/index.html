@@ -137,6 +137,111 @@
     letter-spacing: 0.01em;
   }
 
+  /* ══ PINNED / QUICK REFERENCE — concept tiles above the search ════ */
+  .pinned { margin-top: 1.2rem; padding: 0 1.25rem 0.5rem; }
+
+  /* Anchor row — The Stack, inset narrower than the phase row below it.
+     margin-top clears the anchor's medallion, which pokes ~38px above
+     the tile's own top border (see .pin-anchor .pin-icon transform). */
+  .pin-stack-row { display: flex; justify-content: center; margin-top: 2.2rem; }
+  .pin-anchor {
+    width: calc(100% - 2.6rem);
+    max-width: 420px;
+    padding: 2.5rem 1.25rem 1.4rem;
+  }
+
+  /* Two phases, equal width, full pinned width. margin-top clears the
+     phase medallions (~30px protrusion) from the anchor tile above. */
+  .pin-phase-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+    margin-top: 2.4rem;
+  }
+  .pin-phase-row .pin-tile { padding: 2.1rem 0.75rem 1.1rem; }
+
+  /* Sigil-break tile: the icon escapes the box into a medallion that
+     straddles the top edge, so the card reads as a plaque hung under
+     its sigil rather than an icon centered in a plain rect. */
+  .pin-tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    background: var(--surface);
+    border: 1.5px solid var(--bronze-dim);
+    border-radius: 6px;
+    text-decoration: none;
+    text-align: center;
+    overflow: visible;
+    /* faint always-on top bevel so the surface isn't dead flat */
+    box-shadow: inset 0 1px 0 rgba(240,236,230,0.045);
+    transition: border-color 0.18s, transform 0.15s, box-shadow 0.18s;
+  }
+  /* bronze-glow fill layer fades in on hover */
+  .pin-tile::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 6px;
+    background: var(--bronze-glow);
+    opacity: 0;
+    transition: opacity 0.18s;
+    pointer-events: none;
+  }
+  .pin-tile:hover, .pin-tile:active {
+    border-color: var(--bronze);
+    transform: translateY(-2px);
+    box-shadow: inset 0 1px 0 rgba(240,236,230,0.07),
+                0 10px 24px -16px rgba(0,0,0,0.95);
+  }
+  .pin-tile:hover::after, .pin-tile:active::after { opacity: 1; }
+
+  .pin-icon {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    color: var(--bronze);
+    line-height: 1;
+    background: var(--bg);
+    border: 2px solid var(--bronze);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: box-shadow 0.18s;
+  }
+  .pin-tile:hover .pin-icon, .pin-tile:active .pin-icon {
+    box-shadow: 0 0 14px rgba(184,147,90,0.4);
+  }
+  .pin-icon svg { display: block; }
+  .pin-anchor .pin-icon {
+    width: 4rem; height: 4rem;
+    transform: translate(-50%, -60%);
+  }
+  .pin-anchor .pin-icon svg { width: 28px; height: 28px; }
+  .pin-anchor .pin-icon img { height: 32px; width: auto; display: block; }
+  .pin-phase-row .pin-icon {
+    width: 3.2rem; height: 3.2rem;
+    transform: translate(-50%, -58%);
+  }
+  .pin-phase-row .pin-icon svg { width: 22px; height: 22px; }
+  .pin-phase-row .pin-icon img { height: 24px; width: auto; display: block; }
+
+  .pin-label {
+    position: relative;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--bronze);
+    line-height: 0.95;
+    letter-spacing: 0.03em;
+  }
+  .pin-anchor .pin-label { font-size: 1.6rem; letter-spacing: 0.05em; }
+  .pin-phase-row .pin-label { font-size: 1.28rem; }
+
   /* ══ STICKY CONTROLS — search only (no tier toggle) ══════════════ */
   .controls {
     position: sticky;
@@ -416,7 +521,7 @@
     outline: 2px solid var(--bronze);
     outline-offset: 2px;
   }
-  .tile:focus-visible { outline-offset: 3px; }
+  .tile:focus-visible, .pin-tile:focus-visible { outline-offset: 3px; }
 
   /* ── Quality floor: respect reduced motion ── */
   .toast {
@@ -444,6 +549,7 @@
       animation-duration: 0.01ms !important;
     }
     .tile:hover, .tile:active,
+    .pin-tile:hover, .pin-tile:active,
     .suggest-btn:hover { transform: none; }
   }
 
@@ -457,6 +563,20 @@
        Nav ring and footer buttons are untouched (own rules above). ── */
   @media (min-width: 900px) {
     .page { max-width: 900px; }
+
+    .pinned { margin-top: 1.8rem; padding: 0 2.5rem 0.75rem; }
+    .pin-stack-row { margin-top: 3.2rem; }
+    .pin-anchor { max-width: 620px; padding: 3.3rem 1.9rem 1.9rem; }
+    .pin-phase-row { gap: 1.1rem; margin-top: 3.4rem; }
+    .pin-phase-row .pin-tile { padding: 2.7rem 1.1rem 1.5rem; }
+    .pin-anchor .pin-icon { width: 5.4rem; height: 5.4rem; transform: translate(-50%, -62%); }
+    .pin-anchor .pin-icon svg { width: 38px; height: 38px; }
+    .pin-anchor .pin-icon img { height: 42px; }
+    .pin-phase-row .pin-icon { width: 4.3rem; height: 4.3rem; transform: translate(-50%, -60%); }
+    .pin-phase-row .pin-icon svg { width: 30px; height: 30px; }
+    .pin-phase-row .pin-icon img { height: 33px; }
+    .pin-anchor .pin-label { font-size: 2.05rem; }
+    .pin-phase-row .pin-label { font-size: 1.62rem; }
 
     .controls { padding: 1.15rem 2.5rem 1rem; }
     #search { font-size: 1.05rem; padding: 0.9rem 3rem 0.9rem 3.2rem; border-radius: 14px; }
@@ -577,6 +697,34 @@ const SUBMISSION_URL = "https://tally.so/r/rjqMJp";
     </div>
     <p class="tagline">Split Second Game Info!</p>
   </header>
+
+  <!-- PINNED / QUICK REFERENCE -->
+  <section class="pinned" aria-label="Quick reference">
+    <div class="pin-stack-row">
+      <a class="pin-tile pin-anchor" href="/stack/the-stack">
+        <span class="pin-icon" aria-hidden="true">
+          <img src="/icons/stack.png" alt="">
+        </span>
+        <span class="pin-label">The Stack</span>
+      </a>
+    </div>
+
+    <div class="pin-phase-row">
+      <a class="pin-tile" href="/stack/beginning-phase">
+        <span class="pin-icon" aria-hidden="true">
+          <img src="/icons/begin.png" alt="">
+        </span>
+        <span class="pin-label">Beginning<br>Phase</span>
+      </a>
+
+      <a class="pin-tile" href="/stack/combat-phase">
+        <span class="pin-icon" aria-hidden="true">
+          <img src="/icons/combat.png" alt="">
+        </span>
+        <span class="pin-label">Combat<br>Phase</span>
+      </a>
+    </div>
+  </section>
 
   <!-- STICKY SEARCH -->
   <div class="controls">
@@ -807,7 +955,17 @@ const SUBMISSION_URL = "https://tally.so/r/rjqMJp";
   document.addEventListener('click', function(e) {
     if (typeof gtag !== 'function') return;
 
-    // 1. Search Result Clicks (Dynamically generated)
+    // 1. Pinned Quick Reference Clicks
+    const pinTile = e.target.closest('.pin-tile');
+    if (pinTile) {
+      const label = pinTile.querySelector('.pin-label').innerText.replace(/\n/g, ' ');
+      gtag('event', 'click_pinned_tile', { 
+        'event_category': 'quick_reference', 
+        'item_name': label 
+      });
+    }
+
+    // 2. Search Result Clicks (Dynamically generated)
     const searchTile = e.target.closest('.tile');
     if (searchTile) {
       const label = searchTile.getAttribute('aria-label');
@@ -818,7 +976,7 @@ const SUBMISSION_URL = "https://tally.so/r/rjqMJp";
       });
     }
 
-    // 2. Footer Links (Ko-fi & Insta)
+    // 3. Footer Links (Ko-fi & Insta)
     const footerBtn = e.target.closest('.footer-btn');
     if (footerBtn) {
       const link = footerBtn.getAttribute('href');
@@ -828,7 +986,7 @@ const SUBMISSION_URL = "https://tally.so/r/rjqMJp";
       });
     }
 
-    // 3. Suggestion Button
+    // 4. Suggestion Button
     const suggestBtn = e.target.closest('#suggestLink');
     if (suggestBtn) {
       gtag('event', 'click_suggest_interaction', { 
@@ -836,7 +994,7 @@ const SUBMISSION_URL = "https://tally.so/r/rjqMJp";
       });
     }
     
-    // 4. Logo / Home Clicks
+    // 5. Logo / Home Clicks
     const homeBtn = e.target.closest('.logo-home');
     if (homeBtn) {
       gtag('event', 'click_home_logo', { 
