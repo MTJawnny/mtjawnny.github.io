@@ -542,6 +542,7 @@
     transition: all 0.15s;
   }
   .upkeep-btn.armed { background: rgba(255,215,0,0.18); border-color: #ffd700; color: #ffd700; }
+  .desktop .upkeep-btn { font-size: 16px; padding: 8px 18px; border-radius: 12px; }
 
   /* Seat stack — one per panel, rotated to the seat. Holds everything
      the player reads, authored upright so left/right/above are intuitive.
@@ -570,6 +571,7 @@
     opacity: 0;
   }
   .panel.active .player-label { color: var(--bronze); }
+  .desktop .player-label { font-size: 20px; }
 
   /* Life row: [−  number  +] */
   .life-row {
@@ -2087,15 +2089,25 @@ function applyLife(i, d) {
 
 /* Floating +N/-N over the life total — restarts the CSS animation on every
    call (rapid taps each get their own pop) by forcing a reflow between
-   removing and re-adding the .show class. */
+   removing and re-adding the .show class. Consecutive taps within a burst
+   accumulate into a running total (-1, -2, -3...) instead of each
+   restarting at -1; the burst resets once taps stop for a beat. */
+const deltaBurst = {}; // seat -> { total, timer }
 function popLifeDelta(i, d) {
   if (d === 0) return;
   const el = document.getElementById('delta-' + i);
   if (!el) return;
-  el.textContent = (d > 0 ? '+' : '−') + Math.abs(d);
+
+  const burst = deltaBurst[i] ?? (deltaBurst[i] = { total: 0, timer: null });
+  burst.total += d;
+  clearTimeout(burst.timer);
+  burst.timer = setTimeout(() => { burst.total = 0; }, 1000);
+
+  const total = burst.total;
+  el.textContent = (total >= 0 ? '+' : '−') + Math.abs(total);
   el.classList.remove('show', 'pos', 'neg');
   void el.offsetWidth;
-  el.classList.add('show', d > 0 ? 'pos' : 'neg');
+  el.classList.add('show', total >= 0 ? 'pos' : 'neg');
 }
 
 function chooseFirst(i) {
