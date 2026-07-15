@@ -234,8 +234,9 @@
     display: grid; gap: 12px;
   }
   .setup-seat-grid.n4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+  /* n3 grid-column/row is set inline per seat (see LAYOUT3) — the wide tile
+     physically relocates to whichever edge Rotate Seats has selected. */
   .setup-seat-grid.n3 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
-  .setup-seat-grid.n3 .setup-seat:first-child { grid-column: 1 / 3; }
   .setup-seat-grid.n2 { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
 
   .setup-seat {
@@ -256,6 +257,8 @@
      that tile's own outer edge, away from the shared center. */
   .setup-seat[data-vpos="start"] { align-items: flex-start; }
   .setup-seat[data-vpos="end"]   { align-items: flex-end; }
+  .setup-seat[data-hpos="start"] { justify-content: flex-start; }
+  .setup-seat[data-hpos="end"]   { justify-content: flex-end; }
   .setup-seat-inner {
     display: flex; flex-direction: column; align-items: center; gap: 2px;
   }
@@ -1235,19 +1238,6 @@
           <span class="logo-home-label">share</span>
         </button>
       </div>
-      <!-- tagline slot — tips + instagram -->
-      <div class="tk-links">
-        <a class="footer-btn" href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
-          Tips Appreciated!
-          <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
-        </a>
-        <a class="footer-btn" href="https://instagram.com/mtjawnny" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-          MTJawnny
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-        </a>
-      </div>
     </header>
 
     <div class="seg-players" role="group" aria-label="Player count">
@@ -1296,6 +1286,20 @@
   </section>
 
   <section class="splash-more">
+    <!-- tagline slot — tips + instagram -->
+    <div class="tk-links">
+      <a class="footer-btn" href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+        Tips Appreciated!
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+      </a>
+      <a class="footer-btn" href="https://instagram.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        MTJawnny
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+    </div>
+
     <h2>Format Guides</h2>
 
     <div class="format-grid">
@@ -1650,6 +1654,7 @@ function freshState() {
     dir: 'cw',
     startLife: 40,
     tileColors: ['white', 'blue', 'black', 'green'],
+    setupLayout3: 0, // 3-player setup preview only: which edge the wide tile is on (0=top,1=right,2=bottom,3=left)
     phase: 'setup',   // setup | choose | playing
     active: -1,
     turn: 1,
@@ -1761,6 +1766,7 @@ function selP(n) {
   // makes sense for the 3-player shape.
   const ri = document.getElementById('rotate-item');
   if (ri) ri.style.display = n === 3 ? 'flex' : 'none';
+  S.setupLayout3 = 0; // Rotate Seats always starts fresh with the wide seat on top
   selLife(n === 2 ? 20 : 40); // sensible default; user can still override after — also re-renders the diagram
 }
 function selDir(d) {
@@ -1791,20 +1797,62 @@ const SETUP_SEAT_LABELS = {
   3: { cw: [2, 1, 3],    ccw: [3, 1, 2]    },
   4: { cw: [2, 3, 1, 4], ccw: [4, 3, 1, 2] },
 };
+/* 3-player setup preview only: the wide tile (always slot 0) can sit on any
+   of the table's 4 edges. Rotate Seats cycles top → right → bottom → left,
+   so the big tile visibly moves around the table instead of just the colors
+   reshuffling in place. This is a PREVIEW-ONLY rotation — the real in-game
+   grid (SEAT3/buildGrid()) is a fixed top/bottom-left/bottom-right shape and
+   is not touched, so once Start Game is pressed the table always renders
+   wide-on-top regardless of which edge was previewed here. Four stops (not
+   three) so every step is a genuine 90° move — three stops meant the last
+   step (right straight to left) jumped past "bottom" and read as a swap. */
+const LAYOUT3 = [
+  [ { col: '1 / 3', row: '1',     rot: 180 }, { col: '1', row: '2', rot: 90  }, { col: '2', row: '2', rot: 270 } ], // top
+  [ { col: '2',     row: '1 / 3', rot: 270 }, { col: '1', row: '1', rot: 90  }, { col: '1', row: '2', rot: 90  } ], // right
+  [ { col: '1 / 3', row: '2',     rot: 0   }, { col: '1', row: '1', rot: 90  }, { col: '2', row: '1', rot: 270 } ], // bottom
+  [ { col: '1',     row: '1 / 3', rot: 90  }, { col: '2', row: '1', rot: 270 }, { col: '2', row: '2', rot: 270 } ], // left
+];
+// Pushes the wide tile's content toward whichever edge it's currently
+// facing outward on, away from the Start circle sitting in the middle.
+const LAYOUT3_WIDE_BIAS = [
+  { v: 'start' }, // wide on top — push content up
+  { h: 'end'   }, // wide on right — push content right
+  { v: 'end'   }, // wide on bottom — push content down
+  { h: 'start' }, // wide on left — push content left
+];
 function buildColorMap() {
   const map = document.getElementById('color-map');
   if (!map) return;
   const n = S.playerCount;
   map.className = 'setup-seat-grid n' + n;
   const labels = SETUP_SEAT_LABELS[n][S.dir];
+
+  if (n === 3) {
+    const layout = LAYOUT3[S.setupLayout3];
+    const wideBias = LAYOUT3_WIDE_BIAS[S.setupLayout3];
+    map.innerHTML = Array.from({ length: 3 }, (_, i) => {
+      let bias = '';
+      if (i === 0) {
+        if (wideBias.v) bias += ` data-vpos="${wideBias.v}"`;
+        if (wideBias.h) bias += ` data-hpos="${wideBias.h}"`;
+      }
+      const { col, row, rot } = layout[i];
+      return `<div class="setup-seat" data-mana="${tileColor(i)}"${bias} onclick="cycleColor(${i})" style="grid-column:${col};grid-row:${row}">
+                <div class="setup-seat-inner" style="transform:rotate(${rot}deg)">
+                  <span class="setup-seat-life">${S.startLife}</span>
+                  <span class="setup-seat-name">Seat ${labels[i]}</span>
+                </div>
+              </div>`;
+    }).join('');
+    return;
+  }
+
   map.innerHTML = Array.from({ length: n }, (_, i) => {
     const rot = getSeat(i).rot;
-    // "Standalone" tiles — both seats in 1v1, and the wide seat in
-    // 3-player — get their content biased toward the tile's own outer
-    // edge, away from the Start circle sitting between/among them.
-    let bias = '';
-    if (n === 2) bias = i === 0 ? ' data-vpos="start"' : ' data-vpos="end"';
-    else if (n === 3 && i === 0) bias = ' data-vpos="start"';
+    // "Standalone" tiles — both seats in 1v1 — get their content biased
+    // toward the tile's own outer edge, away from the Start circle sitting
+    // between them.
+    const bias = n === 2 ? (i === 0 ? ' data-vpos="start"' : ' data-vpos="end"') : '';
     return `<div class="setup-seat" data-mana="${tileColor(i)}"${bias} onclick="cycleColor(${i})">
               <div class="setup-seat-inner" style="transform:rotate(${rot}deg)">
                 <span class="setup-seat-life">${S.startLife}</span>
@@ -1818,13 +1866,12 @@ function cycleColor(i) {
   S.tileColors[i] = COLOR_ORDER[(idx + 1) % COLOR_ORDER.length];
   buildColorMap();
 }
-/* 3-player only: reassigns which color holds which of the table's three
-   fixed roles (top/bottom-left/bottom-right — the same shape the in-game
-   screen uses), so seating can match wherever people are actually sitting. */
+/* 3-player only: cycles which edge of the table the wide tile sits on
+   (top → right → bottom → left). See LAYOUT3 above for the preview/real-game
+   relationship. */
 function rotateSetupSeats() {
   if (S.playerCount !== 3) return;
-  const c = S.tileColors;
-  S.tileColors = [c[2], c[0], c[1], c[3]]; // keep the unused 4th slot intact
+  S.setupLayout3 = (S.setupLayout3 + 1) % 4;
   buildColorMap();
 }
 
