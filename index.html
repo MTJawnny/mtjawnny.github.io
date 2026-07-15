@@ -78,67 +78,126 @@
     }
 
     .tagline {
-      font-size: 0.95rem;
+      font-size: 1.15rem;
       color: var(--text-dim);
       margin-top: 0.1rem;
       letter-spacing: 0.01em;
     }
 
-    /* ── NAV GRID ── */
-    .nav-grid {
+    /* ── ORBIT FIELD ──
+       Owns the tagline -> first-row rhythm as a single explicit margin
+       (never header padding, per header-pattern.md's spacing law). Also
+       the mobile/tablet grid container directly (folded in from the old
+       .nav-grid) and, at the pentagon breakpoint, the positioned context
+       every pip and the center display share. Flat structure is required:
+       the CSS-only hover reveal needs the five pips and .pent-center to be
+       literal DOM siblings for the sibling combinator to reach them. */
+    .orbit-field {
+      position: relative;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0.85rem;
+      gap: 0.8rem;
       max-width: 480px;
-      margin: 0.85rem auto 0;
-      padding: 0 1.25rem;
+      margin: 2.25rem auto 0;
+      padding: 0 0.85rem;
+    }
+
+    .pentagon-ring,
+    .pent-center {
+      display: none;
     }
 
     .nav-tile {
-      background: var(--surface);
-      border: 1px solid var(--bronze-dim);
-      border-radius: var(--radius);
-      padding: 1.4rem 1rem 1.2rem;
       text-align: center;
       text-decoration: none;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.5rem;
-      transition: border-color 0.2s, background 0.2s, transform 0.15s;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
     }
 
-    .nav-tile::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: var(--bronze-glow);
-      opacity: 0;
-      transition: opacity 0.2s;
-      border-radius: var(--radius);
+    .nav-tile:focus-visible {
+      outline: 2px solid var(--bronze);
+      outline-offset: 2px;
     }
 
-    .nav-tile:hover {
-      border-color: var(--bronze);
-      transform: translateY(-2px);
-    }
-
-    .nav-tile:hover::after {
-      opacity: 1;
-    }
-
+    /* Icon sits slightly above center, label inside the circle below it
+       (same pattern everywhere now, not just the desktop pentagon) --
+       .tile-icon is the positioning context at every breakpoint. */
     .nav-tile .tile-icon {
-      color: var(--bronze);
-      line-height: 1;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: #000;
+      border: 5px solid var(--bronze);
+      position: relative;
+      flex-shrink: 0;
+      transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
     }
 
     .nav-tile .tile-icon img {
-      height: 38px;
-      width: auto;
+      position: absolute;
+      left: 50%;
+      top: 38%;
+      width: 46%;
+      height: 46%;
+      object-fit: contain;
       display: block;
+      transform: translate(-50%, -50%);
+      transition: transform 0.15s;
+    }
+
+    .nav-tile:hover .tile-icon,
+    .nav-tile:focus-visible .tile-icon {
+      border-color: #d8b27a;
+      transform: translateY(-2px);
+    }
+
+    .nav-tile:hover .tile-icon img,
+    .nav-tile:focus-visible .tile-icon img {
+      transform: translate(-50%, -50%) scale(1.06);
+    }
+
+    .nav-tile:active .tile-icon {
+      transform: translateY(0);
+    }
+
+    .nav-tile.is-table:hover .tile-icon, .nav-tile.is-table:focus-visible .tile-icon {
+      box-shadow: 0 0 18px rgba(90,171,110,0.28), 0 6px 18px rgba(0,0,0,0.4);
+    }
+    .nav-tile.is-cards:hover .tile-icon, .nav-tile.is-cards:focus-visible .tile-icon {
+      box-shadow: 0 0 18px rgba(240,234,208,0.28), 0 6px 18px rgba(0,0,0,0.4);
+    }
+    .nav-tile.is-tools:hover .tile-icon, .nav-tile.is-tools:focus-visible .tile-icon {
+      box-shadow: 0 0 18px rgba(224,96,96,0.28), 0 6px 18px rgba(0,0,0,0.4);
+    }
+    .nav-tile.is-stack:hover .tile-icon, .nav-tile.is-stack:focus-visible .tile-icon {
+      box-shadow: 0 0 18px rgba(106,174,224,0.28), 0 6px 18px rgba(0,0,0,0.4);
+    }
+    .nav-tile.is-coffers:hover .tile-icon, .nav-tile.is-coffers:focus-visible .tile-icon {
+      box-shadow: 0 0 18px rgba(160,154,176,0.28), 0 6px 18px rgba(0,0,0,0.4);
+    }
+
+    /* Static stagger (mobile/tablet grid only, below the 900px pentagon
+       breakpoint): nudges the five buttons off the strict grid into a loose
+       arc. Lives on the outer <a>, never the .tile-icon, so it never fights
+       the hover transform. Overridden entirely by the pentagon's coefficient
+       transforms at 900px+. */
+    .nav-tile.is-table   { transform: translate(2px, -10px); }
+    .nav-tile.is-cards   { transform: translate(-2px, -10px); }
+    .nav-tile.is-tools   { transform: translate(-14px, 6px); }
+    .nav-tile.is-stack   { transform: translate(14px, 6px); }
+    .nav-tile.is-coffers { transform: translate(0, -12px); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .nav-tile .tile-icon,
+      .nav-tile .tile-icon img {
+        transition: none;
+      }
+      .pent-desc {
+        transition: none;
+      }
     }
 
     .btn-icon {
@@ -148,36 +207,41 @@
       transform: translateY(1.5px);
     }
 
-    .nav-tile .tile-label {
+    /* Labels live inside the circle everywhere now (desktop moved
+       descriptions into the pentagon center; mobile just drops them) --
+       see .pip-label below. The old external .tile-label/.tile-desc spans
+       this replaced are gone from the markup entirely, not just hidden. */
+    .pip-label {
+      display: block;
+      position: absolute;
+      left: 50%;
+      top: 76%;
+      transform: translate(-50%, -50%);
       font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 700;
-      font-size: 1.1rem;
-      letter-spacing: 0.08em;
+      font-weight: 900;
+      font-size: 1.35rem;
+      letter-spacing: 0.03em;
       text-transform: uppercase;
       color: var(--bronze);
+      white-space: nowrap;
+      pointer-events: none;
     }
 
-    .nav-tile .tile-desc {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      line-height: 1.35;
-    }
-
-    .asset-tile .tile-icon img {
-      height: 42px;
-    }
-
-    /* ── ASSET TILE ── */
+    /* ── ASSET TILE ── (Coffers: 5th grid item, spans both columns and
+       self-centers via auto margins within that spanned row) */
     .asset-tile {
-      width: 213px;
-      margin: 0.85rem auto 0;
-      min-height: 0;
+      grid-column: 1 / -1;
+      width: fit-content;
+      margin: 0 auto;
     }
 
-    /* ── DISCORD ── */
+    /* ── DISCORD ──
+       Separated from the button cluster above (own generous top margin) and
+       pulled tight against the footer below (small footer padding-top), so
+       it reads as grouped with Ko-fi/Instagram, not glued to Coffers. */
     .discord-section {
       max-width: 440px;
-      margin: 0.85rem auto 0;
+      margin: 1.75rem auto 0;
       padding: 0 1.25rem;
     }
 
@@ -229,10 +293,11 @@
       margin-top: 0.75rem;
     }
 
-    /* ── FOOTER ── */
+    /* ── FOOTER ── (tight to .discord-section above it -- see that
+       rule's comment; the two now read as one grouped cluster) */
     footer {
       text-align: center;
-      padding: 0.85rem 1.5rem 1.5rem;
+      padding: 0.75rem 1.5rem 1.5rem;
     }
 
     .footer-buttons {
@@ -278,14 +343,280 @@
     /* ── DESKTOP ── */
     @media (min-width: 640px) {
       header { padding: 0.25rem 2rem 0; }
-      .nav-grid { max-width: 560px; gap: 1rem; }
-      .nav-tile { padding: 1.75rem 1.25rem 1.5rem; }
-      .nav-tile .tile-label { font-size: 1.2rem; }
-      .nav-tile .tile-desc { font-size: 0.8rem; }
-      .asset-tile { width: 252px; margin-top: 1rem; }
+      .logo-wrap { gap: 0.9rem; }
+      .logo-pip-ring { width: 60px; height: 60px; }
+      h1 { font-size: clamp(2.8rem, 16vw, 4.2rem); }
+      .orbit-field { max-width: 560px; gap: 2.5rem; }
+      .nav-tile .tile-icon { width: 180px; height: 180px; }
+      .pip-label { font-size: 1.5rem; }
+      .nav-tile.is-table { transform: translate(-12px, -15px); }
+      .nav-tile.is-cards { transform: translate(12px, -15px); }
+      .nav-tile.is-tools { transform: translate(-21px, 9px); }
+      .nav-tile.is-stack { transform: translate(21px, 9px); }
       .discord-btn { width: 252px; }
       .discord-section { max-width: 510px; }
       .footer-buttons { max-width: 380px; gap: 1rem; }
+    }
+
+    /* ── PENTAGON (wide desktop) ──
+       Replaces the staggered grid with a true pentagon, same unit-circle
+       coefficients as the footer's .mtjnav-pip. Single --R, viewport-capped
+       on both axes. Labels/descriptions now live INSIDE each circle (see
+       .pip-label below) and the center of the pentagon carries a resting
+       watermark + hover-revealed descriptions (see .pent-center) instead of
+       hanging text below each button -- so the old pentagon-top/height
+       formula's generous label-block allowance is gone; it only needs to
+       clear circle-to-circle now. */
+    @media (min-width: 900px) {
+      .tagline { font-size: 1.3rem; }
+
+      .orbit-field {
+        /* Deliberately tight -- and this time actually computed right.
+           Adjacent pentagon vertices (Table-Cards, Cards-Stack,
+           Stack-Coffers, Coffers-Tools, Tools-Table) are 72° apart; their
+           true chord distance is 2*R*sin(36°) = 1.1756*R, NOT the 0.691
+           this comment used to claim (that was only the Y-delta between a
+           mid-row pip and the apex, not an actual chord -- it ignored the
+           X-delta entirely and made the floor far more conservative than
+           it needed to be). Zero-overlap for 175px circles alone is where
+           1.1756*R = 175, i.e. R=148.8px -- BUT the real floor here is
+           higher than that: the three fixed-size .pent-social-btn circles
+           (112px, at a 69.3px triangle radius) reach 125.3px from center,
+           and that has to stay inside the main ring's own inner edge
+           (R - 87.5) or the inner cluster visibly overlaps the outer pips.
+           That requires R >= 212.8px -- but that's only the "doesn't
+           visibly overlap" floor. The .pent-center hover backdrop (sized
+           1.12*R, see below) also needs to fully cover that same 125.3px
+           inner-cluster extent so the description reveal doesn't leave
+           the three buttons' edges peeking out from behind it; that needs
+           0.56*R >= 125.3, i.e. R >= 223.75px, which is the actual
+           binding constraint. 228px covers it with a small margin. Go
+           lower and the backdrop stops fully hiding the inner three on
+           hover, even though the pips themselves are still fine. vw/vh
+           caps dropped low on purpose too, so the floor wins on almost any
+           real window instead of the pentagon spreading out on big
+           screens like it used to. */
+        --R: max(228px, min(20vw, 22vh));
+        --pentagon-top: calc(0.8090 * var(--R) + 87.5px);
+        position: relative;
+        display: block;
+        max-width: none;
+        padding: 0;
+        margin-top: 2rem;
+        height: calc(var(--pentagon-top) + var(--R) + 87.5px);
+      }
+
+      /* Connective ring, same idea as the footer's .mtjnav-bg .connect
+         circle: a plain circle of radius --R centered on the same anchor
+         the buttons offset from, so it passes exactly through all five
+         icon centers and threads behind each one (buttons paint above it,
+         DOM order + shared stacking level). Solid black fill inside the
+         ring, full-strength bronze border. */
+      .pentagon-ring {
+        display: block;
+        position: absolute;
+        left: 50%;
+        top: var(--pentagon-top);
+        width: calc(var(--R) * 2);
+        height: calc(var(--R) * 2);
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        border: 7px solid var(--bronze);
+        background: #000;
+        pointer-events: none;
+      }
+
+      .nav-tile {
+        position: absolute;
+        left: 50%;
+        top: var(--pentagon-top);
+      }
+
+      .nav-tile.is-table {
+        transform: translate(calc(-50% + (-0.5878 * var(--R))), calc(-87.5px + (-0.8090 * var(--R))));
+      }
+      .nav-tile.is-cards {
+        transform: translate(calc(-50% + ( 0.5878 * var(--R))), calc(-87.5px + (-0.8090 * var(--R))));
+      }
+      .nav-tile.is-stack {
+        transform: translate(calc(-50% + ( 0.9511 * var(--R))), calc(-87.5px + ( 0.3090 * var(--R))));
+      }
+      .nav-tile.is-tools {
+        transform: translate(calc(-50% + (-0.9511 * var(--R))), calc(-87.5px + ( 0.3090 * var(--R))));
+      }
+      .nav-tile.is-coffers {
+        transform: translate(-50%, calc(-87.5px + (1.0 * var(--R))));
+      }
+
+      /* Circle size + fill are independent of the mobile/tablet grid here
+         (own explicit values, not inherited) -- a past version of this
+         icon-size override used a lower-specificity selector
+         (".tile-icon img" instead of ".nav-tile .tile-icon img"), which
+         meant the base mobile rule silently won the width/height fight and
+         desktop rendered at whatever percentage mobile happened to use.
+         Matching the base selector's specificity here, and setting every
+         property desktop cares about explicitly, is what actually
+         decouples the two -- changing mobile's numbers again won't move
+         desktop's, and vice versa. */
+      .nav-tile .tile-icon {
+        width: 175px;
+        height: 175px;
+        background: var(--surface);
+      }
+
+      .nav-tile .tile-icon img {
+        width: 50%;
+        height: 50%;
+      }
+
+      .pip-label {
+        font-size: 1.6rem;
+      }
+
+      /* Center display: three small icon-only social links (Instagram
+         apex-top, Ko-fi bottom-left, Discord bottom-right) sitting quietly
+         in the pentagon's open interior, colored bronze so they blend into
+         the ring rather than compete with the five main pips. Swaps for
+         the hovered pip's description on top of them. CSS-only: .pent-center
+         is the last sibling after all five .nav-tile pips within
+         .orbit-field, so a general sibling combinator on each pip's
+         :hover/:focus-visible can reach in and light up just that one
+         description. The social links are real, focusable content (not
+         decorative), so .pent-center itself is not aria-hidden -- only the
+         redundant .pent-desc preview text is. */
+      .pent-center {
+        display: block;
+        position: absolute;
+        left: 50%;
+        top: var(--pentagon-top);
+        width: calc(var(--R) * 1.12);
+        height: calc(var(--R) * 1.12);
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+      }
+
+      /* Triangle radius as a fraction of --R so it scales with the
+         pentagon; positions computed via 120°-apart unit vectors (apex up,
+         then ±120°), same trig idiom as the main pentagon coefficients. */
+      .pent-social-btn {
+        position: absolute;
+        width: 98px;
+        height: 98px;
+        margin: -49px 0 0 -49px;
+        border-radius: 50%;
+        background: #000;
+        border: 2.5px solid var(--bronze-dim);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--bronze);
+        pointer-events: auto;
+        transition: border-color 0.15s, transform 0.15s;
+      }
+
+      .pent-social-btn svg {
+        width: 44px;
+        height: 44px;
+        fill: currentColor;
+        display: block;
+      }
+
+      .pent-social-btn:hover,
+      .pent-social-btn:focus-visible {
+        border-color: var(--bronze);
+        transform: scale(1.06);
+      }
+
+      .pent-social-btn:focus-visible {
+        outline: 2px solid var(--bronze);
+        outline-offset: 2px;
+      }
+
+      /* Fixed px radius, not var(--R)-proportional like everything else on
+         this ring: the spacing depends only on button diameter (98px), not
+         on the pentagon's size. Radius = 65.82px gives an ~16px gap
+         between adjacent 98px circles (exact-touch radius would be
+         56.59px = diameter / 1.732). If the button size (above) changes,
+         recompute from that touch radius plus however much gap is wanted. */
+      .pent-social-btn.is-instagram {
+        left: 50%;
+        top: calc(50% - 65.82px);
+      }
+      .pent-social-btn.is-discord {
+        left: calc(50% + 57.00px);
+        top: calc(50% + 32.91px);
+      }
+      .pent-social-btn.is-tips {
+        left: calc(50% - 57.00px);
+        top: calc(50% + 32.91px);
+      }
+
+      .pent-desc {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        padding: 0 0.5rem;
+        text-align: center;
+        background: #000;
+        border-radius: 50%;
+        opacity: 0;
+        transition: opacity 0.18s ease;
+      }
+
+      .pent-desc-label {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-weight: 900;
+        font-size: 2rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .pent-desc.is-table .pent-desc-label   { color: #5aab6e; }
+      .pent-desc.is-cards .pent-desc-label   { color: #f0ead0; }
+      .pent-desc.is-tools .pent-desc-label   { color: #e06060; }
+      .pent-desc.is-stack .pent-desc-label   { color: #6aaee0; }
+      .pent-desc.is-coffers .pent-desc-label { color: #a09ab0; }
+
+      .pent-desc-text {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-weight: 600;
+        font-size: 1.75rem;
+        line-height: 1.25;
+        color: var(--text);
+      }
+
+      .nav-tile.is-table:hover ~ .pent-center .pent-desc.is-table,
+      .nav-tile.is-table:focus-visible ~ .pent-center .pent-desc.is-table {
+        opacity: 1;
+      }
+      .nav-tile.is-cards:hover ~ .pent-center .pent-desc.is-cards,
+      .nav-tile.is-cards:focus-visible ~ .pent-center .pent-desc.is-cards {
+        opacity: 1;
+      }
+      .nav-tile.is-tools:hover ~ .pent-center .pent-desc.is-tools,
+      .nav-tile.is-tools:focus-visible ~ .pent-center .pent-desc.is-tools {
+        opacity: 1;
+      }
+      .nav-tile.is-stack:hover ~ .pent-center .pent-desc.is-stack,
+      .nav-tile.is-stack:focus-visible ~ .pent-center .pent-desc.is-stack {
+        opacity: 1;
+      }
+      .nav-tile.is-coffers:hover ~ .pent-center .pent-desc.is-coffers,
+      .nav-tile.is-coffers:focus-visible ~ .pent-center .pent-desc.is-coffers {
+        opacity: 1;
+      }
+
+      /* Their content (Discord CTA, Ko-fi/Instagram) lives inside the
+         pentagon center as .pent-social-btn now; the mobile/tablet
+         versions of these sections stay untouched below 900px. */
+      .discord-section,
+      footer {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -318,36 +649,77 @@
   </header>
 
 
-  <!-- NAV GRID -->
-  <nav class="nav-grid" aria-label="Site sections">
-    <a class="nav-tile" href="/table">
-      <span class="tile-icon"><img src="/icons/table.png" alt=""></span>
-      <span class="tile-label">Table</span>
-      <span class="tile-desc">Game Utilities</span>
-    </a>
-    <a class="nav-tile" href="/cards">
-      <span class="tile-icon"><img src="/icons/cards.png" alt=""></span>
-      <span class="tile-label">Cards</span>
-      <span class="tile-desc">In-Depth Card Explanations</span>
-    </a>
-    <a class="nav-tile" href="/tools">
-      <span class="tile-icon"><img src="/icons/tools.png" alt=""></span>
-      <span class="tile-label">Tools</span>
-      <span class="tile-desc">Deck Utilities</span>
-    </a>
-    <a class="nav-tile" href="/stack">
-      <span class="tile-icon"><img src="/icons/stack.png" alt=""></span>
-      <span class="tile-label">Stack</span>
-      <span class="tile-desc">Stack Interactions Explained</span>
-    </a>
-  </nav>
+  <!-- ORBIT FIELD: mobile/tablet grid + desktop pentagon, one shared
+       positioning + landmark context. Flat DOM on purpose: the CSS-only
+       hover reveal (see .pent-center) needs the five pips and the center
+       display to be literal siblings for the sibling combinator to work. -->
+  <nav class="orbit-field" aria-label="Site sections">
+    <div class="pentagon-ring" aria-hidden="true"></div>
 
-  <!-- ASSETS TILE -->
-  <a class="nav-tile asset-tile" href="/coffers">
-    <span class="tile-icon"><img src="/icons/coffers.png" alt=""></span>
-    <span class="tile-label">Coffers</span>
-    <span class="tile-desc">Made by me, for you!</span>
-  </a>
+    <a class="nav-tile is-table" href="/table" aria-label="Table. Game Utilities">
+      <span class="tile-icon">
+        <img src="/icons/table.png" alt="">
+        <span class="pip-label" aria-hidden="true">Table</span>
+      </span>
+    </a>
+    <a class="nav-tile is-cards" href="/cards" aria-label="Cards. Card Info">
+      <span class="tile-icon">
+        <img src="/icons/cards.png" alt="">
+        <span class="pip-label" aria-hidden="true">Cards</span>
+      </span>
+    </a>
+    <a class="nav-tile is-tools" href="/tools" aria-label="Tools. Deck Utilities">
+      <span class="tile-icon">
+        <img src="/icons/tools.png" alt="">
+        <span class="pip-label" aria-hidden="true">Tools</span>
+      </span>
+    </a>
+    <a class="nav-tile is-stack" href="/stack" aria-label="Stack. Rules Info">
+      <span class="tile-icon">
+        <img src="/icons/stack.png" alt="">
+        <span class="pip-label" aria-hidden="true">Stack</span>
+      </span>
+    </a>
+
+    <a class="nav-tile asset-tile is-coffers" href="/coffers" aria-label="Coffers. Made by me, for you!">
+      <span class="tile-icon">
+        <img src="/icons/coffers.png" alt="">
+        <span class="pip-label" aria-hidden="true">Coffers</span>
+      </span>
+    </a>
+
+    <div class="pent-center">
+      <a class="pent-social-btn is-instagram" href="https://instagram.com/mtjawnny" target="_blank" rel="noopener" aria-label="Follow MTJawnny on Instagram">
+        <svg viewBox="0 0 24 24" style="fill:currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+      <a class="pent-social-btn is-tips" href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener" aria-label="Support MTJawnny on Ko-fi">
+        <svg viewBox="0 0 24 24" style="fill:currentColor" stroke="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+      </a>
+      <a class="pent-social-btn is-discord" href="https://discord.gg/jjJ5Zfn9qM" target="_blank" rel="noopener" aria-label="Join the MTJawnny Discord">
+        <svg viewBox="0 0 24 24" style="fill:currentColor" stroke="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+      </a>
+      <span class="pent-desc is-table">
+        <span class="pent-desc-label">Table</span>
+        <span class="pent-desc-text">Life totals, dice, turn order, and other tabletop essentials!</span>
+      </span>
+      <span class="pent-desc is-cards">
+        <span class="pent-desc-label">Cards</span>
+        <span class="pent-desc-text">In-depth breakdowns of tricky cards and their rulings!</span>
+      </span>
+      <span class="pent-desc is-tools">
+        <span class="pent-desc-label">Tools</span>
+        <span class="pent-desc-text">Proxy builders, tag makers, and deck-prep utilities!</span>
+      </span>
+      <span class="pent-desc is-stack">
+        <span class="pent-desc-label">Stack</span>
+        <span class="pent-desc-text">Priority, triggers, and timing, explained clearly!</span>
+      </span>
+      <span class="pent-desc is-coffers">
+        <span class="pent-desc-label">Coffers</span>
+        <span class="pent-desc-text">Free downloads and extras, made for the community!</span>
+      </span>
+    </div>
+  </nav>
 
   <!-- DISCORD -->
   <section class="discord-section" aria-label="Discord">

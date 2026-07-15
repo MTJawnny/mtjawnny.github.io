@@ -128,6 +128,13 @@
     letter-spacing: 0.01em;
   }
 
+  /* ══ HEADER — desktop scale-up (header-pattern.md) ══════════════ */
+  @media (min-width: 640px) {
+    .logo-wrap { gap: 0.9rem; }
+    .logo-pip-ring { width: 60px; height: 60px; }
+    .splash-hero h1 { font-size: clamp(2.8rem, 16vw, 4.2rem); }
+  }
+
   /* ══ STICKY CONTROLS — search + tier toggle ══════════════ */
   .controls {
     position: sticky;
