@@ -1317,7 +1317,7 @@
         <button id="l30" class="chip" onclick="selLife(30)">30</button>
         <button id="l40" class="chip sel" onclick="selLife(40)">40</button>
       </div>
-      <div class="turn-item" id="rotate-item" style="display:none">
+      <div class="turn-item" id="rotate-item" style="visibility:hidden">
         <button id="rotate-btn" class="dir-btn" onclick="rotateSetupSeats()" aria-label="Rotate seat colors">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20 12a8 8 0 1 1-8-8c2.3 0 4.4.9 6 2.4"/>
@@ -1812,13 +1812,15 @@ function clearSpin(btn) {
 function selP(n) {
   S.playerCount = n;
   [2,3,4].forEach(x => document.getElementById('p'+x).classList.toggle('sel', x===n));
-  // Turn order is meaningless with two players
+  // Turn order is meaningless with two players. visibility (not display)
+  // so the dial keeps its layout slot — row height/width never changes
+  // as player count switches, so the tiles below never shift.
   const dg = document.getElementById('dir-group');
-  if (dg) dg.style.display = n === 2 ? 'none' : '';
+  if (dg) dg.style.visibility = n === 2 ? 'hidden' : 'visible';
   // Rotate Seats (reassign which color holds the wide/top-BL-BR roles) only
   // makes sense for the 3-player shape.
   const ri = document.getElementById('rotate-item');
-  if (ri) ri.style.display = n === 3 ? 'flex' : 'none';
+  if (ri) ri.style.visibility = n === 3 ? 'visible' : 'hidden';
   S.setupLayout3 = 0; // Rotate Seats always starts fresh with the wide seat on top
   selLife(n === 2 ? 20 : 40); // sensible default; user can still override after — also re-renders the diagram
 }
