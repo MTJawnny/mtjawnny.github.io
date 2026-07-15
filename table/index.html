@@ -211,18 +211,6 @@
   .chip.sel { background: var(--bronze); border-color: var(--bronze); color: var(--bg); }
   .chip:not(.sel):hover { border-color: var(--bronze); color: var(--white); }
 
-  .seat-hint {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 1.75rem; font-weight: 800;
-    letter-spacing: 0.01em;
-    line-height: 1.15;
-    color: var(--bronze);
-    text-align: center;
-    margin: 0 auto 0.8rem;
-    padding: 0 0.5rem;
-    max-width: 380px;
-  }
-
   .table-wrap { display: flex; justify-content: center; padding: 0 1.4rem; }
   .table-diagram {
     position: relative;
@@ -275,6 +263,13 @@
     font-size: 22px; font-weight: 800;
     letter-spacing: 0.06em; text-transform: uppercase;
     color: rgba(255,255,255,0.62);
+  }
+  .setup-seat-hint {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-top: 5px;
   }
   .setup-seat[data-mana="white"] { background: linear-gradient(160deg, #c8b896, #a8936e); }
   .setup-seat[data-mana="blue"]  { background: linear-gradient(160deg, #2a6fa8, #1a4870); }
@@ -1256,8 +1251,6 @@
       <button id="l40" class="chip sel" onclick="selLife(40)">40</button>
     </div>
 
-    <div class="seat-hint">Tap a seat to change its color</div>
-
     <div class="table-wrap">
       <div class="table-diagram">
         <div id="color-map" class="setup-seat-grid"></div>
@@ -1844,6 +1837,7 @@ function buildColorMap() {
                 <div class="setup-seat-inner" style="transform:rotate(${rot}deg)">
                   <span class="setup-seat-life">${S.startLife}</span>
                   <span class="setup-seat-name">Seat ${labels[i]}</span>
+                  <span class="setup-seat-hint">Tap to change color</span>
                 </div>
               </div>`;
     }).join('');
@@ -1860,6 +1854,7 @@ function buildColorMap() {
               <div class="setup-seat-inner" style="transform:rotate(${rot}deg)">
                 <span class="setup-seat-life">${S.startLife}</span>
                 <span class="setup-seat-name">Seat ${labels[i]}</span>
+                <span class="setup-seat-hint">Tap to change color</span>
               </div>
             </div>`;
   }).join('');
