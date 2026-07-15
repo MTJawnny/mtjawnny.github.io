@@ -2,7 +2,7 @@
    Stale-while-revalidate: serve from cache instantly, refresh in the
    background. Covers the page itself plus the Google Fonts CSS/woff2,
    so the tracker works with zero signal once it's been opened once. */
-const CACHE = 'mtj-tablekeep-v1';
+const CACHE = 'mtj-tablekeep-v2';
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
