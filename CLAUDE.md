@@ -20,6 +20,33 @@ not just legal positioning.
 - /coffers/ = free assets + Ko-fi monetization
 - Global pip-ring footer nav appears on all section pages
 
+## Homepage (index.html) nav
+- index.html is the landing page, NOT a proxy card page despite sitting at
+  root. Five section pips: Table, Cards, Tools, Stack, Coffers. Flat DOM on
+  purpose (the desktop CSS-only hover reveal needs the pips + center to be
+  literal siblings).
+- Three breakpoints:
+  - Mobile (< 640px): connected PENTAGON RING. Whole layout derives from one
+    knob, --circle (pip diameter, clamp(104px, 31vw, 138px)); --half =
+    circle/2 and --R = 1.02 * circle set the ring radius so pips never
+    overlap or overflow. Same unit-circle coefficients as the desktop
+    pentagon. Nudge feel via those two values (circle size, --R multiplier).
+  - Tablet (640-899px): plain two-column grid.
+  - Desktop (900px+): full pentagon with a hover-reveal center (social
+    cluster + per-pip descriptions).
+- All mobile-specific rules live in a single @media (max-width: 639.98px)
+  block. Keep tablet/desktop untouched when editing it.
+- "Feeling Lucky?" button (mobile only): a floating d6 die + label at the
+  ring center that jumps to a random page. Destinations are a commented
+  array in the inline <script> at the bottom of index.html (edit freely);
+  href="/cards/" is the no-JS fallback. Hidden on tablet/desktop via the
+  shared base display:none.
+- Screenshot workflow for homepage/font-accurate renders: the headless
+  browser can't reach Google Fonts through the proxy, so fetch the Barlow /
+  Barlow Condensed woff2 files with curl, swap the @import for a local
+  @font-face, and render with no browser proxy (routing the browser through
+  the proxy breaks the localhost page load).
+
 ## CDN & media URLs (contract — do not drift)
 - **Card images are keyed by oracle_id, NEVER by slug.** Canonical URL:
   https://cdn.mtjawnny.com/cards/png/<oracle_id>.png
@@ -106,6 +133,16 @@ not just legal positioning.
   Branches list). Don't promise automatic branch cleanup; when a merged
   branch is left behind, tell the user it's harmless and hand them the
   one-click deletion step.
+
+## Future notes / ideas
+- Gamble mini-game: when the "Feeling Lucky?" homepage button lands on the
+  Gamble card page, it should fire a fun win/lose reveal UI (a cute little
+  mini-game moment, e.g. "You win!") instead of just showing the page. The
+  Gamble card page is NOT built yet. When it ships: (1) add its slug to the
+  Feeling Lucky destination array in index.html, and (2) build the reveal on
+  the Gamble page itself, ideally triggered when arrival came from the
+  Feeling Lucky button (e.g. a ?lucky=1 query param or referrer check) so it
+  only games out on a "lucky" landing.
 
 ## Reference docs (read before large changes)
 - MTJAWNNY-MASTER.md — overall architecture and standards
