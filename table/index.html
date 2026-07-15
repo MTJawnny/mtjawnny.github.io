@@ -183,31 +183,39 @@
      miniature becomes the real table." ── */
   /* Player-selector and life-chip rows share a width with the table
      diagram (--setup-w) and each pair with a direction dial on the right,
-     so both rows' outer edges line up with the tile grid's edges. */
+     so both rows' outer edges line up with the tile grid's edges. Both
+     controls stay pinned to the left edge always — even when their dial
+     is hidden (1v1: no direction dial; 2/4-player: no rotate dial) — so
+     they never jump around as player count changes. */
   .setup-row {
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex; align-items: center; justify-content: flex-start;
     gap: 10px;
     width: var(--setup-w);
     margin: 0 auto 0.6rem;
   }
-  .setup-row.centered { justify-content: center; }
 
+  /* Sized to exactly match the life-chips row's width (4 chips + 3 gaps)
+     so the two rows form matching columns; segments split that width
+     evenly regardless of label length. */
   .seg-players {
     display: flex;
     gap: 4px;
-    width: fit-content;
+    width: calc(4 * clamp(50px, 15vw, 64px) + 3 * clamp(6px, 2vw, 10px));
+    box-sizing: border-box;
     background: var(--surface);
     border: 1.5px solid var(--bronze-dim);
     border-radius: 999px;
     padding: 5px;
   }
   .seg-btn {
+    flex: 1;
     background: transparent; border: none; color: var(--text-dim);
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 800; font-size: clamp(0.85rem, 3.6vw, 1.05rem);
     letter-spacing: 0.01em; text-transform: uppercase;
     white-space: nowrap;
-    padding: 11px clamp(8px, 2.8vw, 14px); border-radius: 999px; cursor: pointer;
+    text-align: center;
+    padding: 11px 4px; border-radius: 999px; cursor: pointer;
     transition: background 0.18s, color 0.18s;
   }
   .seg-btn.sel { background: var(--bronze); color: var(--bg); }
@@ -1302,7 +1310,7 @@
       </div>
     </div>
 
-    <div class="setup-row centered" id="row-life">
+    <div class="setup-row" id="row-life">
       <div class="life-chips" role="group" aria-label="Starting life">
         <button id="l20" class="chip" onclick="selLife(20)">20</button>
         <button id="l25" class="chip" onclick="selLife(25)">25</button>
@@ -1807,12 +1815,10 @@ function selP(n) {
   // Turn order is meaningless with two players
   const dg = document.getElementById('dir-group');
   if (dg) dg.style.display = n === 2 ? 'none' : '';
-  document.getElementById('row-players')?.classList.toggle('centered', n === 2);
   // Rotate Seats (reassign which color holds the wide/top-BL-BR roles) only
   // makes sense for the 3-player shape.
   const ri = document.getElementById('rotate-item');
   if (ri) ri.style.display = n === 3 ? 'flex' : 'none';
-  document.getElementById('row-life')?.classList.toggle('centered', n !== 3);
   S.setupLayout3 = 0; // Rotate Seats always starts fresh with the wide seat on top
   selLife(n === 2 ? 20 : 40); // sensible default; user can still override after — also re-renders the diagram
 }
