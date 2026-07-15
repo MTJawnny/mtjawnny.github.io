@@ -515,6 +515,13 @@
        formula's generous label-block allowance is gone; it only needs to
        clear circle-to-circle now. */
     @media (min-width: 900px) {
+      /* Wider than the title+pips row above it (~455px at this breakpoint)
+         on purpose -- a deliberate visual overshoot, not a sizing mistake. */
+      .tagline {
+        font-size: 1.75rem;
+        margin-top: 1rem;
+      }
+
       .orbit-field {
         /* Deliberately tight -- and this time actually computed right.
            Adjacent pentagon vertices (Table-Cards, Cards-Stack,
