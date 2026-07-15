@@ -350,18 +350,18 @@
        the desktop pentagon (>=900px) are untouched. */
     @media (max-width: 639.98px) {
       .orbit-field {
-        /* Big pips, minimal center void. Everything derives from one knob,
-           --circle (the pip diameter, viewport-scaled with px floor/cap):
-           --half is exactly half of it, and --R is 0.90 * --circle -- just
-           above the 0.8507 tangent ratio, so neighbouring pips sit ~7% of a
-           diameter apart (a near-continuous rosette) and the middle hole
-           (R - half) stays small. Because R tracks the circle size, the
-           span 0.9511*R + half is always well inside 50vw, so it never
-           overflows at any width. --half is the mobile analogue of
+        /* Middle ground between the airy first pass and the near-touching
+           rosette. Everything derives from one knob, --circle (the pip
+           diameter, viewport-scaled with px floor/cap): --half is half of
+           it, and --R is 1.02 * --circle, which opens a comfortable ~25px
+           gap between neighbouring pips (vs ~8px when R = 0.90 * circle)
+           while keeping the center hole modest. Because R tracks the circle
+           size, the span 0.9511*R + half stays well inside 50vw, so it
+           never overflows at any width. --half is the mobile analogue of
            desktop's fixed 87.5px. */
-        --circle: clamp(108px, 33vw, 148px);
+        --circle: clamp(104px, 31vw, 138px);
         --half: calc(var(--circle) / 2);
-        --R: calc(var(--circle) * 0.90);
+        --R: calc(var(--circle) * 1.02);
         --pentagon-top: calc(0.8090 * var(--R) + var(--half));
         position: relative;
         display: block;
@@ -421,7 +421,7 @@
       }
 
       .pip-label {
-        font-size: 1.25rem;
+        font-size: 1.2rem;
         top: 75%;
       }
 
