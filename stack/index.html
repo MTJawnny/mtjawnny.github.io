@@ -627,6 +627,31 @@
 ═════════════════════════════════════════════════════════════════════ -->
 <script>
 const ENTRIES = [
+  // The three concept pages below also render as the pinned tiles further down
+  // the page (see the .pinned section). `pinned: true` keeps them out of the
+  // default unfiltered grid so they don't show twice -- but search and category
+  // filtering still find them, which is the whole point of listing them here.
+  {
+    names: ["The Stack"],
+    slug: "the-stack",
+    cat: "timing",
+    pinned: true,
+    keywords: ["priority", "resolution", "LIFO", "response", "respond", "counter"]
+  },
+  {
+    names: ["Beginning Phase"],
+    slug: "beginning-phase",
+    cat: "timing",
+    pinned: true,
+    keywords: ["upkeep", "untap", "draw step", "draw"]
+  },
+  {
+    names: ["Combat Phase"],
+    slug: "combat-phase",
+    cat: "timing",
+    pinned: true,
+    keywords: ["combat damage", "attackers", "blockers", "declare", "damage"]
+  },
   {
     names: ["Protection From"],
     slug: "protection",
@@ -676,7 +701,6 @@ const CATS = {
   multiplayer: { chip: "Multiplayer", color: "#e6a23c" }
 };
 
-// Interaction-submission tool. Swap the "#" for the real form link when it's ready.
 const SUBMISSION_URL = "https://tally.so/r/rjqMJp";
 </script>
 <!-- ════════════════════════════════════════════════════════════════ -->
@@ -891,9 +915,16 @@ const SUBMISSION_URL = "https://tally.so/r/rjqMJp";
     const raw = searchInput.value;
     const q = raw.trim();
 
-    let list = ENTRIES.map((e, i) => ({ e, i, s: score(raw, e.names.join(' ')) }));
+    let list = ENTRIES.map((e, i) => {
+      const searchText = e.names.join(' ') + (e.keywords ? ' ' + e.keywords.join(' ') : '');
+      return { e, i, s: score(raw, searchText) };
+    });
     if (q !== '') list = list.filter(o => o.s >= 0);
     if (activeCat !== 'all') list = list.filter(o => catList(o.e).includes(activeCat));
+    // Pinned entries (The Stack, Beginning Phase, Combat Phase) already have
+    // their own tiles in the .pinned section above -- only surface them here
+    // when the visitor actually searched or filtered, so they never duplicate.
+    if (q === '' && activeCat === 'all') list = list.filter(o => !o.e.pinned);
 
     list.sort((a, b) => q !== '' ? (b.s - a.s || a.i - b.i) : (a.i - b.i));
     return { list, q };
