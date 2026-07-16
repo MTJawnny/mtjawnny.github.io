@@ -284,8 +284,8 @@
   }
   .setup-seat-hint {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 15px; font-weight: 700;
-    letter-spacing: 0.06em; text-transform: uppercase;
+    font-size: clamp(20px, 6vw, 30px); font-weight: 800;
+    letter-spacing: 0.08em; text-transform: uppercase;
     text-align: center;
     color: rgba(255,255,255,0.55);
     margin-top: 6px;
@@ -367,15 +367,15 @@
     cursor: pointer;
     transition: border-color 0.18s, background 0.18s, transform 0.5s ease;
   }
-  .dir-btn-lg { width: 100%; height: auto; aspect-ratio: 1; }
+  .dir-btn-lg { width: 82%; height: auto; aspect-ratio: 1; }
   .dir-btn:hover { border-color: var(--bronze); background: var(--bronze-glow); }
   .dir-btn svg { width: clamp(20px, 6vw, 26px); height: clamp(20px, 6vw, 26px); }
   .dir-btn-lg svg { width: 42%; height: 42%; }
   .dir-btn.ccw svg { transform: scaleX(-1); }
   .dir-word {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.8rem; font-weight: 800;
-    letter-spacing: 0.03em; text-transform: uppercase;
+    font-size: clamp(0.85rem, 4.5vw, 1.2rem); font-weight: 800;
+    letter-spacing: 0.02em; text-transform: uppercase;
     color: var(--text-dim);
     line-height: 1.15;
     text-align: center;
@@ -1915,7 +1915,7 @@ function buildColorMap() {
       return `<div class="setup-seat" data-mana="${tileColor(i)}"${bias} onclick="cycleColor(${i})" style="grid-column:${col};grid-row:${row}">
                 <div class="setup-seat-inner" style="transform:rotate(${rot}deg)">
                   <span class="setup-seat-life">${S.startLife}</span>
-                  <span class="setup-seat-hint">Tap to pick color</span>
+                  <span class="setup-seat-hint">TAP</span>
                 </div>
               </div>`;
     }).join('');
@@ -1931,7 +1931,7 @@ function buildColorMap() {
     return `<div class="setup-seat" data-mana="${tileColor(i)}"${bias} onclick="cycleColor(${i})">
               <div class="setup-seat-inner" style="transform:rotate(${rot}deg)">
                 <span class="setup-seat-life">${S.startLife}</span>
-                <span class="setup-seat-hint">Tap to pick color</span>
+                <span class="setup-seat-hint">TAP</span>
               </div>
             </div>`;
   }).join('');
