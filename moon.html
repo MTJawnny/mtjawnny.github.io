@@ -562,6 +562,22 @@
   }
   .footer-btn:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
   .footer-btn svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+
+  /* ══ TOAST ══ */
+  .toast {
+    position: fixed; left: 50%;
+    bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    transform: translateX(-50%) translateY(8px);
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif; font-size: 0.9rem;
+    padding: 0.6rem 1rem; border-radius: 10px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s; z-index: 90;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
   /* ── Keyboard focus ── */
   a:focus-visible, button:focus-visible {
     outline: 2px solid var(--bronze); outline-offset: 2px;
@@ -865,9 +881,9 @@
     <!-- ════════ SOURCES ════════ -->
     <h2>Sources</h2>
     <ul class="source-links">
-      <li>Scryfall: <a href="https://scryfall.com/card/2xm/118/blood-moon" target="_blank" rel="noopener">Blood Moon (Double Masters #118)</a> — oracle text, legality, and the official rulings dated 2020-08-07.</li>
-      <li>EDHREC: <a href="https://edhrec.com/cards/blood-moon" target="_blank" rel="noopener">Blood Moon</a> — synergy partners and deck inclusion data.</li>
-      <li>Wizards of the Coast: <a href="https://magic.wizards.com/en/rules" target="_blank" rel="noopener">Magic Comprehensive Rules</a> — the CR references listed under Governing Rules.</li>
+      <li>Scryfall: <a href="https://scryfall.com/card/2xm/118/blood-moon" target="_blank" rel="noopener">Blood Moon (Double Masters #118)</a>: oracle text, legality, and the official rulings dated 2020-08-07.</li>
+      <li>EDHREC: <a href="https://edhrec.com/cards/blood-moon" target="_blank" rel="noopener">Blood Moon</a>: synergy partners and deck inclusion data.</li>
+      <li>Wizards of the Coast: <a href="https://magic.wizards.com/en/rules" target="_blank" rel="noopener">Magic Comprehensive Rules</a>: the CR references listed under Governing Rules.</li>
     </ul>
 
     <!-- ════════ REPORT A BUG/FLUB ════════ -->
