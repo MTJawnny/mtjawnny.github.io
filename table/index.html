@@ -191,7 +191,7 @@
     display: flex; align-items: center; justify-content: flex-start;
     gap: 10px;
     width: var(--setup-w);
-    margin: 0 auto 0.6rem;
+    margin: 1.1rem auto 0.6rem;
   }
   .setup-stack { display: flex; flex-direction: column; gap: 8px; }
 
@@ -574,6 +574,13 @@
     text-shadow: 0 2px 10px rgba(0,0,0,0.7);
   }
   .ko-tag.show { display: block; }
+  /* "Random" first-player pick: the highlight that cycles seat to seat
+     while rouletteChoose() spins, before settling on the winner. */
+  .panel.roulette-hl {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12),
+                0 0 0 4px #ffe600,
+                0 4px 24px rgba(255,230,0,0.55);
+  }
   .panel.upkeep-alert { animation: uflash 0.5s ease 4; }
   @keyframes uflash {
     0%,100% { box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 0 0 3px var(--bronze), 0 4px 20px rgba(184,147,90,0.35); }
@@ -2144,7 +2151,7 @@ function onPanelClick(e, i, panel) {
   }
 
   closeAllPops();
-  if (S.phase === 'choose') chooseFirst(i);
+  if (S.phase === 'choose' && !_rouletteRunning) chooseFirst(i);
 }
 
 function applyLife(i, d) {
@@ -2198,10 +2205,51 @@ function toggleUpkeep(e, i) {
 }
 
 // ══ TURNS + UNDO ══════════════════════════════════════
+let _rouletteRunning = false;
+
+/* Roulette-style reveal for the "Random" first-player pick: cycles a
+   highlight around the seats, slowing down like a wheel losing momentum,
+   before landing on the (pre-rolled) winner and committing via
+   chooseFirst(). Tapping a seat directly still picks it instantly — this
+   is only for the big button's "Random" path. */
+function rouletteChoose() {
+  const n = S.playerCount;
+  _rouletteRunning = true;
+  document.getElementById('pass-btn')?.classList.add('blocked');
+
+  const winner = Math.floor(Math.random() * n);
+  const loops = 2; // full trips around the table before landing
+  const totalSteps = loops * n + winner + 1;
+  let step = 0, cur = -1;
+
+  function tick() {
+    if (cur >= 0) document.querySelector(`.panel[data-index="${cur}"]`)?.classList.remove('roulette-hl');
+    cur = (cur + 1) % n;
+    document.querySelector(`.panel[data-index="${cur}"]`)?.classList.add('roulette-hl');
+    navigator.vibrate?.(12);
+    step++;
+    if (step >= totalSteps) {
+      setTimeout(() => {
+        document.querySelector(`.panel[data-index="${cur}"]`)?.classList.remove('roulette-hl');
+        _rouletteRunning = false;
+        navigator.vibrate?.([40, 30, 70]);
+        chooseFirst(cur);
+      }, 320);
+      return;
+    }
+    // Ease out: each step waits a little longer than the last, like a
+    // wheel losing momentum, so the last couple of stops read clearly.
+    const progress = step / totalSteps;
+    setTimeout(tick, 70 + Math.pow(progress, 2.2) * 260);
+  }
+  tick();
+}
+
 function passTurn() {
-  // During choose phase the big button picks a random first player
+  // During choose phase the big button spins through the seats before
+  // settling on a random first player (see rouletteChoose above).
   if (S.phase === 'choose') {
-    chooseFirst(Math.floor(Math.random() * S.playerCount));
+    if (!_rouletteRunning) rouletteChoose();
     return;
   }
   if (S.phase !== 'playing' || S.cmdOn) return; // blocked while CMD overlay is up
