@@ -22,9 +22,8 @@
 </script>
   <title>MTJawnny</title>
   <link rel="icon" href="/favicon.ico" />
+  <link href="/fonts/fonts.css" rel="stylesheet" />
   <style>
-    @import url('/fonts/fonts.css');
-
     :root {
       --bg:        #1e1728;
       --surface:   #261d33;
@@ -873,7 +872,7 @@
       </span>
       <span class="pent-desc is-tools">
         <span class="pent-desc-label">Tools</span>
-        <span class="pent-desc-text">Proxy builders, tag makers, and deck-prep utilities!</span>
+        <span class="pent-desc-text">Token grabbing, QR codes, and proxy printing utilities!</span>
       </span>
       <span class="pent-desc is-stack">
         <span class="pent-desc-label">Stack</span>
@@ -923,12 +922,12 @@
       var btn = document.getElementById('luckyBtn');
       if (!btn) return;
       var dests = [
-        '/pris.html', '/anvil.html', '/bog.html', '/chains.html',
-        '/chasm.html', '/dead.html', '/moon.html', '/rag.html',
-        '/tef.html', '/trin.html', '/uba.html', '/wheel.html',
-        '/tools/qr.html', '/tools/tag-grabber.html', '/tools/token-grabber.html',
-        '/stack/the-stack.html', '/stack/protection.html', '/stack/ward.html',
-        '/table/commander.html', '/table/pauper.html'
+        '/pris', '/anvil', '/bog', '/chains',
+        '/chasm', '/dead', '/moon', '/rag',
+        '/tef', '/trin', '/uba', '/wheel',
+        '/tools/qr', '/tools/token-grabber',
+        '/stack/the-stack', '/stack/protection', '/stack/ward',
+        '/table/commander', '/table/pauper'
       ];
       btn.addEventListener('click', function (e) {
         e.preventDefault();
