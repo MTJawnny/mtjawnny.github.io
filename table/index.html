@@ -1542,7 +1542,10 @@
   var b = document.querySelector('.mtjnav-top');
   if (!b) return;
   b.addEventListener('click', function () {
-    window.scrollTo({ top: 0, behavior: 'auto' });
+    // #setup-screen is the actual scroll container here (html/body are
+    // overflow:hidden), unlike every other page this shared nav lives on.
+    var scroller = document.getElementById('setup-screen') || window;
+    scroller.scrollTo({ top: 0, behavior: 'auto' });
   });
 })();
 </script>
@@ -1767,6 +1770,10 @@ function freshState() {
   };
 }
 let S = freshState();
+// Tracks whether the player has ever explicitly tapped a life chip this
+// session, so selP() knows not to clobber that choice on a later player-count
+// switch -- it should only apply its own sensible default before that happens.
+let lifeSetByUser = false;
 
 // ══ PERSISTENCE (safe — never throws) ═════════════════
 function save() {
@@ -1862,7 +1869,9 @@ function selP(n) {
   const rb = document.getElementById('rotate-btn');
   if (rb) rb.style.display = n === 3 ? 'flex' : 'none';
   S.setupLayout3 = 0; // Rotate Seats always starts fresh with the wide seat on top
-  selLife(n === 2 ? 20 : 40); // sensible default; user can still override after — also re-renders the diagram
+  // Sensible default only until the player explicitly picks a life total --
+  // after that, switching player count must not silently overwrite their choice.
+  if (!lifeSetByUser) selLife(n === 2 ? 20 : 40, true);
 }
 function selDir(d) {
   S.dir = d;
@@ -1875,8 +1884,9 @@ function selDir(d) {
 function toggleDir() {
   selDir(S.dir === 'cw' ? 'ccw' : 'cw');
 }
-function selLife(n) {
+function selLife(n, auto) {
   S.startLife = n;
+  if (!auto) lifeSetByUser = true; // a real tap on a life chip, not selP()'s default
   [20,25,30,40].forEach(x => document.getElementById('l'+x)?.classList.toggle('sel', x===n));
   buildColorMap(); // setup-preview life totals track the chosen starting life
 }
@@ -3123,8 +3133,15 @@ function confirmReset() {
 function doReset() {
   closeOverlays();
   releaseWake();
+  // Carry the pod's settings into the next game, same as startGame() does --
+  // freshState() below would otherwise silently drop back to 4P/CW/40 every time.
+  const pc = S.playerCount, dir = S.dir, sl = S.startLife, tc = S.tileColors.slice();
   clearSave();
   S = freshState();
+  S.playerCount = pc;
+  S.dir = dir;
+  S.startLife = sl;
+  S.tileColors = tc;
   document.getElementById('game-screen').style.display = 'none';
   document.getElementById('pass-wrap').style.display   = 'none';
   document.getElementById('bottom-nav').classList.remove('show');
