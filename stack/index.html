@@ -411,19 +411,21 @@
     box-shadow: 0 0 8px rgba(184,147,90,0.5);
   }
 
-  /* Category sigil(s) breaking the top edge — one small dot per cat,
-     centered, instead of a full-width bar. Driven by each entry's cat(s). */
+  /* Category sigil(s) breaking the top edge — one dot per cat, centered,
+     instead of a full-width bar. Driven by each entry's cat(s). Sized up
+     (was 14px/faint) so the color reads clearly enough to tie back to the
+     same-color filter chips above the grid. */
   .tile-bar {
     position: absolute;
-    top: -7px; left: 50%;
+    top: -11px; left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 4px;
+    gap: 5px;
   }
   .tile-bar > span {
     flex: none;
-    width: 14px;
-    height: 14px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     border: 2px solid var(--surface);
     transition: box-shadow 0.18s;
@@ -603,8 +605,8 @@
 
     .grid { grid-template-columns: repeat(3, 1fr); gap: 1rem; padding: 1.4rem 2.5rem 0; }
     .tile { min-height: 130px; padding: 1.8rem 1.1rem 1.4rem; }
-    .tile-bar { top: -8px; gap: 5px; }
-    .tile-bar > span { width: 16px; height: 16px; }
+    .tile-bar { top: -12px; gap: 6px; }
+    .tile-bar > span { width: 22px; height: 22px; }
     .entry-name { font-size: 1.3rem; }
     .entry-name--xl { font-size: 2.4rem; }
     .entry-name--lg { font-size: 2rem; }

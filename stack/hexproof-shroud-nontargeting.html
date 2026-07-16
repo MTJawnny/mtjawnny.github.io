@@ -346,6 +346,19 @@
   .interaction-panel p { font-size: 1.06rem; margin-bottom: 0; }
   .cr { color: var(--text-dim); font-size: 0.98rem; }
 
+  /* ══ RELATED ══ */
+  .related-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0 0 1.6rem; }
+  .related-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: var(--surface); border: 1px solid var(--bronze-dim);
+    border-radius: 10px; padding: 0.55rem 0.95rem;
+    color: var(--white); font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600; font-size: 0.92rem; text-decoration: none;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .related-link:hover { border-color: var(--bronze); background: var(--bronze-glow); }
+  .related-link .rl-arrow { color: var(--bronze); font-size: 0.85rem; }
+
   /* ══ SUGGEST CTA ══ */
   .suggest-cta {
     text-align: center;
@@ -606,6 +619,15 @@
     <div class="interaction-panel">
       <div class="interaction-card-name">Aura Without Casting (The Cheat)</div>
       <p>You can't cast targeted removal at a shroud creature, and you can't cast an Aura at it either, since Aura spells target. You can still attach an Aura by putting it onto the battlefield without casting it, for example a reanimation effect that returns Auras from the graveyard or an attack trigger that searches one out and attaches it. That attachment does not target, so it lands on the shroud creature. The Aura's enchant line still has to allow it, and protection from the Aura's color would still keep it off. <span class="cr">(CR 303.4f, 702.16c)</span></p>
+    </div>
+
+    <h2>Related</h2>
+    <div class="related-row">
+      <a class="related-link" href="/stack/protection.html">Protection From <span class="rl-arrow">→</span></a>
+      <a class="related-link" href="/stack/ward.html">Ward <span class="rl-arrow">→</span></a>
+      <a class="related-link" href="/stack/indestructible-minus-toughness.html">Indestructible vs -X/-X <span class="rl-arrow">→</span></a>
+      <a class="related-link" href="/pris.html">Prisoner's Dilemma <span class="rl-arrow">→</span></a>
+      <a class="related-link" href="/bog.html">Bojuka Bog <span class="rl-arrow">→</span></a>
     </div>
 
     <section class="suggest-cta">

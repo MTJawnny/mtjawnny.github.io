@@ -344,6 +344,19 @@
   .interaction-panel p { font-size: 1.06rem; margin-bottom: 0; }
   .cr { color: var(--text-dim); font-size: 0.98rem; }
 
+  /* ══ RELATED ══ */
+  .related-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0 0 1.6rem; }
+  .related-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: var(--surface); border: 1px solid var(--bronze-dim);
+    border-radius: 10px; padding: 0.55rem 0.95rem;
+    color: var(--white); font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600; font-size: 0.92rem; text-decoration: none;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .related-link:hover { border-color: var(--bronze); background: var(--bronze-glow); }
+  .related-link .rl-arrow { color: var(--bronze); font-size: 0.85rem; }
+
   /* ══ SUGGEST CTA ══ */
   .suggest-cta {
     text-align: center;
@@ -560,6 +573,13 @@
     <div class="interaction-panel">
       <div class="interaction-card-name">Toxic Deluge Or A Big -X/-X</div>
       <p>The same 10/10 indestructible is on the battlefield. Your opponent casts Toxic Deluge for X equal to 10, giving every creature -10/-10. Your creature is now a 0/0. The zero-toughness state-based action puts it into the graveyard, and indestructible offers no protection because this is not destruction. The same outcome follows from any effect that drives toughness to 0 or less, such as a morbid Tragic Slip or enough -1/-1 counters. Forcing a sacrifice or exiling the creature with Swords to Plowshares removes it just as cleanly, since neither destroys it. <span class="cr">(CR 704.5f, 701.8b, 700.4)</span></p>
+    </div>
+
+    <h2>Related</h2>
+    <div class="related-row">
+      <a class="related-link" href="/stack/protection.html">Protection From <span class="rl-arrow">→</span></a>
+      <a class="related-link" href="/stack/hexproof-shroud-nontargeting.html">Hexproof / Shroud <span class="rl-arrow">→</span></a>
+      <a class="related-link" href="/stack/ward.html">Ward <span class="rl-arrow">→</span></a>
     </div>
 
     <section class="suggest-cta">

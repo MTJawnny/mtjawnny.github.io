@@ -307,6 +307,19 @@
   .interaction-panel p { font-size: 1.06rem; margin-bottom: 0; }
   .cr { color: var(--text-dim); font-size: 0.98rem; }
 
+  /* ══ RELATED ══ */
+  .related-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0 0 1.6rem; }
+  .related-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: var(--surface); border: 1px solid var(--bronze-dim);
+    border-radius: 10px; padding: 0.55rem 0.95rem;
+    color: var(--white); font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600; font-size: 0.92rem; text-decoration: none;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .related-link:hover { border-color: var(--bronze); background: var(--bronze-glow); }
+  .related-link .rl-arrow { color: var(--bronze); font-size: 0.85rem; }
+
   /* ══ SUGGEST CTA (mirrors the card-page request block) ══ */
   .suggest-cta {
     text-align: center;
@@ -580,6 +593,13 @@
     <div class="interaction-panel">
       <div class="interaction-card-name">Miracle (e.g., Terminus)</div>
       <p>Exploits the precise moment a card is drawn. If a card with Miracle is the first card a player draws during a turn, they may reveal it immediately. This triggers a special priority window allowing them to cast the spell for its reduced Miracle cost during the draw step. <span class="cr">(CR 702.94)</span></p>
+    </div>
+
+    <h2>Related</h2>
+    <div class="related-row">
+      <a class="related-link" href="/stack/the-stack.html">The Stack <span class="rl-arrow">→</span></a>
+      <a class="related-link" href="/anvil.html">Anvil of Bogardan <span class="rl-arrow">→</span></a>
+      <a class="related-link" href="/uba.html">Uba Mask <span class="rl-arrow">→</span></a>
     </div>
 
     <!-- SUGGEST CTA -->

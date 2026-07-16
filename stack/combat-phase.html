@@ -307,6 +307,19 @@
   .interaction-panel p { font-size: 1.06rem; margin-bottom: 0; }
   .cr { color: var(--text-dim); font-size: 0.98rem; }
 
+  /* ══ RELATED ══ */
+  .related-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0 0 1.6rem; }
+  .related-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: var(--surface); border: 1px solid var(--bronze-dim);
+    border-radius: 10px; padding: 0.55rem 0.95rem;
+    color: var(--white); font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600; font-size: 0.92rem; text-decoration: none;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .related-link:hover { border-color: var(--bronze); background: var(--bronze-glow); }
+  .related-link .rl-arrow { color: var(--bronze); font-size: 0.85rem; }
+
   /* ══ SUGGEST CTA ══ */
   .suggest-cta {
     text-align: center;
@@ -407,7 +420,6 @@
     .timeline-step { padding: 0.6rem 0.4rem; }
     .step-number { font-size: 1.4rem; }
     .step-name { font-size: 0.9rem; margin-bottom: 0.2rem; }
-    .step-summary { font-size: 0.78rem; display: none; }
     .quick-grid { grid-template-columns: 1fr 1fr; }
     .footer-buttons { max-width: 380px; gap: 1rem; }
   }
@@ -628,6 +640,13 @@
     <div class="interaction-panel">
       <div class="interaction-card-name">Desert</div>
       <p>This land features an activated ability causing 1 damage to a target attacking creature, restricted exclusively to the end of combat step. This limitation ensures that the land can only punish an attacking creature after that creature has already had the opportunity to assign and deal its combat damage. <span class="cr">(CR 511.1, 511.3)</span></p>
+    </div>
+
+    <h2>Related</h2>
+    <div class="related-row">
+      <a class="related-link" href="/stack/the-stack.html">The Stack <span class="rl-arrow">→</span></a>
+      <a class="related-link" href="/stack/trample-deathtouch.html">Trample + Deathtouch <span class="rl-arrow">→</span></a>
+      <a class="related-link" href="/rag.html">Ragavan, Nimble Pilferer <span class="rl-arrow">→</span></a>
     </div>
 
     <section class="suggest-cta">

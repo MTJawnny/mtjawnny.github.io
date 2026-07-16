@@ -340,6 +340,19 @@
   .interaction-panel p { font-size: 1.06rem; margin-bottom: 0; }
   .cr { color: var(--text-dim); font-size: 0.98rem; }
 
+  /* ══ RELATED ══ */
+  .related-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0 0 1.6rem; }
+  .related-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: var(--surface); border: 1px solid var(--bronze-dim);
+    border-radius: 10px; padding: 0.55rem 0.95rem;
+    color: var(--white); font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600; font-size: 0.92rem; text-decoration: none;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .related-link:hover { border-color: var(--bronze); background: var(--bronze-glow); }
+  .related-link .rl-arrow { color: var(--bronze); font-size: 0.85rem; }
+
   /* ══ SUGGEST CTA ══ */
   .suggest-cta {
     text-align: center;
@@ -564,6 +577,12 @@
     <div class="interaction-panel">
       <div class="interaction-card-name">Indestructible Blocker</div>
       <p>A 6/6 with deathtouch and trample attacks into an indestructible 8/8. You assign 1 damage to the 8/8 and trample 5 over to the player. The 8/8 counts as having lethal damage assigned, so the trample math is unchanged, even though it cannot be destroyed and survives the turn. The same holds against a fog effect, damage prevention, or protection: those change whether the blocker dies, not how much damage carries over. <span class="cr">(CR 510.1c, 702.2c)</span></p>
+    </div>
+
+    <h2>Related</h2>
+    <div class="related-row">
+      <a class="related-link" href="/stack/combat-phase.html">Combat Phase <span class="rl-arrow">→</span></a>
+      <a class="related-link" href="/stack/the-stack.html">The Stack <span class="rl-arrow">→</span></a>
     </div>
 
     <section class="suggest-cta">
