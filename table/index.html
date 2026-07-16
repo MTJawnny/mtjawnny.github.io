@@ -1881,6 +1881,11 @@ function selP(n) {
   // Sensible default only until the player explicitly picks a life total --
   // after that, switching player count must not silently overwrite their choice.
   if (!lifeSetByUser) selLife(n === 2 ? 20 : 40, true);
+  // The seat-square preview must rebuild on every player-count switch
+  // regardless of the life-total branch above -- selLife() already does
+  // this itself when it runs, but once lifeSetByUser is true that call is
+  // skipped, and the squares would otherwise keep showing the old count.
+  else buildColorMap();
 }
 function selDir(d) {
   S.dir = d;
