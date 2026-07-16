@@ -140,7 +140,7 @@
     .splash-hero h1 { font-size: clamp(2.8rem, 16vw, 4.2rem); }
   }
 
-  /* ── LINK BUTTONS (tagline slot) ── */
+  /* ── LINK BUTTONS ── */
   .tk-links {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -263,6 +263,7 @@
     overflow: hidden;
   }
   .setup-seat:active { transform: scale(0.97); }
+  .setup-seat:focus-visible { outline: 2px solid var(--bronze); outline-offset: 2px; }
   /* Only used on "standalone" tiles — both seats in 1v1, and the wide seat
      in 3-player — where a full tile's worth of empty space otherwise sits
      between the life total and the Start circle. Pushes content toward
@@ -1378,7 +1379,6 @@
   </section>
 
   <section class="splash-more">
-    <!-- tagline slot — tips + instagram -->
     <div class="tk-links">
       <a class="footer-btn" href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
@@ -1655,9 +1655,9 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
     Export
   </button>
-  <button class="nav-tab" id="tab-undo" onclick="undoTurn()" disabled>
+  <button class="nav-tab" id="tab-undo" onclick="undoTurn()" disabled title="Rewinds the turn pass only -- life and commander damage changes aren't undone">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 14l-5-5 5-5"/><path d="M4 9h10a6 6 0 0 1 6 6v1"/></svg>
-    Undo
+    Undo Pass
   </button>
 </nav>
 <!-- ══ CONFIRM MODAL ══════════════════════════════════ -->
@@ -1774,6 +1774,10 @@ let S = freshState();
 // session, so selP() knows not to clobber that choice on a later player-count
 // switch -- it should only apply its own sensible default before that happens.
 let lifeSetByUser = false;
+// Tracks whether the player has ever tapped a setup-preview seat this
+// session -- once true, the "TAP" hint stops rendering so it doesn't keep
+// competing with the life total for attention after it's done its job.
+let seatHintLearned = false;
 
 // ══ PERSISTENCE (safe — never throws) ═════════════════
 function save() {
@@ -1879,7 +1883,6 @@ function selDir(d) {
   const w = document.getElementById('dir-word');
   if (t) t.classList.toggle('ccw', d === 'ccw');
   if (w) w.textContent = d === 'cw' ? 'Clockwise' : 'Counter';
-  buildColorMap(); // setup-preview seat numbers are direction-aware
 }
 function toggleDir() {
   selDir(S.dir === 'cw' ? 'ccw' : 'cw');
@@ -1923,6 +1926,7 @@ function buildColorMap() {
   if (!map) return;
   const n = S.playerCount;
   map.className = 'setup-seat-grid n' + n;
+  const hint = seatHintLearned ? '' : '<span class="setup-seat-hint">TAP</span>';
 
   if (n === 3) {
     const layout = LAYOUT3[S.setupLayout3];
@@ -1934,10 +1938,10 @@ function buildColorMap() {
         if (wideBias.h) bias += ` data-hpos="${wideBias.h}"`;
       }
       const { col, row, rot } = layout[i];
-      return `<div class="setup-seat" data-mana="${tileColor(i)}"${bias} onclick="cycleColor(${i})" style="grid-column:${col};grid-row:${row}">
+      return `<div class="setup-seat" data-mana="${tileColor(i)}"${bias} onclick="cycleColor(${i})" onkeydown="seatKeydown(event,${i})" tabindex="0" role="button" aria-label="Change seat ${i + 1} color" style="grid-column:${col};grid-row:${row}">
                 <div class="setup-seat-inner" style="transform:rotate(${rot}deg)">
                   <span class="setup-seat-life">${S.startLife}</span>
-                  <span class="setup-seat-hint">TAP</span>
+                  ${hint}
                 </div>
               </div>`;
     }).join('');
@@ -1950,17 +1954,24 @@ function buildColorMap() {
     // toward the tile's own outer edge, away from the Start circle sitting
     // between them.
     const bias = n === 2 ? (i === 0 ? ' data-vpos="start"' : ' data-vpos="end"') : '';
-    return `<div class="setup-seat" data-mana="${tileColor(i)}"${bias} onclick="cycleColor(${i})">
+    return `<div class="setup-seat" data-mana="${tileColor(i)}"${bias} onclick="cycleColor(${i})" onkeydown="seatKeydown(event,${i})" tabindex="0" role="button" aria-label="Change seat ${i + 1} color">
               <div class="setup-seat-inner" style="transform:rotate(${rot}deg)">
                 <span class="setup-seat-life">${S.startLife}</span>
-                <span class="setup-seat-hint">TAP</span>
+                ${hint}
               </div>
             </div>`;
   }).join('');
 }
+function seatKeydown(e, i) {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    cycleColor(i);
+  }
+}
 function cycleColor(i) {
   const idx = COLOR_ORDER.indexOf(S.tileColors[i]);
   S.tileColors[i] = COLOR_ORDER[(idx + 1) % COLOR_ORDER.length];
+  seatHintLearned = true;
   buildColorMap();
 }
 /* 3-player only: cycles which edge of the table the wide tile sits on
