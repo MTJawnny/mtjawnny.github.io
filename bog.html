@@ -596,6 +596,25 @@
   @media (min-width: 640px) {
     .footer-buttons { max-width: 380px; gap: 1rem; }
   }
+
+  /* Desktop only: card image and oracle read-out sit side by side instead
+     of stacking down one centered column. Breaks out of .page's 520px
+     reading width just for this section -- everything below it stays at
+     the narrow column on purpose. Mobile is untouched. */
+  @media (min-width: 900px) {
+    .card-hero {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 2rem;
+      width: 100vw;
+      max-width: 900px;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .card-img-wrap { flex: 0 0 340px; }
+    .readout { flex: 1 1 auto; min-width: 0; }
+  }
 </style>
 </head>
 <body>
@@ -832,7 +851,7 @@
       <p>Bojuka Bog has no card-specific rulings on Gatherer or Scryfall. Its behavior comes straight from the Comprehensive Rules: playing a land is a special action that skips the stack, the enters trigger targets a player and uses the stack, and a player with hexproof cannot be chosen. See the Governing Rules above.</p>
     </div>
     <!-- ════════ STACK CROSS-LINK ════════ -->
-    <a class="stack-banner" href="/stack" aria-label="See related stack interactions">
+    <a class="stack-banner" href="/stack/hexproof-shroud-nontargeting.html" aria-label="See related stack interactions">
       <svg class="sb-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
         <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
@@ -844,7 +863,7 @@
       </svg>
       <div class="sb-text">
         <div class="sb-title">See It On The Stack</div>
-        <div class="sb-desc">Why the land drop cannot be answered but the graveyard exile waits on the stack, and the response window an opponent gets before their cards are gone.</div>
+        <div class="sb-desc">Why the trigger targets the player and not the cards, and how an opponent's hexproof can force you to target yourself instead.</div>
       </div>
       <span class="sb-arrow" aria-hidden="true">→</span>
     </a>

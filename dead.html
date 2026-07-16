@@ -602,6 +602,25 @@
   @media (min-width: 640px) {
     .footer-buttons { max-width: 380px; gap: 1rem; }
   }
+
+  /* Desktop only: card image and oracle read-out sit side by side instead
+     of stacking down one centered column. Breaks out of .page's 520px
+     reading width just for this section -- everything below it stays at
+     the narrow column on purpose. Mobile is untouched. */
+  @media (min-width: 900px) {
+    .card-hero {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 2rem;
+      width: 100vw;
+      max-width: 900px;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .card-img-wrap { flex: 0 0 340px; }
+    .readout { flex: 1 1 auto; min-width: 0; }
+  }
 </style>
 </head>
 <body>
@@ -860,7 +879,7 @@
       <p>Once the creature is returned to the battlefield, Animate Dead can't be attached to anything other than it (unless Animate Dead somehow manages to put a different creature onto the battlefield). Attempting to move Animate Dead to another creature won't work.</p>
     </div>
     <!-- ════════ STACK CROSS-LINK ════════ -->
-    <a class="stack-banner" href="/stack" aria-label="See related stack interactions">
+    <a class="stack-banner" href="/stack/protection.html" aria-label="See related stack interactions">
       <svg class="sb-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
         <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
@@ -872,7 +891,7 @@
       </svg>
       <div class="sb-text">
         <div class="sb-title">See It On The Stack</div>
-        <div class="sb-desc">Why the return and attach happen in one resolution, and the single window where killing the Aura strands the creature in the graveyard.</div>
+        <div class="sb-desc">Why protection from black lets the creature return but strands the Aura, and how that same state-based action sacrifices the creature you just reanimated.</div>
       </div>
       <span class="sb-arrow" aria-hidden="true">→</span>
     </a>

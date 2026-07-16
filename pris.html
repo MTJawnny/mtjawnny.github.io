@@ -597,6 +597,28 @@
   @media (min-width: 640px) {
     .footer-buttons { max-width: 380px; gap: 1rem; }
   }
+
+  /* Desktop only: the card image and oracle read-out sit side by side
+     instead of stacking down one centered column. Breaks out of .page's
+     520px reading width just for this one section (a plain width/left/
+     transform recenter) -- everything below it (visuals, tips, combos,
+     rulings, sources) stays at the original narrow column on purpose,
+     since that's the comfortable reading width for body copy. Mobile is
+     untouched: this whole block only exists at 900px+. */
+  @media (min-width: 900px) {
+    .card-hero {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 2rem;
+      width: 100vw;
+      max-width: 900px;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .card-img-wrap { flex: 0 0 340px; }
+    .readout { flex: 1 1 auto; min-width: 0; }
+  }
 </style>
 </head>
 <body>
@@ -822,7 +844,7 @@
       <p>Choices are made during the resolution of Prisoner's Dilemma, so any responses to Prisoner's Dilemma must be made without knowing the outcome of those choices. Have fun iterating!</p>
     </div>
     <!-- ════════ STACK CROSS-LINK ════════ -->
-    <a class="stack-banner" href="/stack" aria-label="See related stack interactions">
+    <a class="stack-banner" href="/stack/hexproof-shroud-nontargeting.html" aria-label="See related stack interactions">
       <svg class="sb-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
         <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
@@ -834,7 +856,7 @@
       </svg>
       <div class="sb-text">
         <div class="sb-title">See It On The Stack</div>
-        <div class="sb-desc">Why every response to Prisoner's Dilemma has to happen before it resolves, and how the secret choices and the damage all play out while no one holds priority.</div>
+        <div class="sb-desc">Why "each opponent" skips targeting entirely, and how that means hexproof, shroud, and even Leyline of Sanctity do nothing to stop it.</div>
       </div>
       <span class="sb-arrow" aria-hidden="true">→</span>
     </a>

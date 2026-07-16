@@ -590,6 +590,25 @@
   @media (min-width: 640px) {
     .footer-buttons { max-width: 380px; gap: 1rem; }
   }
+
+  /* Desktop only: card image and oracle read-out sit side by side instead
+     of stacking down one centered column. Breaks out of .page's 520px
+     reading width just for this section -- everything below it stays at
+     the narrow column on purpose. Mobile is untouched. */
+  @media (min-width: 900px) {
+    .card-hero {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 2rem;
+      width: 100vw;
+      max-width: 900px;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .card-img-wrap { flex: 0 0 340px; }
+    .readout { flex: 1 1 auto; min-width: 0; }
+  }
 </style>
 </head>
 <body>
@@ -850,7 +869,7 @@
       <p>When Glacial Chasm's "enters" ability resolves, if you don't control any other lands, you must sacrifice Glacial Chasm itself.</p>
     </div>
     <!-- ════════ STACK CROSS-LINK ════════ -->
-    <a class="stack-banner" href="/stack" aria-label="See related stack interactions">
+    <a class="stack-banner" href="/stack/the-stack.html" aria-label="See related stack interactions">
       <svg class="sb-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
         <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
