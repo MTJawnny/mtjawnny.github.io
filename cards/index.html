@@ -370,10 +370,12 @@
     .page { max-width: 1240px; }
 
     .controls {
-      max-width: 640px;
-      margin: 0 auto;
       padding: 1.6rem 2.5rem 1.4rem;
       border-bottom-width: 3px;
+    }
+    .controls-inner {
+      max-width: 640px;
+      margin: 0 auto;
     }
     .search-icon { left: 22px; width: 24px; height: 24px; }
     #search {
@@ -468,30 +470,32 @@ const SUBMISSION_URL = "https://tally.so/r/b5AQB2";
   </section>
 
   <div class="controls">
-    <div class="search-wrap">
-      <span class="search-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-      </span>
-      <input id="search" type="search" inputmode="search" autocomplete="off"
-             autocapitalize="none" spellcheck="false"
-             placeholder="Search cards…" aria-label="Search cards by name">
-      <button class="clear-btn" id="clearBtn" type="button" aria-label="Clear search" hidden>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-          <line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/>
-        </svg>
-      </button>
-    </div>
+    <div class="controls-inner">
+      <div class="search-wrap">
+        <span class="search-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </span>
+        <input id="search" type="search" inputmode="search" autocomplete="off"
+               autocapitalize="none" spellcheck="false"
+               placeholder="Search cards…" aria-label="Search cards by name">
+        <button class="clear-btn" id="clearBtn" type="button" aria-label="Clear search" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/>
+          </svg>
+        </button>
+      </div>
 
-    <div class="suggest-panel" id="suggestPanel" hidden>
-      <p>No cards match “<span class="q" id="noMatchQ"></span>”.</p>
-      <a class="suggest-btn" id="suggestLink" href="#">
-        Suggest a card
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/>
-        </svg>
-      </a>
+      <div class="suggest-panel" id="suggestPanel" hidden>
+        <p>No cards match “<span class="q" id="noMatchQ"></span>”.</p>
+        <a class="suggest-btn" id="suggestLink" href="#">
+          Suggest a card
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/>
+          </svg>
+        </a>
+      </div>
     </div>
   </div>
 
