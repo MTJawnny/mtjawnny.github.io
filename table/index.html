@@ -406,6 +406,12 @@
     .tk-links { max-width: 380px; gap: 1rem; }
   }
 
+  /* Desktop only — a little extra room under the title on top of the
+     1.1rem all sizes already get (.setup-row above). */
+  @media (min-width: 900px) {
+    .setup-row { margin-top: 1.6rem; }
+  }
+
   .splash-more {
     padding: 6px 24px 56px;
     display: flex;
@@ -2572,7 +2578,7 @@ const HELPER_TOKENS = [
   { id: 'daynight',      name: 'Day / Night',            imgs: ['/table/helpertokens/day.png', '/table/helpertokens/night.png'] },
   { id: 'minetomb',      name: 'Mine / Tomb',            imgs: ['/table/helpertokens/mine.png', '/table/helpertokens/tomb.png'] },
   { id: 'speed',         name: 'Speed',                  imgs: ['/table/helpertokens/speed.png'] },
-  { id: 'initundercity', name: 'Initi / Undercity', imgs: ['/table/helpertokens/initiative.png', '/table/helpertokens/undercity.png'] }
+  { id: 'initundercity', name: 'Initiative / Under', imgs: ['/table/helpertokens/initiative.png', '/table/helpertokens/undercity.png'] }
 ];
 
 function toggleGadgetView() {
