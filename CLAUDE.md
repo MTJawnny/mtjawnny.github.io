@@ -51,7 +51,16 @@ not just legal positioning.
 - **Card images are keyed by oracle_id, NEVER by slug.** Canonical URL:
   https://cdn.mtjawnny.com/cards/png/<oracle_id>.png
   Double-faced cards: <oracle_id>-front.png and <oracle_id>-back.png.
-  Single-faced: no suffix. PNG only — no jpg, no other extensions.
+  Single-faced: no suffix. PNG only — no jpg, no other extensions. This is
+  the full-res canonical asset; solo card pages always use it via cardImg().
+- **Gallery thumbnails (2026-07) are a derived WebP, gallery-only.** Canonical
+  URL: https://cdn.mtjawnny.com/cards/webp/<oracle_id>.webp (DFCs:
+  <oracle_id>-front.webp / -back.webp — same suffix convention as the PNG).
+  Generated automatically by the pipeline's image_sync.py alongside the PNG
+  (600px wide, quality 82) — never hand-authored, never referenced from a
+  solo card page. Currently only cards/index.html's search gallery uses it,
+  via `.replace('/cards/png/','/cards/webp/')` on the resolved PNG URL, with
+  a fallback chain: webp thumb -> full PNG -> noart SVG.
 - **Slug is an HTML filename only** (names the .html page, e.g. pris.html).
   It has NOTHING to do with image storage. Never build an image URL from a
   slug. Never hardcode same-origin card image paths in new/edited pages.

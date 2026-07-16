@@ -601,10 +601,13 @@ const SUBMISSION_URL = "https://tally.so/r/b5AQB2";
     grid.innerHTML = list.map(({ c }) => {
       const href = '/' + c.file;          // card pages live at the site root
       const label = esc(c.name) + ' — view card';
+      // Gallery tiles use a small WebP thumbnail (derived from the full-res PNG by
+      // the image pipeline); solo card pages keep the full-res PNG via cardImg().
+      const thumb = c.image.replace('/cards/png/', '/cards/webp/').replace(/\.png$/, '.webp');
       return (
         '<a class="tile" href="' + esc(href) + '" aria-label="' + label + '">' +
-          '<img src="' + esc(c.image) + '" alt="" loading="lazy" ' +
-               'onerror="this.closest(\'.tile\').classList.add(\'noart\')">' +
+          '<img src="' + esc(thumb) + '" data-fallback="' + esc(c.image) + '" alt="" loading="lazy" ' +
+               'onerror="if(this.dataset.fallback){this.src=this.dataset.fallback;this.dataset.fallback=\'\';}else{this.closest(\'.tile\').classList.add(\'noart\');}">' +
           '<span class="tile-fallback" aria-hidden="true">' +
             PIP_SVG + '<span class="fb-name">' + esc(c.name) + '</span>' +
           '</span>' +
