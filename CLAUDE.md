@@ -90,6 +90,10 @@ not just legal positioning.
   citations) stays smaller, ~0.8-0.95rem. Canonical reference: pris.html
   (cards), stack/the-stack.html (stack pages), table/pauper.html (format
   guides) — clone bases already carry this; don't shrink it back down.
+  Tool help-panel body copy (`.help-body p`, `TEMPLATE-03-tool.md`) is
+  intentionally in the UI-chrome band at 0.9rem, not the 1.06rem floor —
+  it's short instructional copy read once before/after playing, not
+  long-form content read mid-game. Not a drift case if you see 0.9rem there.
 - Header tagline standard (2026-07): the `.tagline` line under an h1 (e.g.
   home's "Your Free Magic: The Gathering Toolbox!") is 1.2rem, sitting a
   flat 12px below the h1's bottom edge — tune margin-top per page to hit
