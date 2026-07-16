@@ -243,6 +243,11 @@
     gap: 0.6rem;
     padding: 1rem 1.25rem 0;
   }
+  /* Card names printed on the art itself get borderline illegible at 3-up
+     on narrow phones -- drop to 2 columns so they stay readable. */
+  @media (max-width: 479.98px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
 
   .tile {
     position: relative;
