@@ -1367,7 +1367,7 @@
         <!-- 3-player only: reassigns which edge the wide seat sits on. Lives
              on the diagram it actually affects instead of a duplicate dial
              up in the button rows. -->
-        <button id="rotate-btn" class="diagram-rotate-btn" onclick="rotateSetupSeats()" aria-label="Rotate seat colors" style="display:none">
+        <button id="rotate-btn" class="diagram-rotate-btn" onclick="rotateSetupSeats()" aria-label="Rotate wide seat to next edge" style="display:none">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20 12a8 8 0 1 1-8-8c2.3 0 4.4.9 6 2.4"/>
             <path d="M20 3v5h-5"/>
@@ -1704,12 +1704,10 @@ const SEAT4 = [
   { rot: 90  },  // black  bot-left   (left side)
   { rot: 270 },  // green  bot-right  (right side)
 ];
-/* 3p: top spans (faces from top → 180), bottom-left (90), bottom-right (270) */
-const SEAT3 = [
-  { rot: 180 },
-  { rot: 90  },
-  { rot: 270 },
-];
+/* 3p seats are NOT a fixed array like SEAT2/SEAT4 -- which edge the wide
+   tile sits on is player-chosen (Rotate Seats) and must survive Start Game,
+   so getSeat() below reads them straight out of LAYOUT3[S.setupLayout3]
+   instead. See LAYOUT3 (further down) for the four rotation stops. */
 /* 2p: top (180), bottom (0) */
 const SEAT2 = [
   { rot: 180 },
@@ -1807,9 +1805,16 @@ function clearSave() {
 
 // ══ SEAT HELPERS ══════════════════════════════════════
 function seatSet() {
-  return S.playerCount === 2 ? SEAT2 : S.playerCount === 3 ? SEAT3 : SEAT4;
+  return S.playerCount === 2 ? SEAT2 : SEAT4;
 }
-function getSeat(i) { return seatSet()[i] ?? seatSet()[0]; }
+/* 3-player seats read straight from LAYOUT3[S.setupLayout3] so the real
+   game grid (buildGrid) and every rotation-dependent helper below (effRot,
+   sideOf, the CMD mini-maps) all agree with whatever edge Rotate Seats
+   left the wide tile on -- there is no separate "real game" shape anymore. */
+function getSeat(i) {
+  if (S.playerCount === 3) return LAYOUT3[S.setupLayout3]?.[i] ?? LAYOUT3[0][i];
+  return seatSet()[i] ?? seatSet()[0];
+}
 
 /* Effective rotation for on-panel UI. In desktop mode everything is forced
    upright (0°) — a browser window is read from one side, never passed
@@ -1867,9 +1872,9 @@ function selP(n) {
   // as player count switches, so the tiles below never shift.
   const dg = document.getElementById('dir-group');
   if (dg) dg.style.visibility = n === 2 ? 'hidden' : 'visible';
-  // Rotate Seats (reassign which color holds the wide/top-BL-BR roles) only
-  // makes sense for the 3-player shape. It's an absolutely-positioned
-  // overlay on the diagram, so display:none here can't shift any layout.
+  // Rotate Seats (moves which edge the wide seat sits on) only makes sense
+  // for the 3-player shape. It's an absolutely-positioned overlay on the
+  // diagram, so display:none here can't shift any layout.
   const rb = document.getElementById('rotate-btn');
   if (rb) rb.style.display = n === 3 ? 'flex' : 'none';
   S.setupLayout3 = 0; // Rotate Seats always starts fresh with the wide seat on top
@@ -1898,15 +1903,13 @@ function selLife(n, auto) {
 /* A live miniature of the real in-game table on the splash; tapping a seat
    cycles its color through WUBRG (+ the extra tile colors), same as the old
    color-map, but now also previews life total. */
-/* 3-player setup preview only: the wide tile (always slot 0) can sit on any
-   of the table's 4 edges. Rotate Seats cycles top → right → bottom → left,
-   so the big tile visibly moves around the table instead of just the colors
-   reshuffling in place. This is a PREVIEW-ONLY rotation — the real in-game
-   grid (SEAT3/buildGrid()) is a fixed top/bottom-left/bottom-right shape and
-   is not touched, so once Start Game is pressed the table always renders
-   wide-on-top regardless of which edge was previewed here. Four stops (not
-   three) so every step is a genuine 90° move — three stops meant the last
-   step (right straight to left) jumped past "bottom" and read as a swap. */
+/* 3-player: the wide tile (always slot 0) can sit on any of the table's 4
+   edges. Rotate Seats cycles top → right → bottom → left in this setup
+   preview, and Start Game carries S.setupLayout3 into the real game --
+   getSeat()/buildGrid() read the same table below, so the in-game grid
+   always matches whatever edge was chosen here. Four stops (not three) so
+   every step is a genuine 90° move — three stops meant the last step
+   (right straight to left) jumped past "bottom" and read as a swap. */
 const LAYOUT3 = [
   [ { col: '1 / 3', row: '1',     rot: 180 }, { col: '1', row: '2', rot: 90  }, { col: '2', row: '2', rot: 270 } ], // top
   [ { col: '2',     row: '1 / 3', rot: 270 }, { col: '1', row: '1', rot: 90  }, { col: '1', row: '2', rot: 90  } ], // right
@@ -2023,11 +2026,13 @@ function checkKO() {
 
 function startGame() {
   const pc = S.playerCount, dir = S.dir, sl = S.startLife, tc = S.tileColors.slice();
+  const layout3 = S.setupLayout3;
   S = freshState();
   S.playerCount = pc;
   S.dir = dir;
   S.startLife = sl;
   S.tileColors = tc;
+  S.setupLayout3 = layout3; // carry the Rotate Seats choice into the real grid
   S.phase = 'choose';
   S.upkeep = Array(pc).fill(false);
   S.ko     = Array(pc).fill(false);
@@ -2060,12 +2065,17 @@ function buildGrid(container) {
   grid.classList.toggle('desktop', S.desktopMode);
 
   for (let i = 0; i < n; i++) {
+    const seat = getSeat(i);
     const rot = effRot(i);
     const p = document.createElement('div');
     p.className = 'panel';
     p.dataset.index = i;
     p.dataset.mana = tileColor(i);
-    if (n === 3 && i === 0) p.style.gridColumn = '1 / 3';
+    // 3p's wide seat can sit on any of the 4 table edges (Rotate Seats) --
+    // col/row come straight from the seat table so the panel actually lands
+    // where the setup preview promised, instead of always assuming slot 0
+    // is a fixed top-spanning tile.
+    if (n === 3) { p.style.gridColumn = seat.col; p.style.gridRow = seat.row; }
 
     // One rotated stack per panel. Everything inside is authored upright;
     // the container rotation orients the whole stack to the seat.
@@ -2080,8 +2090,12 @@ function buildGrid(container) {
     // rot 90 maps frame +x → screen +y; rot 270 inverts. For 0/180 seats
     // frame −y is both screen-mid-ward AND away from the life row, so the
     // same shift is always collision-free there.
+    // 3p is handled separately: the wide seat can span either axis
+    // depending on which edge Rotate Seats left it on, so a single
+    // hardcoded row/column assumption doesn't hold — see seat3Shift().
     const towardMid = (n === 4 && i < 2) ? 1 : -1; // +1 = screen-down
-    const topShift = rot === 90  ? `transform:translateX(${34 * towardMid}px)`
+    const topShift = n === 3 ? seat3Shift(rot, seat.col, seat.row)
+                   : rot === 90  ? `transform:translateX(${34 * towardMid}px)`
                    : rot === 270 ? `transform:translateX(${-34 * towardMid}px)`
                    : `transform:translateY(-34px)`;
     const miniHTML = `
@@ -2160,6 +2174,26 @@ function lifeZonePos(rot) {
     case 180: return { minus: 'right:0;top:0;bottom:0;width:25%',   plus: 'left:0;top:0;bottom:0;width:25%' };
     default:  return { minus: 'left:0;top:0;bottom:0;width:25%',    plus: 'right:0;top:0;bottom:0;width:25%' };
   }
+}
+
+/* 3p mid-line nudge, generalized for all four Rotate Seats stops (the
+   fixed n===4/n===2 math above only ever has to handle a single shape, so
+   it hardcodes which side is "toward mid" -- 3p can't, since the wide seat
+   swaps between spanning two columns (top/bottom stops) and spanning two
+   rows (left/right stops)). Desired direction is worked out in SCREEN
+   space (toward whichever row/column the OTHER seat(s) occupy), then
+   rotated back into the seat's own local frame, since this transform lives
+   inside the already-rotated .seat-top element. Values are always exact
+   0/±34 -- rot is always a multiple of 90°, so cos/sin never leave
+   {0, 1, -1} and there's no sub-pixel drift to round away. */
+function seat3Shift(rot, col, row) {
+  const spansRows = row.includes('/');
+  const sx = spansRows ? (col.trim().startsWith('1') ? 34 : -34) : 0;
+  const sy = spansRows ? 0 : (row.trim().startsWith('1') ? 34 : -34);
+  const rad = rot * Math.PI / 180;
+  const x = sx * Math.cos(rad) + sy * Math.sin(rad);
+  const y = -sx * Math.sin(rad) + sy * Math.cos(rad);
+  return `transform:translate(${x}px,${y}px)`;
 }
 
 
@@ -2851,6 +2885,13 @@ function bumpTracker(e, key, i, d) {
    screen positions as the real grid. The owner's seat shows "CMD"; every
    other cell tracks damage taken FROM the player at that position.
    Cell layout never rotates (it's a map); text rotates to the owner. */
+/* n===3's wide seat can be on any edge (Rotate Seats), so its mini-map
+   cell has to span whichever axis buildGrid gave it too, not always
+   grid-column. */
+function cmdCellSpan3(j) {
+  const seat = getSeat(j);
+  return `grid-column:${seat.col};grid-row:${seat.row};`;
+}
 function toggleCmd() {
   if (S.phase === 'setup' || !S.cmdMiniOn) return;
   S.cmdOn = !S.cmdOn;
@@ -2880,7 +2921,7 @@ function renderCmdWidgets() {
     w.style.gridTemplateRows    = n === 2 ? '1fr 1fr' : (n >= 3 ? '1fr 1fr' : '1fr');
 
     w.innerHTML = Array.from({ length: n }, (_, j) => {
-      const span3 = (n === 3 && j === 0) ? 'grid-column:1/3;' : '';
+      const span3 = n === 3 ? cmdCellSpan3(j) : '';
       if (j === i) {
         return `<div class="cmd-cell own" data-c="${tileColor(i)}" style="${span3}"
                      onclick="exitCmd(event)">
@@ -3034,8 +3075,9 @@ function render() {
         const n   = S.playerCount;
         const rot = effRot(i);
         miniIn.style.gridTemplateColumns = n >= 3 ? '1fr 1fr' : '1fr';
+        miniIn.style.gridTemplateRows    = n === 2 ? '1fr 1fr' : (n >= 3 ? '1fr 1fr' : '1fr');
         miniIn.innerHTML = Array.from({ length: n }, (_, j) => {
-          const span3 = (n === 3 && j === 0) ? 'grid-column:1/3;' : '';
+          const span3 = n === 3 ? cmdCellSpan3(j) : '';
           const own   = j === i;
           const num   = own ? '' :
             `<span style="transform:rotate(${rot}deg)">${S.cmdDmg[i]?.[j] ?? 0}</span>`;
