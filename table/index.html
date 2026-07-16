@@ -473,6 +473,13 @@
   }
   .format-btn .fb-tag {
     margin-top: 7px;
+    /* Floor gap before the stats row's hairline border, so a long
+       description (e.g. Getting Started's) never sits flush against it --
+       .fb-stats's own margin-top:auto shrinks to ~0 once the tag fills the
+       tile, so this has to be a real margin, not relying on that auto
+       space. 1.32em == exactly one line at this element's own line-height,
+       reading like one Enter press after the last line of text. */
+    margin-bottom: 1.32em;
     font-family: 'Barlow', sans-serif;
     font-weight: 500;
     font-size: 18.5px;
