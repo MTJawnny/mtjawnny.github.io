@@ -310,7 +310,7 @@
   transform: translateX(-50%) translateY(8px);
   background: var(--surface);
   border: 1px solid var(--bronze-dim);
-  color: var(--white);
+  color: var(--text);
   font-family: 'Barlow', sans-serif;
   font-size: 0.9rem;
   padding: 0.6rem 1rem;
@@ -391,7 +391,9 @@
   <main>
 
     <!-- FEATURED GUIDE (leads the page) -->
-    <a class="guide-feature" href="/proxy-gear-guide.html">
+    <!-- Self-removes via the script below until PROXY_GUIDE_URL is wired to a real page,
+         same pattern as coffers/index.html's guide crosslink. -->
+    <a class="guide-feature" id="proxyGuideFeature" href="#">
       <span class="gf-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 6.5C10.5 5.4 8 5 4 5v13c4 0 6.5.4 8 1.5 1.5-1.1 4-1.5 8-1.5V5c-4 0-6.5.4-8 1.5z"/>
@@ -409,6 +411,16 @@
         </svg>
       </span>
     </a>
+    <script>
+      // TODO_PROXY_GEAR_GUIDE_URL -- set to the real guide page once it's written, then drop this script.
+      var PROXY_GUIDE_URL = "#";
+      (function () {
+        var guide = document.getElementById('proxyGuideFeature');
+        if (!guide) return;
+        if (PROXY_GUIDE_URL && PROXY_GUIDE_URL !== '#') guide.href = PROXY_GUIDE_URL;
+        else guide.remove(); // hide the cross-link until the guide exists
+      })();
+    </script>
 
     <!-- TOOLS: Browser (left) | Desktop (right) -->
     <div class="tool-columns">
@@ -463,54 +475,6 @@
             <div class="tc-rule"></div>
             <div class="tc-text"><span class="tc-desc">Pull every token your deck makes, ready to print.</span></div>
             <div class="tc-coll"><span>Free</span><span>MTJ &middot; 001</span></div>
-          </a>
-          </div>
-
-          <!-- Scryfall Tag Grabber -->
-          <div class="tcard-slot">
-          <a class="tcard" href="/tools/tag-grabber" style="--ic:#5fcfe0">
-            <div class="tc-title">
-              <svg class="tc-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
-                <circle cx="7" cy="7" r="1.2"/>
-              </svg>
-              <span class="tc-name">Tag Grabber</span>
-              <svg class="tc-cost" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><ellipse cx="12" cy="12" rx="5" ry="10"/>
-              </svg>
-            </div>
-            <div class="tc-rule"></div>
-            <div class="tc-art">
-              <img class="tc-shot is-missing" src="/toolshots/tag-grabber.png" alt="" onerror="this.classList.add('is-missing')">
-              <span class="tc-bracket tl"></span><span class="tc-bracket tr"></span>
-              <span class="tc-bracket bl"></span><span class="tc-bracket br"></span>
-              <span class="tc-glyph">
-                <svg viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M40 14H18a4 4 0 0 0-4 4v22l26 26a4 4 0 0 0 5.6 0L66 45.6a4 4 0 0 0 0-5.6z" fill="#110c19"/>
-                  <circle cx="26" cy="26" r="4"/>
-                  <path d="M34 40l8 8M40 36l8 8" stroke-width="2"/>
-                </svg>
-              </span>
-            </div>
-            <div class="tc-rule"></div>
-            <div class="tc-type">
-              <svg class="tc-type-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/>
-                <circle cx="6" cy="7" r="0.7" fill="currentColor" stroke="none"/><circle cx="8.4" cy="7" r="0.7" fill="currentColor" stroke="none"/>
-              </svg>
-              <span class="tc-type-txt">Tag Export</span>
-              <svg class="tc-setsym" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <circle cx="24" cy="24" r="14.5" stroke="currentColor" stroke-width="3.4"/>
-                <circle cx="24" cy="9" r="4.4" fill="currentColor"/>
-                <circle cx="10.5" cy="19" r="4.4" fill="currentColor"/>
-                <circle cx="37.5" cy="19" r="4.4" fill="currentColor"/>
-                <circle cx="14" cy="36" r="4.4" fill="currentColor"/>
-                <circle cx="34" cy="36" r="4.4" fill="currentColor"/>
-              </svg>
-            </div>
-            <div class="tc-rule"></div>
-            <div class="tc-text"><span class="tc-desc">Export Scryfall tags for a card or query.</span></div>
-            <div class="tc-coll"><span>Free</span><span>MTJ &middot; 002</span></div>
           </a>
           </div>
 
@@ -583,7 +547,7 @@
             </div>
             <div class="tc-rule"></div>
             <div class="tc-text"><span class="tc-desc">Turn any link or text into a scannable code.</span></div>
-            <div class="tc-coll"><span>Free</span><span>MTJ &middot; 005</span></div>
+            <div class="tc-coll"><span>Free</span><span>MTJ &middot; 002</span></div>
           </a>
           </div>
 
@@ -594,9 +558,9 @@
         <h2 class="section-head">Desktop Apps</h2>
         <div class="card-grid">
 
-          <!-- TCG Proxy Page Builder -->
+          <!-- TCG Proxy Page Builder -- not downloadable yet, styled as is-soon until the GitHub release is real -->
           <div class="tcard-slot">
-          <a class="tcard" href="https://github.com/USER/REPO/releases/latest" target="_blank" rel="noopener" style="--ic:#e76d6d">
+          <div class="tcard is-soon" aria-disabled="true" style="--ic:#e76d6d">
             <div class="tc-title">
               <svg class="tc-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="6 9 6 2 18 2 18 9"/>
@@ -611,7 +575,7 @@
             </div>
             <div class="tc-rule"></div>
             <div class="tc-art">
-              <img class="tc-shot is-missing" src="/toolshots/proxy-builder.png" alt="" onerror="this.classList.add('is-missing')">
+              <img class="tc-shot" src="/tools/toolshots/proxy-builder.png" alt="" onerror="this.classList.add('is-missing')">
               <span class="tc-bracket tl"></span><span class="tc-bracket tr"></span>
               <span class="tc-bracket bl"></span><span class="tc-bracket br"></span>
               <span class="tc-glyph">
@@ -652,13 +616,13 @@
             </div>
             <div class="tc-rule"></div>
             <div class="tc-text"><span class="tc-desc">Lay out print-ready proxy pages. Windows desktop app.</span></div>
-            <div class="tc-coll"><span>Open source</span><span>MTJ &middot; 003</span></div>
-          </a>
+            <div class="tc-coll"><span>In development</span><span>MTJ &middot; 003</span></div>
+          </div>
           </div>
 
           <!-- More Tools (coming soon) -->
           <div class="tcard-slot">
-          <span class="tcard is-soon" aria-disabled="true" style="--ic:#e3a14a">
+          <div class="tcard is-soon" aria-disabled="true" style="--ic:#e3a14a">
             <div class="tc-title">
               <svg class="tc-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 5v14M5 12h14"/>
@@ -703,7 +667,7 @@
             <div class="tc-rule"></div>
             <div class="tc-text"><span class="tc-desc">New tools are on the way.</span></div>
             <div class="tc-coll"><span>In development</span><span>MTJ &middot; 004</span></div>
-          </span>
+          </div>
           </div>
 
         </div>
