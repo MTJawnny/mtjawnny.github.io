@@ -135,13 +135,6 @@
     .splash-hero h1 { font-size: clamp(2.8rem, 16vw, 4.2rem); }
   }
 
-  .tagline {
-    font-size: 0.95rem;
-    color: var(--text-dim);
-    margin-top: 0.5rem;
-    letter-spacing: 0.01em;
-  }
-
   /* ══ SECTIONS ════════════════════════════════════════════ */
   .section { padding: 1.6rem 1.25rem 0; }
 
@@ -853,32 +846,9 @@ const ASSETS = {
 
   // Each style ships in all five colours plus an artifact version.
   // Add a style by copying a block; add/remove colours inside variants.
-  frameStyles: [
-    {
-      name: "Style One", slug: "style-one",
-      note: "Borderless full art cards!",
-      variants: [
-        { color: "White",    code: "white" },
-        { color: "Blue",     code: "blue" },
-        { color: "Black",    code: "black" },
-        { color: "Red",      code: "red" },
-        { color: "Green",    code: "green" },
-        { color: "Artifact", code: "artifact" },
-      ],
-    },
-    {
-      name: "Style Two", slug: "style-two",
-      note: "Minimalist blocky design!",
-      variants: [
-        { color: "White",    code: "white" },
-        { color: "Blue",     code: "blue" },
-        { color: "Black",    code: "black" },
-        { color: "Red",      code: "red" },
-        { color: "Green",    code: "green" },
-        { color: "Artifact", code: "artifact" },
-      ],
-    },
-  ],
+  // Empty until the actual frame files exist at /coffers/assets/frames/<slug>/<color>.(png|svg) --
+  // the whole "Card Frames" group hides itself while this is empty (see frameGroupHead below).
+  frameStyles: [],
 };
 
 // Outbound links — swap the "#" placeholders for the real URLs.
@@ -953,8 +923,8 @@ const BUNDLE_SAMPLES = [
     </div>
     <div id="backSlot"></div>
 
-    <!-- Frames -->
-    <div class="group-head">
+    <!-- Frames -- hidden by JS below while ASSETS.frameStyles is empty -->
+    <div class="group-head" id="frameGroupHead">
       <h3>Card Frames</h3>
       <span class="what-you-get">Multiple styles, all colors + artifact</span>
     </div>
@@ -997,14 +967,14 @@ const BUNDLE_SAMPLES = [
   <section class="section support">
     <div class="section-head">
       <h2>Want to support?</h2>
-      <h2>Grab my custom merch!</h2>
+      <p class="sub">Grab my custom merch!</p>
     </div>
 
     <div class="merch-list">
       <div class="merch-card feature">
         <div class="merch-body">
           <div class="merch-title">My Card Art + Proxy Guide</div>
-          <p class="merch-desc">Proxy-ready cards featuring my own original art! ( Hand-drawn in MS Paint :') ), plus a PDF guide on the paper, printer settings, and cutting tricks I learned the hard way.</p>
+          <p class="merch-desc">Proxy-ready cards featuring my own original art (hand-drawn in MS Paint, lovingly), plus a PDF guide to the paper, printer settings, and cutting tricks I learned the hard way.</p>
           <div class="bundle-preview">
             <div class="bundle-preview-head">A peek at the art inside</div>
             <div class="bundle-strip" id="bundleStrip"></div>
@@ -1136,6 +1106,9 @@ const BUNDLE_SAMPLES = [
   })();
 
   // ── Frames ──
+  if (ASSETS.frameStyles.length === 0) {
+    document.getElementById('frameGroupHead').style.display = 'none';
+  }
   document.getElementById('frameSlot').innerHTML = ASSETS.frameStyles.map((st, i) => {
     const cards = st.variants.map(v => {
       const base = FRAME_BASE + st.slug + '/' + v.code;
