@@ -321,9 +321,27 @@
     box-shadow: 0 0 0 5px var(--bg), 0 3px 12px rgba(0,0,0,0.5);
   }
 
-  /* Turn-direction dial rides the right edge of the player-selector row;
-     the (3-player only) Rotate Seats dial rides the right edge of the
-     life-chips row directly below it. Both shrunk to fit that row. */
+  /* Rotate Seats — floats in the corner of the diagram it edits. z-index
+     sits above the (unpositioned-stacking) seat tiles but below start-btn
+     (z-index:20), so it never competes with the centered Start circle. */
+  .diagram-rotate-btn {
+    position: absolute; top: 10px; right: 10px;
+    width: clamp(38px, 10vw, 46px); height: clamp(38px, 10vw, 46px);
+    border-radius: 50%;
+    border: 2px solid var(--bronze-dim);
+    background: var(--surface);
+    color: var(--bronze);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 15;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+    transition: border-color 0.18s, background 0.18s;
+  }
+  .diagram-rotate-btn:hover { border-color: var(--bronze); background: var(--bronze-glow); }
+  .diagram-rotate-btn svg { width: 55%; height: 55%; }
+
+  /* Turn-direction dial rides the right edge of the player-selector row,
+     shrunk to fit it. (Rotate Seats lives on the table diagram itself —
+     see .diagram-rotate-btn below — since it only affects that diagram.) */
   .turn-item {
     display: flex; flex-direction: column; align-items: center; gap: 4px;
     width: clamp(56px, 16vw, 72px);
@@ -1317,22 +1335,22 @@
         <button id="l30" class="chip" onclick="selLife(30)">30</button>
         <button id="l40" class="chip sel" onclick="selLife(40)">40</button>
       </div>
-      <div class="turn-item" id="rotate-item" style="visibility:hidden">
-        <button id="rotate-btn" class="dir-btn" onclick="rotateSetupSeats()" aria-label="Rotate seat colors">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 12a8 8 0 1 1-8-8c2.3 0 4.4.9 6 2.4"/>
-            <path d="M20 3v5h-5"/>
-            <rect x="9" y="9" width="6" height="6" rx="1.5" fill="currentColor" stroke="none"/>
-          </svg>
-        </button>
-        <span class="dir-word">Rotate Seats</span>
-      </div>
     </div>
 
     <div class="table-wrap">
       <div class="table-diagram">
         <div id="color-map" class="setup-seat-grid"></div>
         <button id="start-btn" onclick="startGame()"><span>Start</span><span>Game</span></button>
+        <!-- 3-player only: reassigns which edge the wide seat sits on. Lives
+             on the diagram it actually affects instead of a duplicate dial
+             up in the button rows. -->
+        <button id="rotate-btn" class="diagram-rotate-btn" onclick="rotateSetupSeats()" aria-label="Rotate seat colors" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 12a8 8 0 1 1-8-8c2.3 0 4.4.9 6 2.4"/>
+            <path d="M20 3v5h-5"/>
+            <rect x="9" y="9" width="6" height="6" rx="1.5" fill="currentColor" stroke="none"/>
+          </svg>
+        </button>
       </div>
     </div>
   </section>
@@ -1818,9 +1836,10 @@ function selP(n) {
   const dg = document.getElementById('dir-group');
   if (dg) dg.style.visibility = n === 2 ? 'hidden' : 'visible';
   // Rotate Seats (reassign which color holds the wide/top-BL-BR roles) only
-  // makes sense for the 3-player shape.
-  const ri = document.getElementById('rotate-item');
-  if (ri) ri.style.visibility = n === 3 ? 'visible' : 'hidden';
+  // makes sense for the 3-player shape. It's an absolutely-positioned
+  // overlay on the diagram, so display:none here can't shift any layout.
+  const rb = document.getElementById('rotate-btn');
+  if (rb) rb.style.display = n === 3 ? 'flex' : 'none';
   S.setupLayout3 = 0; // Rotate Seats always starts fresh with the wide seat on top
   selLife(n === 2 ? 20 : 40); // sensible default; user can still override after — also re-renders the diagram
 }
