@@ -3,6 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>
+  /* Locks the pentagon layout to physical screen size, not viewport CSS
+     width, so browser zoom (which shrinks the effective viewport just like
+     a narrower window would) can't knock a desktop monitor back into the
+     tablet grid. Set once, before <style> parses, so there's no flash. */
+  if (window.screen && window.screen.width >= 900) {
+    document.documentElement.classList.add('is-desktop-pentagon');
+  }
+</script>
 <meta name="theme-color" content="#1e1728" />
 <meta name="description" content="Your free Magic: The Gathering toolbox: card explainers, stack interactions, deck utilities, and custom proxy assets." />
 <meta property="og:title" content="MTJawnny — Free MTG Toolbox" />
@@ -513,7 +522,13 @@
        hanging text below each button -- so the old pentagon-top/height
        formula's generous label-block allowance is gone; it only needs to
        clear circle-to-circle now. */
-    @media (min-width: 900px) {
+    /* Locked to physical screen size via .is-desktop-pentagon (see the
+       early <head> script), not a viewport-width media query -- browser
+       zoom shrinks the effective CSS viewport exactly like a narrower
+       window would, which used to knock this back into the tablet grid
+       mid-zoom. Nested selectors below all resolve as
+       "html.is-desktop-pentagon <selector>". */
+    html.is-desktop-pentagon {
       /* Wider than the title+pips row above it (~455px at this breakpoint)
          on purpose -- a deliberate visual overshoot, not a sizing mistake. */
       .tagline {
