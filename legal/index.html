@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1e1728">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Legal">
+<meta name="description" content="Privacy policy, terms of use, Wizards of the Coast fan content notice, and MTJawnny's stance on using proxies ethically.">
+<link rel="icon" href="/favicon.ico">
+<link rel="manifest" href="/manifest.json">
+<meta property="og:title" content="Legal &amp; Privacy — MTJawnny">
+<meta property="og:description" content="Privacy policy, terms of use, Wizards of the Coast fan content notice, and MTJawnny's stance on using proxies ethically.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mtjawnny.com/legal">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://mtjawnny.com/legal">
+<title>Legal &amp; Privacy — MTJawnny</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WKH3Y62H5H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WKH3Y62H5H');
+</script>
+<link href="/fonts/fonts.css" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #1e1728;
+    --surface:     #261d33;
+    --bronze:      #b8935a;
+    --bronze-dim:  #7a5e35;
+    --bronze-glow: rgba(184,147,90,0.15);
+    --text-dim:    #9b8fb0;
+    --white:       #f0ece6;
+    --muted:       #6b5f7a;
+    --radius:      10px;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button, input { font-family: inherit; }
+
+  .page {
+    max-width: 640px;
+    margin: 0 auto;
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+  }
+
+  /* ══ HEADER — mirrors Tablekeep splash-hero ══════════════ */
+  .splash-hero { padding: 0.25rem 0 0; }
+  .tk-header { text-align: center; padding: 0 1.5rem; }
+
+  .logo-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1.6rem;
+  }
+
+  .logo-home {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 6px;
+    margin: -6px;
+    text-decoration: none;
+    transition: background 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .logo-home:hover, .logo-home:active { background: var(--bronze-glow); }
+  button.logo-home { background: none; border: 0; font: inherit; cursor: pointer; }
+  .logo-home:focus-visible { outline: 2px solid var(--bronze); outline-offset: 2px; }
+  .logo-home .logo-pip-ring { display: block; }
+  .logo-home-label {
+    position: absolute;
+    top: calc(100% - 5px);
+    left: calc(50% + 2px);
+    transform: translateX(-50%);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .logo-pip-ring { width: 48px; height: 48px; flex-shrink: 0; }
+
+  .splash-hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 14vw, 3.6rem);
+    letter-spacing: 0.04em;
+    color: var(--bronze);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .tagline {
+    font-size: 1.2rem;
+    color: var(--text-dim);
+    margin-top: 0.6rem;
+    letter-spacing: 0.01em;
+  }
+
+  @media (min-width: 640px) {
+    .logo-wrap { gap: 0.9rem; }
+    .logo-pip-ring { width: 60px; height: 60px; }
+    .splash-hero h1 { font-size: clamp(2.8rem, 16vw, 4.2rem); }
+  }
+
+  /* ══ QUICK NAV ══════════════ */
+  .toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    justify-content: center;
+    padding: 1.6rem 1.5rem 0;
+  }
+  .toc a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--bronze);
+    text-decoration: none;
+    border: 1px solid var(--bronze-dim);
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .toc a:hover { border-color: var(--bronze); background: var(--bronze-glow); }
+
+  /* ══ CONTENT ══════════════ */
+  main { padding: 1.6rem 1.5rem 0.5rem; }
+
+  .legal-section { margin-bottom: 2.4rem; scroll-margin-top: 1rem; }
+  .legal-section h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 1.6rem;
+    letter-spacing: 0.02em;
+    color: var(--bronze);
+    text-transform: uppercase;
+    margin-bottom: 0.9rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--bronze-dim);
+  }
+  .legal-section h3 {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 1.06rem;
+    color: var(--white);
+    margin: 1.1rem 0 0.4rem;
+  }
+  .legal-section p {
+    font-size: 1.06rem;
+    line-height: 1.55;
+    color: var(--white);
+    margin-bottom: 0.9rem;
+  }
+  .legal-section ul {
+    margin: 0 0 0.9rem 1.2rem;
+    padding: 0;
+  }
+  .legal-section li {
+    font-size: 1.06rem;
+    line-height: 1.55;
+    margin-bottom: 0.6rem;
+  }
+  .legal-section a { color: var(--bronze); }
+  .legal-section a:hover { text-decoration: none; }
+  .legal-section strong { color: var(--bronze); }
+
+  .not-legal-advice {
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 0.9rem 1.1rem;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+    margin: 0 1.5rem 2rem;
+  }
+
+  .updated-line {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    padding: 0 1.5rem 1rem;
+  }
+
+  /* ══ FOOTER ══════════════ */
+  footer { text-align: center; padding: 2rem 1.5rem 0.5rem; }
+  .footer-buttons {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;
+    max-width: 400px; margin: 0 auto; padding: 0 1.25rem;
+  }
+  .footer-btn {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0.4rem; white-space: nowrap;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.5rem;
+    color: var(--bronze);
+    font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 0.88rem;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .footer-btn:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+  .footer-btn svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+  .legal-note { margin-top: 0.85rem; text-align: center; font-size: 0.76rem; color: var(--muted); line-height: 1.4; }
+
+  @media (min-width: 640px) {
+    .footer-buttons { max-width: 380px; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <section class="splash-hero">
+    <header class="tk-header">
+      <div class="logo-wrap">
+        <a class="logo-home" href="/" aria-label="Back to MTJawnny home">
+          <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+            <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+            <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+          </svg>
+          <span class="logo-home-label">home</span>
+        </a>
+        <h1>Legal</h1>
+        <button class="logo-home logo-share" id="shareBtn" type="button" aria-label="Share this page">
+          <svg class="logo-pip-ring" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5" opacity="0.4"/>
+            <circle cx="24" cy="24" r="16" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+            <line x1="14.8" y1="24" x2="30.16" y2="17.16" stroke="#b8935a" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="14.8" y1="24" x2="30.16" y2="30.84" stroke="#b8935a" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="14.8" cy="24" r="3.4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="30.16" cy="17.16" r="3.4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+            <circle cx="30.16" cy="30.84" r="3.4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+          </svg>
+          <span class="logo-home-label">share</span>
+        </button>
+      </div>
+      <p class="tagline">Privacy, terms, and using proxies the right way.</p>
+    </header>
+  </section>
+
+  <nav class="toc" aria-label="Sections on this page">
+    <a href="#privacy">Privacy</a>
+    <a href="#terms">Terms of Use</a>
+    <a href="#fan-content">Fan Content Notice</a>
+    <a href="#proxies">Proxy Ethics</a>
+  </nav>
+
+  <div class="not-legal-advice">
+    This page is written in plain English by MTJawnny's solo maintainer, in good faith, to
+    honestly describe how this free hobby site works. It is not legal advice and hasn't
+    been reviewed by an attorney.
+  </div>
+
+  <main>
+
+    <section class="legal-section" id="privacy">
+      <h2>Privacy Policy</h2>
+      <p>
+        MTJawnny.com is a static, ad-free hobby site. Here's what actually happens when you
+        visit it.
+      </p>
+
+      <h3>What we collect</h3>
+      <p>
+        Google Analytics 4 (GA4) runs on every page: aggregate stats like pages viewed,
+        rough location, device type, and referrer. It's used to see what's getting used,
+        not to identify you personally. GA4 sets cookies to do this; you can opt out with
+        the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics Opt-out Browser Add-on</a>,
+        or block cookies in your own browser settings.
+      </p>
+      <p>
+        There are no accounts, no logins, and no server-side database on this site. It
+        can't identify you by name or email, because it never asks for one anywhere on
+        mtjawnny.com itself.
+      </p>
+
+      <h3>Third-party services this site links out to</h3>
+      <ul>
+        <li><strong>Ko-fi</strong> (tipping): <a href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener">ko-fi.com/mtjawnny</a>. Any payment or account info you give Ko-fi is handled entirely by Ko-fi, under Ko-fi's own privacy policy.</li>
+        <li><strong>Tally</strong> (card-suggestion and bug-report forms): anything submitted through a "Suggest a card" or "Report a bug" link goes to Tally.so, not to this site, and is governed by Tally's privacy policy.</li>
+        <li><strong>Instagram</strong> (@mtjawnny): an external social link.</li>
+        <li><strong>Scryfall</strong>: some tools, like Token Grabber, query Scryfall's public API directly from your browser to look up card data. No personal info about you passes through this site to do that.</li>
+        <li><strong>cdn.mtjawnny.com</strong> (Cloudflare R2): card art and mana symbols are served from this asset host, with a Scryfall-hosted fallback. It's a static CDN; it doesn't collect anything about you beyond standard server logs.</li>
+        <li><strong>GitHub Pages</strong>: this site is hosted on GitHub Pages, which logs standard server-access data under GitHub's own privacy statement.</li>
+      </ul>
+
+      <h3>Cookies</h3>
+      <p>
+        The only cookies set on this site come from Google Analytics. There's no first-party
+        tracking cookie, no ad-network pixel, and no cross-site retargeting.
+      </p>
+
+      <h3>Children's privacy</h3>
+      <p>
+        This site isn't directed at children under 13 and doesn't knowingly collect
+        information from them.
+      </p>
+
+      <h3>Changes</h3>
+      <p>
+        This policy gets updated as the site changes. The date at the bottom of this page
+        is the last time it was touched.
+      </p>
+    </section>
+
+    <section class="legal-section" id="terms">
+      <h2>Terms of Use</h2>
+      <p>By using mtjawnny.com, here's what you're agreeing to, kept as short as it can honestly be:</p>
+      <ul>
+        <li><strong>It's free, and it's a hobby project.</strong> Card explainers, proxy pages, rules pages, and tools are provided as-is, with no warranty of accuracy, uptime, or fitness for any particular purpose. Rulings and rules interactions are checked against Scryfall and the official Comprehensive Rules, but mistakes happen; always confirm anything tournament-critical with the official source or your judge.</li>
+        <li><strong>Use the tools at your own risk.</strong> Tablekeep, the QR generator, Token Grabber, and everything else under /tools/ run entirely in your browser. Nothing is guaranteed to be bug-free.</li>
+        <li><strong>External links aren't ours.</strong> Links to Ko-fi, Instagram, Tally, Scryfall, Wizards of the Coast, or anywhere else go to sites this project doesn't control and isn't responsible for.</li>
+        <li><strong>No scraping the CDN for redistribution.</strong> Card art is served here to make this site work, not as a free image host for other projects. Don't hotlink or bulk-scrape cdn.mtjawnny.com.</li>
+        <li><strong>This isn't legal advice.</strong> This page was written in good faith by the site's solo maintainer, not drafted or reviewed by a lawyer. For an authoritative answer on privacy law, trademark, or anything else here, talk to an actual attorney.</li>
+      </ul>
+    </section>
+
+    <section class="legal-section" id="fan-content">
+      <h2>Fan Content &amp; Trademark Notice</h2>
+      <p>
+        MTJawnny is unofficial Fan Content permitted under the
+        <a href="https://company.wizards.com/en/legal/fancontentpolicy" target="_blank" rel="noopener">Wizards of the Coast Fan Content Policy</a>.
+        It is not approved or endorsed by Wizards of the Coast. Portions of the materials
+        used are property of Wizards of the Coast LLC. ©Wizards of the Coast LLC.
+      </p>
+      <p>
+        Card names, card text, mana symbols, and set data referenced on this site belong to
+        Wizards of the Coast; MTJawnny claims no ownership over them and reproduces them
+        only as permitted by that policy. Every printable card page on this site also
+        carries its own attribution line for this reason.
+      </p>
+    </section>
+
+    <section class="legal-section" id="proxies">
+      <h2>Using Proxies Ethically</h2>
+      <p>
+        This site frames proxies as playtesting, budget, and accessibility tools, never
+        as counterfeits. If you print anything from mtjawnny.com, here's the line
+        we ask you to hold:
+      </p>
+      <ul>
+        <li><strong>Say what it is.</strong> A proxy is a stand-in, not a substitute for the real card anywhere that distinction matters. Don't pass a proxy off as an authentic card in a trade, a sale, or anything involving money changing hands.</li>
+        <li><strong>Know your table, know your event.</strong> Casual playgroups and most Commander tables are proxy-friendly, but sanctioned tournaments, even many local ones, have their own rules about proxies, sometimes none at all. Check with your playgroup or tournament organizer before you sit down with proxies in your deck.</li>
+        <li><strong>Never sell proxies as the real thing.</strong> Passing off a proxy as an authentic, tournament-legal Magic card, to anyone, for any price, isn't something this site supports or endorses.</li>
+        <li><strong>The point is access, not deception.</strong> Proxies exist here so more people can try expensive cards, playtest a build before buying in, or play with cards they can't otherwise get, not to trick anyone.</li>
+      </ul>
+      <p>If that's not how you're planning to use what you print, this site isn't for you.</p>
+    </section>
+
+  </main>
+
+  <p class="updated-line">Last updated July 16, 2026. Questions? Reach out via Ko-fi or Instagram below.</p>
+
+  <footer>
+    <div class="footer-buttons">
+      <a class="footer-btn" href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+        Tips Appreciated!
+        <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
+      </a>
+      <a class="footer-btn" href="https://instagram.com/mtjawnny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        MTJawnny
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+    </div>
+    <div class="legal-note">Fan content, not affiliated with Wizards of the Coast</div>
+  </footer>
+
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  var btn = document.getElementById('shareBtn');
+  if (!btn) return;
+  var canonical = document.querySelector('link[rel="canonical"]');
+  var url = (canonical && canonical.href) ? canonical.href : location.href;
+  var raw = document.title || '';
+  var title = raw.replace(/\s*[—·|-]\s*MTJawnny\s*$/i, '').trim() || raw;
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function () { t.classList.remove('show'); }, 1800);
+  }
+  function legacyCopy() {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = url; ta.setAttribute('readonly', '');
+      ta.style.position = 'absolute'; ta.style.left = '-9999px';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      showToast('Link copied');
+    } catch (e) { showToast('Copy not supported'); }
+  }
+  btn.addEventListener('click', function () {
+    if (navigator.share) { navigator.share({ title: title, url: url }).catch(function () {}); return; }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function () { showToast('Link copied'); }).catch(legacyCopy);
+    } else { legacyCopy(); }
+  });
+})();
+</script>
+
+<!-- ===== MTJawnny pip-ring footer nav ===== -->
+<style>
+  .mtjnav-wrap { padding: 0.75rem 1rem; display: flex; justify-content: center; }
+  .mtjnav, .mtjnav * { box-sizing: border-box; }
+  .mtjnav {
+    --size: min(94vw, 380px);
+    --R:    calc(var(--size) * 0.34);
+    --pip:  calc(var(--size) * 0.24);
+    position: relative; width: var(--size); height: var(--size);
+  }
+  .mtjnav-bg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .mtjnav-bg .back    { fill: #130e1b; stroke: #b8935a; stroke-width: 2; vector-effect: non-scaling-stroke; }
+  .mtjnav-bg .connect { fill: none;    stroke: #b8935a; stroke-width: 5; vector-effect: non-scaling-stroke; }
+  .mtjnav-pip { position: absolute; left: 50%; top: 50%; width: var(--pip); height: var(--pip); text-decoration: none; }
+  .mtjnav-pip.is-table   { transform: translate(calc(-50% + (-0.5878 * var(--R))), calc(-50% + (-0.8090 * var(--R)))); } /* top-left */
+  .mtjnav-pip.is-cards   { transform: translate(calc(-50% + ( 0.5878 * var(--R))), calc(-50% + (-0.8090 * var(--R)))); } /* top-right */
+  .mtjnav-pip.is-stack   { transform: translate(calc(-50% + ( 0.9511 * var(--R))), calc(-50% + ( 0.3090 * var(--R)))); } /* bottom-right */
+  .mtjnav-pip.is-tools   { transform: translate(calc(-50% + (-0.9511 * var(--R))), calc(-50% + ( 0.3090 * var(--R)))); } /* bottom-left */
+  .mtjnav-pip.is-coffers { transform: translate(-50%, calc(-50% + (1.0 * var(--R)))); } /* apex */
+  .mtjnav-dot {
+    width: 100%; height: 100%; border-radius: 50%;
+    background: #261d33; border: 5px solid #b8935a;
+    display: grid; place-items: center;
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+  .mtjnav-dot svg { width: 44%; height: 44%; color: #b8935a; display: block; }
+  .mtjnav-dot .mtjnav-icon { width: auto; height: auto; max-width: 54%; max-height: 48%; object-fit: contain; display: block; }
+  .mtjnav-pip:hover .mtjnav-dot, .mtjnav-pip:focus-visible .mtjnav-dot {
+    border-color: #d8b27a; box-shadow: 0 0 14px rgba(184,147,90,0.35), 0 6px 18px rgba(0,0,0,0.4);
+    transform: translateY(-2px);
+  }
+  .mtjnav-pip:focus-visible { outline: none; }
+  .mtjnav-pip.is-current .mtjnav-dot { opacity: 0.45; }
+  .mtjnav-top {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: calc(var(--size) * 0.13); height: calc(var(--size) * 0.13);
+    min-width: 44px; min-height: 44px;
+    border-radius: 50%; cursor: pointer; padding: 0;
+    background: #261d33; border: 2px solid #8a6d42;
+    display: grid; place-items: center;
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+  .mtjnav-top svg { width: 42%; height: 42%; color: #b8935a; display: block; }
+  .mtjnav-top:hover { border-color: #b8935a; transform: translate(-50%, calc(-50% - 2px)); box-shadow: 0 4px 14px rgba(0,0,0,0.4); }
+  .mtjnav-top:focus-visible { outline: 2px solid #b8935a; outline-offset: 3px; }
+  @media (min-width: 640px) { .mtjnav { --size: min(72vw, 470px); } }
+  @media (prefers-reduced-motion: reduce) { .mtjnav-dot { transition: none; } }
+</style>
+
+<div class="mtjnav-wrap">
+  <nav class="mtjnav" aria-label="Site sections">
+    <svg class="mtjnav-bg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle class="back"    cx="50" cy="50" r="49"/>
+      <circle class="connect" cx="50" cy="50" r="34"/>
+    </svg>
+    <a class="mtjnav-pip is-table"   href="/table"   aria-label="Table"   data-i="table"><span class="mtjnav-dot"></span></a>
+    <a class="mtjnav-pip is-cards"   href="/cards"   aria-label="Cards"   data-i="cards"><span class="mtjnav-dot"></span></a>
+    <a class="mtjnav-pip is-stack"   href="/stack"   aria-label="Stack"   data-i="stack"><span class="mtjnav-dot"></span></a>
+    <a class="mtjnav-pip is-tools"   href="/tools"   aria-label="Tools"   data-i="tools"><span class="mtjnav-dot"></span></a>
+    <a class="mtjnav-pip is-coffers" href="/coffers" aria-label="Coffers" data-i="coffers"><span class="mtjnav-dot"></span></a>
+    <button class="mtjnav-top" type="button" aria-label="Back to top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>
+    </button>
+  </nav>
+</div>
+
+<script>
+(function () {
+  var G = {
+    table:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M9 5v14"/></svg>',
+    tools:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17v3h3l5.3-5.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.2-.6-.6-2.2 2.6-2.5Z"/></svg>',
+    cards:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="12" height="15" rx="2"/><path d="M8 6V4a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-2"/></svg>',
+    stack:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5-10-5ZM2 13l10 5 10-5M2 18l10 5 10-5"/></svg>',
+    coffers:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16l-1 11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1L4 8Z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/><circle cx="12" cy="14" r="2"/></svg>'
+  };
+  var seg = (location.pathname.split('/')[1] || '').toLowerCase();
+  document.querySelectorAll('.mtjnav-pip').forEach(function (a) {
+    var k = a.getAttribute('data-i');
+    var dot = a.querySelector('.mtjnav-dot');
+    var img = new Image();
+    img.className = 'mtjnav-icon'; img.alt = '';
+    img.onerror = function () { dot.innerHTML = G[k] || ''; };
+    img.src = '/icons/' + k + '.png';
+    dot.appendChild(img);
+    var s = (a.getAttribute('href').split('/')[1] || '').toLowerCase();
+    if (s && s === seg) { a.classList.add('is-current'); a.setAttribute('aria-current', 'page'); }
+  });
+})();
+</script>
+<script>
+(function () {
+  var b = document.querySelector('.mtjnav-top');
+  if (!b) return;
+  b.addEventListener('click', function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  });
+})();
+</script>
+<!-- ===== /MTJawnny pip-ring footer nav ===== -->
+
+</body>
+</html>
