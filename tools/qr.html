@@ -175,7 +175,7 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 0.45rem;
-    font-size: 0.78rem;
+    font-size: 0.85rem;
     color: var(--text-dim);
   }
   .meta-row .over { color: var(--red); font-weight: 600; }
@@ -192,7 +192,7 @@
     border: 1px solid var(--bronze-dim);
     border-radius: 20px;
     color: var(--text-dim);
-    font-size: 0.78rem;
+    font-size: 0.85rem;
     font-weight: 600;
     padding: 0.34rem 0.72rem;
     cursor: pointer;
@@ -207,7 +207,7 @@
     align-items: baseline;
     margin-bottom: 0.5rem;
   }
-  .seg-label .hint { font-size: 0.74rem; color: var(--text-dim); font-weight: 400; }
+  .seg-label .hint { font-size: 0.82rem; color: var(--text-dim); font-weight: 400; }
 
   .seg {
     display: grid;
@@ -224,7 +224,7 @@
     border-right: 1px solid var(--bronze-dim);
     color: var(--text-dim);
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     padding: 0.55rem 0.3rem;
     cursor: pointer;
     transition: background 0.16s, color 0.16s;
@@ -253,7 +253,7 @@
   .color-field { flex: 1; }
   .color-field span {
     display: block;
-    font-size: 0.74rem;
+    font-size: 0.82rem;
     color: var(--text-dim);
     margin-bottom: 0.35rem;
   }
@@ -297,7 +297,7 @@
   .score-label {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
-    font-size: 0.78rem;
+    font-size: 0.85rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--text-dim);
@@ -317,7 +317,7 @@
     margin-top: 0.5rem;
   }
   .score-fill { height: 100%; width: 0; border-radius: 4px; transition: width 0.25s, background 0.25s; }
-  .score-note { font-size: 0.78rem; color: var(--text-dim); margin-top: 0.45rem; line-height: 1.35; }
+  .score-note { font-size: 0.85rem; color: var(--text-dim); margin-top: 0.45rem; line-height: 1.35; }
   .score.good    .score-verdict { color: var(--green); }
   .score.good    .score-fill    { background: var(--green); }
   .score.fair    .score-verdict { color: #e6a23c; }
@@ -328,25 +328,36 @@
   /* Mode switch (Single / Batch) */
   .mode-wrap { margin-bottom: 1rem; }
 
-  /* Label field (round frame) */
-  .label-field { display: none; margin-top: 0.9rem; }
-  .label-field.show { display: block; }
+  /* Stack-swap: overlays two mutually-exclusive children in the same grid
+     cell so the container always sizes to the taller one. Which child is
+     visible toggles via visibility (never display), so the swap can never
+     change the container's height -- nothing around it, including the
+     preview column on desktop, ever shifts when it happens. */
+  .stack-swap { display: grid; }
+  .stack-swap > * { grid-area: 1 / 1; }
+  .single-only, .batch-only { visibility: visible; }
+  body.batch .single-only { visibility: hidden; }
+  body:not(.batch) .batch-only { visibility: hidden; }
+
+  /* Label field (round frame) / Corner-radius field (square frame) --
+     also stack-swapped (.frame-extra) so switching Frame shape can't
+     resize the Frame control-block either. */
+  .frame-extra { margin-top: 0.9rem; }
+  .label-field, .corners-field { visibility: hidden; }
+  .label-field.show, .corners-field.show { visibility: visible; }
   .label-field input[type="text"] {
     width: 100%;
     background: var(--bg);
     border: 1px solid var(--bronze-dim);
     border-radius: 8px;
     color: var(--text);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     padding: 0.6rem 0.7rem;
     transition: border-color 0.18s;
   }
   .label-field input[type="text"]:focus { outline: none; border-color: var(--bronze); }
 
   /* Batch textarea */
-  .batch-only { display: none; }
-  body.batch .single-only { display: none; }
-  body.batch .batch-only { display: block; }
   textarea#batch-data {
     width: 100%;
     min-height: 132px;
@@ -355,21 +366,23 @@
     border: 1px solid var(--bronze-dim);
     border-radius: 8px;
     color: var(--text);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     line-height: 1.5;
     padding: 0.7rem 0.8rem;
     font-family: 'Barlow', sans-serif;
     transition: border-color 0.18s;
   }
   textarea#batch-data:focus { outline: none; border-color: var(--bronze); }
-  .preview-note { font-size: 0.78rem; color: var(--text-dim); margin-top: 0.55rem; }
+  .preview-note { font-size: 0.85rem; color: var(--text-dim); margin-top: 0.55rem; min-height: 1.1em; }
 
-  /* Action buttons */
+  /* Action buttons -- single/batch action rows are stack-swapped
+     (.actions-stack) so their row-count difference (2 rows vs. 1) can't
+     resize the preview card either. */
+  .actions-stack { margin-top: 1rem; }
   .actions {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.7rem;
-    margin-top: 1rem;
   }
   .actions .btn-wide { grid-column: 1 / -1; }
   .act-btn {
@@ -382,7 +395,7 @@
     border-radius: var(--radius);
     color: var(--bronze);
     font-weight: 600;
-    font-size: 0.86rem;
+    font-size: 0.92rem;
     padding: 0.7rem 0.5rem;
     cursor: pointer;
     transition: border-color 0.18s, background 0.18s;
@@ -490,27 +503,124 @@
     #qr-canvas { width: 300px; }
   }
 
-  /* ══ DESKTOP: two-panel layout (controls left, sticky preview right) ══
-     No markup changes -- .page's cap just lifts and main becomes a 2-col
-     grid, placing the existing 3 <section class="card"> children (input,
-     controls, preview) by position/class instead of DOM order. */
+  /* ══ DESKTOP (≥900px): workbench layout ══════════════════════════════
+     Three labeled panels -- Content (input) and Style (controls) stack
+     inside .left-col, Preview sits beside it as a single sibling. main is
+     a single-row 2-col grid (default align-items: stretch), so Preview's
+     height simply matches .left-col's natural height -- no row-spanning,
+     so no dead space gets distributed into either card. Panel labels are
+     desktop-only ::before pseudo-elements so no markup exists below
+     900px; mobile/tablet rules above are untouched. */
   @media (min-width: 900px) {
-    .page { max-width: 900px; }
+    .page { max-width: 1080px; }
+    .tk-header { padding: 2.4rem 2rem 0; }
     main {
       display: grid;
-      grid-template-columns: 1fr 380px;
-      align-items: start;
-      gap: 1.25rem;
+      grid-template-columns: minmax(0, 1fr) 400px;
+      gap: 1.4rem;
       padding: 0 2rem;
+      margin-top: 0.4rem;
     }
-    main > section:nth-of-type(1) { grid-column: 1; grid-row: 1; }
-    main > section:nth-of-type(2) { grid-column: 1; grid-row: 2; }
+    .left-col { display: flex; flex-direction: column; gap: 1.4rem; min-width: 0; }
+    .card { margin-top: 0; padding: 1.35rem 1.5rem 1.5rem; }
+
+    /* Panel labels */
+    .left-col > section::before,
+    .preview-card::before {
+      display: block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 0.88rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--bronze-dim);
+      padding-bottom: 0.6rem;
+      margin-bottom: 1.15rem;
+    }
+    .left-col > section:nth-of-type(1)::before { content: 'Content'; }
+    .left-col > section:nth-of-type(2)::before { content: 'Style'; }
+    .preview-card::before { content: 'Preview'; text-align: left; }
+
+    /* Content panel: label + mode switch share the header row; the
+       hairline moves onto the content area so all three panels match */
+    .left-col > section:nth-of-type(1) {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      column-gap: 1rem;
+      align-items: center;
+    }
+    .left-col > section:nth-of-type(1)::before { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+    .left-col > section:nth-of-type(1) .mode-wrap { margin-bottom: 0; }
+    .left-col > section:nth-of-type(1) .mode-stack { grid-column: 1 / -1; }
+    .left-col > section:nth-of-type(1) .single-only,
+    .left-col > section:nth-of-type(1) .batch-only {
+      border-top: 1px solid var(--bronze-dim);
+      padding-top: 1.15rem;
+      margin-top: 0.9rem;
+    }
+    textarea#data { min-height: 108px; }
+
+    /* Style panel: two independent columns (encoding vs. appearance),
+       each its own flex track -- so one column's control count/height
+       never stretches empty space into the other's cells. Colors runs
+       as a third, full-width row below both, since neither column is
+       wide enough on its own to give the swatches real room. */
+    .left-col > section:nth-of-type(2) {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 1.6rem;
+      row-gap: 1.25rem;
+      align-content: start;
+      align-items: start;
+    }
+    .seg-label { flex-wrap: wrap; column-gap: 0.6rem; }
+    .left-col > section:nth-of-type(2)::before { grid-column: 1 / -1; margin-bottom: 0; }
+    .style-col { display: flex; flex-direction: column; gap: 1.25rem; }
+    .left-col > section:nth-of-type(2) .control-block { margin-top: 0; }
+    .color-block { grid-column: 1 / -1; }
+
+    /* Colors: mirrors the same 1fr/1fr + 1.6rem-gap grid as the Style
+       panel above it, so the Classic/Custom toggle lands at exactly the
+       same width as the Finder Corners toggle, and the swatches get the
+       matching second column to scale into (rather than a fixed max-width
+       guess). Custom reveals the swatches within that column instead of
+       growing the block downward, so picking Custom can't resize the row.
+       The swatches (with their Code/Background labels) are taller than
+       the toggle alone, so the row always reserves that height
+       (visibility, not display) -- otherwise switching Classic/Custom
+       would resize the row and, via .left-col's stretch, move the
+       preview panel again. */
+    .color-row { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1.6rem; align-items: end; }
+    .color-row .colors {
+      display: flex;
+      visibility: hidden;
+      gap: 0.8rem;
+      min-width: 0;
+      margin-top: 0;
+    }
+    .color-row .colors.show { visibility: visible; }
+
+    /* Preview panel: stretches to match .left-col's height (grid default
+       align-items: stretch); content group centers in whatever extra
+       room that leaves, so the card reads as intentionally balanced
+       rather than top-heavy with empty space below. */
     .preview-card {
-      grid-column: 2;
-      grid-row: 1 / 3;
-      position: sticky;
-      top: 1.5rem;
+      position: static;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
+    .qr-frame { padding: 18px; border-radius: 12px; }
+    #qr-canvas { width: 316px; }
+    .score { margin-top: 1rem; }
+  }
+
+  /* Wide desktop: more air, larger preview stage */
+  @media (min-width: 1200px) {
+    .page { max-width: 1200px; }
+    main { grid-template-columns: minmax(0, 1fr) 448px; gap: 1.75rem; }
+    #qr-canvas { width: 356px; }
   }
   .legal-note { margin-top: 0.85rem; text-align: center; font-size: 0.76rem; color: var(--muted, var(--text-dim, #8a7d99)); line-height: 1.4; }
   .legal-note a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
@@ -557,6 +667,7 @@
   </header>
 
   <main>
+    <div class="left-col">
     <!-- INPUT -->
     <section class="card">
       <div class="mode-wrap">
@@ -566,103 +677,126 @@
         </div>
       </div>
 
-      <div class="single-only">
-        <label class="field-label" for="data">Link or text</label>
-        <textarea id="data" placeholder="https://mtjawnny.com" spellcheck="false">https://mtjawnny.com</textarea>
-        <div class="meta-row">
-          <span id="charcount">19 characters</span>
-          <span>Longer text = denser code</span>
+      <div class="mode-stack stack-swap">
+        <div class="single-only">
+          <label class="field-label" for="data">Link or text</label>
+          <textarea id="data" placeholder="https://mtjawnny.com" spellcheck="false">https://mtjawnny.com</textarea>
+          <div class="meta-row">
+            <span id="charcount">19 characters</span>
+            <span>Longer text = denser code</span>
+          </div>
+          <div class="chips" id="chips">
+            <button class="chip" data-url="https://mtjawnny.com">Home</button>
+            <button class="chip" data-url="https://mtjawnny.com/table">Tablekeep</button>
+            <button class="chip" data-url="https://mtjawnny.com/cards">Cardex</button>
+            <button class="chip" data-url="https://mtjawnny.com/stack">Stack It Up</button>
+            <button class="chip" data-url="https://mtjawnny.com/tools">Deck Tech</button>
+            <button class="chip" data-url="https://mtjawnny.com/coffers">Coffers</button>
+          </div>
         </div>
-        <div class="chips" id="chips">
-          <button class="chip" data-url="https://mtjawnny.com">Home</button>
-          <button class="chip" data-url="https://mtjawnny.com/table">Tablekeep</button>
-          <button class="chip" data-url="https://mtjawnny.com/cards">Cardex</button>
-          <button class="chip" data-url="https://mtjawnny.com/stack">Stack It Up</button>
-          <button class="chip" data-url="https://mtjawnny.com/tools">Deck Tech</button>
-          <button class="chip" data-url="https://mtjawnny.com/coffers">Coffers</button>
-        </div>
-      </div>
 
-      <div class="batch-only">
-        <label class="field-label" for="batch-data">Links or text, one per line</label>
-        <textarea id="batch-data" placeholder="https://mtjawnny.com/pris&#10;https://mtjawnny.com/wheel&#10;https://mtjawnny.com/bog" spellcheck="false">https://mtjawnny.com/pris
+        <div class="batch-only">
+          <label class="field-label" for="batch-data">Links or text, one per line</label>
+          <textarea id="batch-data" placeholder="https://mtjawnny.com/pris&#10;https://mtjawnny.com/wheel&#10;https://mtjawnny.com/bog" spellcheck="false">https://mtjawnny.com/pris
 https://mtjawnny.com/wheel
 https://mtjawnny.com/bog</textarea>
-        <div class="meta-row">
-          <span id="batchcount">3 codes</span>
-          <span>One QR per line, named by slug</span>
+          <div class="meta-row">
+            <span id="batchcount">3 codes</span>
+            <span>One QR per line, named by slug</span>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- CONTROLS -->
     <section class="card">
-      <div class="control-block">
-        <div class="seg-label">
-          <span class="field-label" style="margin-bottom:0">Error correction</span>
-          <span class="hint" id="ecc-hint">Recovers ~15% damage</span>
+      <div class="style-col">
+        <div class="control-block">
+          <div class="seg-label">
+            <span class="field-label" style="margin-bottom:0">Error correction</span>
+            <span class="hint" id="ecc-hint">Recovers ~15% damage</span>
+          </div>
+          <div class="seg" id="ecc" role="group" aria-label="Error correction level">
+            <button data-ecc="L">L</button>
+            <button data-ecc="M" class="active">M</button>
+            <button data-ecc="Q">Q</button>
+            <button data-ecc="H">H</button>
+          </div>
         </div>
-        <div class="seg" id="ecc" role="group" aria-label="Error correction level">
-          <button data-ecc="L">L</button>
-          <button data-ecc="M" class="active">M</button>
-          <button data-ecc="Q">Q</button>
-          <button data-ecc="H">H</button>
+
+        <div class="control-block">
+          <div class="seg-label">
+            <span class="field-label" style="margin-bottom:0">Size</span>
+            <span class="hint"><span id="size-val">512</span> px export</span>
+          </div>
+          <input type="range" id="size" min="256" max="1024" step="64" value="512">
+        </div>
+
+        <div class="control-block">
+          <div class="seg-label">
+            <span class="field-label" style="margin-bottom:0">Border</span>
+            <span class="hint"><span id="quiet-val">4</span> module quiet zone</span>
+          </div>
+          <input type="range" id="quiet" min="0" max="10" step="1" value="4">
         </div>
       </div>
 
-      <div class="control-block">
-        <div class="seg-label">
-          <span class="field-label" style="margin-bottom:0">Size</span>
-          <span class="hint"><span id="size-val">512</span> px export</span>
+      <div class="style-col">
+        <div class="control-block">
+          <span class="field-label">Frame</span>
+          <div class="seg" id="frame" role="group" aria-label="Frame shape">
+            <button data-frame="square" class="active">Square</button>
+            <button data-frame="round">Round</button>
+          </div>
+          <div class="frame-extra stack-swap">
+            <div class="corners-field show" id="corners-field">
+              <div class="seg-label">
+                <span class="field-label" style="margin-bottom:0">Corners</span>
+                <span class="hint" id="corner-hint">2.5mm · MTG card corner</span>
+              </div>
+              <div class="seg" id="corners" role="group" aria-label="Background corner radius">
+                <button data-corner="0">Sharp</button>
+                <button data-corner="2">2mm</button>
+                <button data-corner="2.5" class="active">2.5mm</button>
+                <button data-corner="3">3mm</button>
+              </div>
+            </div>
+            <div class="label-field" id="label-field">
+              <input type="text" id="label" maxlength="26" placeholder="Curved label, e.g. SCAN ME (optional)" spellcheck="false">
+            </div>
+          </div>
         </div>
-        <input type="range" id="size" min="256" max="1024" step="64" value="512">
+
+        <div class="control-block">
+          <span class="field-label">Finder corners</span>
+          <div class="seg" id="finders" role="group" aria-label="Finder corner style">
+            <button data-finders="square" class="active">Square</button>
+            <button data-finders="rounded">Rounded</button>
+          </div>
+        </div>
       </div>
 
-      <div class="control-block">
-        <div class="seg-label">
-          <span class="field-label" style="margin-bottom:0">Border</span>
-          <span class="hint"><span id="quiet-val">4</span> module quiet zone</span>
-        </div>
-        <input type="range" id="quiet" min="0" max="10" step="1" value="4">
-      </div>
-
-      <div class="control-block">
-        <span class="field-label">Frame</span>
-        <div class="seg" id="frame" role="group" aria-label="Frame shape">
-          <button data-frame="square" class="active">Square</button>
-          <button data-frame="round">Round</button>
-        </div>
-        <div class="label-field" id="label-field">
-          <input type="text" id="label" maxlength="26" placeholder="Curved label, e.g. SCAN ME (optional)" spellcheck="false">
-        </div>
-      </div>
-
-      <div class="control-block">
-        <span class="field-label">Finder corners</span>
-        <div class="seg" id="finders" role="group" aria-label="Finder corner style">
-          <button data-finders="square" class="active">Square</button>
-          <button data-finders="rounded">Rounded</button>
-        </div>
-      </div>
-
-      <div class="control-block">
+      <div class="control-block color-block">
         <span class="field-label">Colors</span>
-        <div class="seg" id="theme" role="group" aria-label="Color theme">
-          <button data-theme="classic" class="active">Classic</button>
-          <button data-theme="custom">Custom</button>
-        </div>
-        <div class="colors" id="colors">
-          <label class="color-field">
-            <span>Code</span>
-            <input type="color" id="fg" value="#1e1728">
-          </label>
-          <label class="color-field">
-            <span>Background</span>
-            <input type="color" id="bg" value="#f0ead0">
-          </label>
+        <div class="color-row">
+          <div class="seg" id="theme" role="group" aria-label="Color theme">
+            <button data-theme="classic" class="active">Classic</button>
+            <button data-theme="custom">Custom</button>
+          </div>
+          <div class="colors" id="colors">
+            <label class="color-field">
+              <span>Code</span>
+              <input type="color" id="fg" value="#1e1728">
+            </label>
+            <label class="color-field">
+              <span>Background</span>
+              <input type="color" id="bg" value="#f0ead0">
+            </label>
+          </div>
         </div>
       </div>
     </section>
+    </div>
 
     <!-- PREVIEW -->
     <section class="card preview-card">
@@ -680,28 +814,30 @@ https://mtjawnny.com/bog</textarea>
         <div class="score-note" id="score-note"></div>
       </div>
 
-      <!-- single-mode actions -->
-      <div class="actions single-only">
-        <button class="act-btn primary btn-wide" id="dl-png">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Download PNG
-        </button>
-        <button class="act-btn" id="dl-svg">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-          SVG
-        </button>
-        <button class="act-btn" id="copy">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Copy
-        </button>
-      </div>
+      <div class="actions-stack stack-swap">
+        <!-- single-mode actions -->
+        <div class="actions single-only">
+          <button class="act-btn primary btn-wide" id="dl-png">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download PNG
+          </button>
+          <button class="act-btn" id="dl-svg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            SVG
+          </button>
+          <button class="act-btn" id="copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+        </div>
 
-      <!-- batch-mode action -->
-      <div class="actions batch-only">
-        <button class="act-btn primary btn-wide" id="dl-zip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          <span id="zip-label">Download ZIP (3 codes)</span>
-        </button>
+        <!-- batch-mode action -->
+        <div class="actions batch-only">
+          <button class="act-btn primary btn-wide" id="dl-zip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span id="zip-label">Download ZIP (3 codes)</span>
+          </button>
+        </div>
       </div>
     </section>
   </main>
@@ -830,6 +966,7 @@ https://mtjawnny.com/bog</textarea>
     <ul>
       <li>Quick-pick chips fill in MTJawnny pages for you.</li>
       <li>The round frame adds a disc and an optional curved label. The code stays square inside, so nothing scannable is lost.</li>
+      <li>Square frames can round their background corners; 2.5mm matches a real MTG card corner.</li>
       <li>Batch mode turns a list of links into a zip of PNGs, each named by its slug.</li>
       <li>The scannability meter weighs contrast, border, density, and styling. Test a real scan before printing when it dips below Good.</li>
       <li>Download a crisp PNG, a scalable SVG, or copy straight to your clipboard.</li>
@@ -3199,6 +3336,8 @@ var qrcode = function() {
   var bgEl     = $('bg');
   var labelWrap= $('label-field');
   var labelEl  = $('label');
+  var cornersWrap = $('corners-field');
+  var cornerHint  = $('corner-hint');
   var frameEl  = $('qr-frame');
   var noteEl   = $('preview-note');
   var zipLabel = $('zip-label');
@@ -3217,10 +3356,14 @@ var qrcode = function() {
     quiet: 4,
     finders: 'square',// square | rounded
     frame: 'square',  // square | round
+    corner: '2.5',    // square-frame background corner radius in mm: '0' | '2' | '2.5' | '3'
     label: ''
   };
 
   var ECC_NOTE = { L: 'Recovers ~7% damage', M: 'Recovers ~15% damage', Q: 'Recovers ~25% damage', H: 'Recovers ~30% damage' };
+  var CORNER_NOTE = { '0': 'Sharp 90° corner', '2': '2mm rounded', '2.5': '2.5mm · MTG card corner', '3': '3mm rounded' };
+  // mm -> px at an assumed 300 DPI print target (no site-wide physical-size standard exists)
+  var PX_PER_MM = 300 / 25.4;
 
   function isFinder(r, c, n) {
     return (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7);
@@ -3320,7 +3463,11 @@ var qrcode = function() {
     var dim = total * scale;
     canvas.width = dim; canvas.height = dim;
     var ctx = canvas.getContext('2d');
-    ctx.fillStyle = state.bg; ctx.fillRect(0, 0, dim, dim);
+    // rounded background corners, clamped so they never eat into the quiet zone's modules
+    var cornerPx = Math.min(parseFloat(state.corner) * PX_PER_MM, q * scale, dim / 2);
+    ctx.fillStyle = state.bg;
+    rrect(ctx, 0, 0, dim, dim, cornerPx);
+    ctx.fill();
     drawCode(ctx, qr, n, scale, q*scale, q*scale);
   }
 
@@ -3417,7 +3564,9 @@ var qrcode = function() {
 
   // ---- main render (preview + score) ----
   function render() {
-    frameEl.style.background = state.frame === 'round' ? 'var(--bg)' : (state.bg || '#ffffff');
+    // rounded-corner square frames sit on the page background so the corner shape reads in the preview
+    var roundedSquare = state.frame === 'square' && parseFloat(state.corner) > 0;
+    frameEl.style.background = (state.frame === 'round' || roundedSquare) ? 'var(--bg)' : (state.bg || '#ffffff');
     var text = currentText();
     var overflow = false, n = 0;
     try { n = paintTo(canvas, text); }
@@ -3458,8 +3607,13 @@ var qrcode = function() {
     var sr = 'crispEdges';
     if (state.frame !== 'round') {
       var q = state.quiet, total = n + q*2;
-      var body = '<rect width="' + total + '" height="' + total + '" fill="' + state.bg + '"/>' +
-                 svgModules(qr, n, q, q) + svgFinders(q, q, n);
+      // corner radius in module units, sized so SVG matches the PNG at the current size setting
+      var pxScale = Math.max(4, Math.floor(state.size / total));
+      var rM = Math.min(parseFloat(state.corner) * PX_PER_MM / pxScale, q, total / 2);
+      var bgRect = rM > 0
+        ? '<rect width="' + total + '" height="' + total + '" rx="' + rM.toFixed(3) + '" fill="' + state.bg + '" shape-rendering="geometricPrecision"/>'
+        : '<rect width="' + total + '" height="' + total + '" fill="' + state.bg + '"/>';
+      var body = bgRect + svgModules(qr, n, q, q) + svgFinders(q, q, n);
       return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + total + ' ' + total + '" shape-rendering="' + sr + '">' + body + '</svg>';
     }
     // round frame in module units
@@ -3636,8 +3790,12 @@ var qrcode = function() {
   });
 
   segWire('finders', 'finders');
+  segWire('corners', 'corner', function () {
+    cornerHint.textContent = CORNER_NOTE[state.corner];
+  });
   segWire('frame', 'frame', function () {
     labelWrap.classList.toggle('show', state.frame === 'round');
+    cornersWrap.classList.toggle('show', state.frame !== 'round');
   });
 
   // theme
