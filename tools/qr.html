@@ -712,19 +712,6 @@ https://mtjawnny.com/bog</textarea>
       <div class="style-col">
         <div class="control-block">
           <div class="seg-label">
-            <span class="field-label" style="margin-bottom:0">Error correction</span>
-            <span class="hint" id="ecc-hint">Recovers ~15% damage</span>
-          </div>
-          <div class="seg" id="ecc" role="group" aria-label="Error correction level">
-            <button data-ecc="L">L</button>
-            <button data-ecc="M" class="active">M</button>
-            <button data-ecc="Q">Q</button>
-            <button data-ecc="H">H</button>
-          </div>
-        </div>
-
-        <div class="control-block">
-          <div class="seg-label">
             <span class="field-label" style="margin-bottom:0">Size</span>
             <span class="hint"><span id="size-val">512</span> px export</span>
           </div>
@@ -738,23 +725,37 @@ https://mtjawnny.com/bog</textarea>
           </div>
           <input type="range" id="quiet" min="0" max="10" step="1" value="4">
         </div>
+
+        <div class="corners-field show control-block" id="corners-field">
+          <div class="seg-label">
+            <span class="field-label" style="margin-bottom:0">Corners</span>
+            <span class="hint" id="corner-hint">2.5mm · MTG card corner</span>
+          </div>
+          <input type="range" id="corners" min="0" max="9" step="1" value="2" aria-label="Background corner radius">
+        </div>
       </div>
 
       <div class="style-col">
+        <div class="control-block">
+          <div class="seg-label">
+            <span class="field-label" style="margin-bottom:0">Error correction</span>
+            <span class="hint" id="ecc-hint">Recovers ~15% damage</span>
+          </div>
+          <div class="seg" id="ecc" role="group" aria-label="Error correction level">
+            <button data-ecc="L">L</button>
+            <button data-ecc="M" class="active">M</button>
+            <button data-ecc="Q">Q</button>
+            <button data-ecc="H">H</button>
+          </div>
+        </div>
+
         <div class="control-block">
           <span class="field-label">Frame</span>
           <div class="seg" id="frame" role="group" aria-label="Frame shape">
             <button data-frame="square" class="active">Square</button>
             <button data-frame="round">Round</button>
           </div>
-          <div class="frame-extra stack-swap">
-            <div class="corners-field show" id="corners-field">
-              <div class="seg-label">
-                <span class="field-label" style="margin-bottom:0">Corners</span>
-                <span class="hint" id="corner-hint">2.5mm · MTG card corner</span>
-              </div>
-              <input type="range" id="corners" min="0" max="9" step="1" value="2" aria-label="Background corner radius">
-            </div>
+          <div class="frame-extra">
             <div class="label-field" id="label-field">
               <input type="text" id="label" maxlength="26" placeholder="Curved label, e.g. SCAN ME (optional)" spellcheck="false">
             </div>
