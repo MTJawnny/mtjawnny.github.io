@@ -272,12 +272,11 @@
   .qr-frame {
     display: inline-block;
     background: #ffffff;
-    border-radius: 8px;
     padding: 14px;
     line-height: 0;
     max-width: 100%;
   }
-  #qr-canvas { width: 260px; max-width: 100%; height: auto; image-rendering: auto; border-radius: 2px; }
+  #qr-canvas { width: 260px; max-width: 100%; height: auto; image-rendering: auto; }
 
   /* Scannability score */
   .score {
@@ -611,7 +610,7 @@
       flex-direction: column;
       justify-content: center;
     }
-    .qr-frame { padding: 18px; border-radius: 12px; }
+    .qr-frame { padding: 18px; }
     #qr-canvas { width: 316px; }
     .score { margin-top: 1rem; }
   }
@@ -754,12 +753,7 @@ https://mtjawnny.com/bog</textarea>
                 <span class="field-label" style="margin-bottom:0">Corners</span>
                 <span class="hint" id="corner-hint">2.5mm · MTG card corner</span>
               </div>
-              <div class="seg" id="corners" role="group" aria-label="Background corner radius">
-                <button data-corner="0">Sharp</button>
-                <button data-corner="2">2mm</button>
-                <button data-corner="2.5" class="active">2.5mm</button>
-                <button data-corner="3">3mm</button>
-              </div>
+              <input type="range" id="corners" min="0" max="9" step="1" value="2" aria-label="Background corner radius">
             </div>
             <div class="label-field" id="label-field">
               <input type="text" id="label" maxlength="26" placeholder="Curved label, e.g. SCAN ME (optional)" spellcheck="false">
@@ -780,10 +774,10 @@ https://mtjawnny.com/bog</textarea>
         <span class="field-label">Colors</span>
         <div class="color-row">
           <div class="seg" id="theme" role="group" aria-label="Color theme">
-            <button data-theme="classic" class="active">Classic</button>
-            <button data-theme="custom">Custom</button>
+            <button data-theme="classic">Classic</button>
+            <button data-theme="custom" class="active">Custom</button>
           </div>
-          <div class="colors" id="colors">
+          <div class="colors show" id="colors">
             <label class="color-field">
               <span>Code</span>
               <input type="color" id="fg" value="#1e1728">
@@ -3336,6 +3330,7 @@ var qrcode = function() {
   var bgEl     = $('bg');
   var labelWrap= $('label-field');
   var labelEl  = $('label');
+  var cornersEl = $('corners');
   var cornersWrap = $('corners-field');
   var cornerHint  = $('corner-hint');
   var frameEl  = $('qr-frame');
@@ -3349,19 +3344,26 @@ var qrcode = function() {
   var state = {
     mode: 'single',   // single | batch
     ecc: 'M',
-    theme: 'classic',
-    fg: '#000000',
-    bg: '#ffffff',
+    theme: 'custom',
+    fg: '#1e1728',
+    bg: '#f0ead0',
     size: 512,
     quiet: 4,
     finders: 'square',// square | rounded
     frame: 'square',  // square | round
-    corner: '2.5',    // square-frame background corner radius in mm: '0' | '2' | '2.5' | '3'
+    corner: '2.5',    // square-frame background corner radius in mm -- one of CORNER_VALUES
     label: ''
   };
 
   var ECC_NOTE = { L: 'Recovers ~7% damage', M: 'Recovers ~15% damage', Q: 'Recovers ~25% damage', H: 'Recovers ~30% damage' };
-  var CORNER_NOTE = { '0': 'Sharp 90° corner', '2': '2mm rounded', '2.5': '2.5mm · MTG card corner', '3': '3mm rounded' };
+  // corner slider is an index into this scale, not a raw mm value, since the
+  // spacing isn't uniform (a bare jump from Sharp to 2mm, then 0.5mm steps)
+  var CORNER_VALUES = [0, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6];
+  function cornerNote(mm) {
+    if (mm === 0) return 'Sharp 90° corner';
+    if (mm === 2.5) return '2.5mm · MTG card corner';
+    return mm + 'mm rounded';
+  }
   // mm -> px at an assumed 300 DPI print target (no site-wide physical-size standard exists)
   var PX_PER_MM = 300 / 25.4;
 
@@ -3790,9 +3792,6 @@ var qrcode = function() {
   });
 
   segWire('finders', 'finders');
-  segWire('corners', 'corner', function () {
-    cornerHint.textContent = CORNER_NOTE[state.corner];
-  });
   segWire('frame', 'frame', function () {
     labelWrap.classList.toggle('show', state.frame === 'round');
     cornersWrap.classList.toggle('show', state.frame !== 'round');
@@ -3815,6 +3814,12 @@ var qrcode = function() {
   // size / border / label
   sizeEl.addEventListener('input', function () { state.size = parseInt(sizeEl.value, 10); sizeVal.textContent = state.size; render(); });
   quietEl.addEventListener('input', function () { state.quiet = parseInt(quietEl.value, 10); quietVal.textContent = state.quiet; render(); });
+  cornersEl.addEventListener('input', function () {
+    var mm = CORNER_VALUES[parseInt(cornersEl.value, 10)];
+    state.corner = String(mm);
+    cornerHint.textContent = cornerNote(mm);
+    render();
+  });
   labelEl.addEventListener('input', function () { state.label = labelEl.value; render(); });
 
   // ---- help panel (opens only on the "?" button; no first-visit splash) ----
