@@ -560,22 +560,23 @@
     }
     textarea#data { min-height: 108px; }
 
-    /* Style panel: two independent columns (encoding vs. appearance),
-       each its own flex track -- so one column's control count/height
-       never stretches empty space into the other's cells. Colors runs
-       as a third, full-width row below both, since neither column is
-       wide enough on its own to give the swatches real room. */
+    /* Style panel: two columns (sliders vs. toggles). They don't have the
+       same number/kind of controls, so left stretches to match right's
+       height (grid default) and its flex column spaces its own controls
+       out evenly (space-between) to fill that height -- rather than
+       clumping at the top and leaving dead space before the Colors row.
+       Colors runs as a third, full-width row below both, since neither
+       column is wide enough on its own to give the swatches real room. */
     .left-col > section:nth-of-type(2) {
       display: grid;
       grid-template-columns: 1fr 1fr;
       column-gap: 1.6rem;
       row-gap: 1.25rem;
       align-content: start;
-      align-items: start;
     }
     .seg-label { flex-wrap: wrap; column-gap: 0.6rem; }
     .left-col > section:nth-of-type(2)::before { grid-column: 1 / -1; margin-bottom: 0; }
-    .style-col { display: flex; flex-direction: column; gap: 1.25rem; }
+    .style-col { display: flex; flex-direction: column; gap: 1.25rem; justify-content: space-between; }
     .left-col > section:nth-of-type(2) .control-block { margin-top: 0; }
     .color-block { grid-column: 1 / -1; }
 
