@@ -67,6 +67,11 @@
        selector / life chips / turn-control rows all match it so their
        left/right edges line up with the tile grid below. */
     --setup-w: min(92vw, 420px);
+    /* Shared with .seg-players / .chip / .turn-item-lg's width formulas
+       below (all reference these two vars) so bumping either one at a
+       breakpoint keeps every row's math in sync automatically. */
+    --chip-size: clamp(50px, 15vw, 64px);
+    --chip-gap: clamp(6px, 2vw, 10px);
   }
   .splash-hero {
     /* No forced full-viewport height — the page has enough content now
@@ -201,7 +206,7 @@
   .seg-players {
     display: flex;
     gap: 4px;
-    width: calc(4 * clamp(50px, 15vw, 64px) + 3 * clamp(6px, 2vw, 10px));
+    width: calc(4 * var(--chip-size) + 3 * var(--chip-gap));
     box-sizing: border-box;
     background: var(--surface);
     border: 1.5px solid var(--bronze-dim);
@@ -222,9 +227,9 @@
   .seg-btn.sel { background: var(--bronze); color: var(--bg); }
   .seg-btn:not(.sel):hover { color: var(--white); }
 
-  .life-chips { display: flex; gap: clamp(6px, 2vw, 10px); width: fit-content; }
+  .life-chips { display: flex; gap: var(--chip-gap); width: fit-content; }
   .chip {
-    width: clamp(50px, 15vw, 64px); height: clamp(50px, 15vw, 64px); border-radius: 50%;
+    width: var(--chip-size); height: var(--chip-size); border-radius: 50%;
     background: var(--surface); border: 2px solid var(--bronze-dim);
     color: var(--text-dim);
     font-family: 'Barlow Condensed', sans-serif;
@@ -354,7 +359,7 @@
     flex-shrink: 0;
   }
   .turn-item-lg {
-    width: calc(var(--setup-w) - (4 * clamp(50px, 15vw, 64px) + 3 * clamp(6px, 2vw, 10px)) - 10px);
+    width: calc(var(--setup-w) - (4 * var(--chip-size) + 3 * var(--chip-gap)) - 10px);
   }
   .dir-btn {
     width: clamp(44px, 13vw, 56px); height: clamp(44px, 13vw, 56px);
@@ -405,12 +410,50 @@
 @media (min-width: 640px) {
     .tk-header { padding: 0 2rem; }
     .tk-links { max-width: 380px; gap: 1rem; }
+
+    /* Tablet: the setup screen was capped at the same 420px mobile width
+       here, leaving most of the viewport empty. Scale the whole diagram
+       + controls up as one unit (--setup-w/--chip-size/--chip-gap keep
+       every dependent row's math in sync -- see the vars' definition on
+       #setup-screen), then bump the independent vw-capped text/button
+       sizes that don't derive from those vars so they grow to match. */
+    #setup-screen {
+      --setup-w: min(70vw, 560px);
+      --chip-size: clamp(64px, 9vw, 84px);
+      --chip-gap: clamp(8px, 1.4vw, 14px);
+    }
+    .seg-btn { font-size: clamp(1rem, 1.8vw, 1.2rem); }
+    .chip { font-size: clamp(1.2rem, 2.6vw, 1.5rem); }
+    .setup-seat-life { font-size: clamp(34px, 5.5vw, 54px); }
+    .setup-seat-hint { font-size: clamp(22px, 3.6vw, 34px); }
+    #start-btn {
+      width: clamp(136px, 20vw, 168px); height: clamp(136px, 20vw, 168px);
+      font-size: clamp(23px, 2.6vw, 27px);
+    }
   }
 
   /* Desktop only — a little extra room under the title on top of the
      1.1rem all sizes already get (.setup-row above). */
   @media (min-width: 900px) {
     .setup-row { margin-top: 1.6rem; }
+
+    /* Desktop: scale further still. Every floor below is set to match
+       (or just clear) the tablet block's value at the 899/900px seam --
+       see the comment on that block -- so there's no visible shrink right
+       at the breakpoint; vw then takes back over for wider screens. */
+    #setup-screen {
+      --setup-w: max(560px, min(42vw, 680px));
+      --chip-size: clamp(84px, 6vw, 104px);
+      --chip-gap: clamp(13px, 1vw, 18px);
+    }
+    .seg-btn { font-size: clamp(1.1rem, 1.3vw, 1.35rem); }
+    .chip { font-size: clamp(1.47rem, 1.8vw, 1.7rem); }
+    .setup-seat-life { font-size: clamp(50px, 4vw, 74px); }
+    .setup-seat-hint { font-size: clamp(33px, 2.6vw, 44px); }
+    #start-btn {
+      width: clamp(170px, 11vw, 210px); height: clamp(170px, 11vw, 210px);
+      font-size: clamp(24px, 1.6vw, 30px);
+    }
   }
 
   .splash-more {
@@ -438,6 +481,17 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
     width: min(560px, 100%);
+  }
+  /* Tablet/desktop: same reasoning as the setup screen above -- this was
+     capped at the mobile width on every viewport. Placed after the base
+     rule (not the earlier tk-header/.setup-row media blocks) so these
+     declarations actually win the cascade instead of being overridden by
+     the unconditional rule above. */
+  @media (min-width: 640px) {
+    .format-grid { width: max(560px, min(58vw, 680px)); }
+  }
+  @media (min-width: 900px) {
+    .format-grid { width: max(680px, min(58vw, 920px)); grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
   .format-btn {
     position: relative;
@@ -1308,6 +1362,21 @@
   .legal-note a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
   .legal-note a:hover { color: var(--bronze); }
 
+  /* ══ REPORT A BUG/FLUB (mirrors pris.html's .report-btn) ══ */
+  .report-cta { text-align: center; }
+  .report-btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: var(--surface);
+    border: 1px solid var(--bronze-dim);
+    border-radius: 10px;
+    color: var(--text-dim);
+    font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 0.9rem;
+    text-decoration: none; padding: 0.5rem 0.9rem;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .report-btn:hover { border-color: var(--bronze); color: var(--bronze); background: var(--bronze-glow); }
+  .report-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
 </style>
 </head>
 <body>
@@ -1403,6 +1472,17 @@
       </a>
     </div>
     <div class="legal-note"><a href="/legal">Legal &amp; Privacy</a> · Fan content, not affiliated with Wizards of the Coast</div>
+
+    <section class="report-cta">
+      <a class="report-btn" href="https://tally.so/r/lb5PPV?page=table/index.html" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        Report a bug or flub
+      </a>
+    </section>
 
     <h2>Format Guides</h2>
 

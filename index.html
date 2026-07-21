@@ -778,9 +778,12 @@
 
       /* Their content (Discord CTA, Ko-fi/Instagram) lives inside the
          pentagon center as .pent-social-btn now; the mobile/tablet
-         versions of these sections stay untouched below 900px. */
+         versions of these sections stay untouched below 900px. Only the
+         redundant button row hides here -- footer itself stays, since the
+         legal-note link inside it (see .legal-note) has no other home at
+         this breakpoint. */
       .discord-section,
-      footer {
+      footer .footer-buttons {
         display: none;
       }
     }
