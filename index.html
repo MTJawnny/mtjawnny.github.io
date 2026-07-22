@@ -627,6 +627,11 @@
       }
 
       .nav-tile .tile-icon { width: 180px; height: 180px; }
+      /* Fixed px instead of the base rule's 46%-of-container so the
+         artwork can be bigger than that ratio would give (82.8px) without
+         touching the 180px button itself -- 100px still leaves a healthy
+         40px of clearance to the button's own edge on every side. */
+      .nav-tile .tile-icon img { width: 100px; height: 100px; }
       .pip-label { font-size: 1.5rem; }
 
       /* "Feeling Lucky?" die, same as mobile's -- sized up a little to
