@@ -37,6 +37,11 @@
     --bronze:     #b8935a;
     --bronze-dim:#7a5e35;
     --bronze-glow: rgba(184,147,90,0.15);
+    /* Richer/warmer than --bronze -- used only for the active-turn ring
+       (see .panel.active) so the whose-turn indicator reads as a deeper
+       bronze than the site's usual tan-gold accent, without recoloring
+       that accent everywhere else it's used. */
+    --bronze-active: #cd8a3e;
     --text-dim:   #9b8fb0;
     --red:        #c0392b;
     --red-bright: #e74c3c;
@@ -616,8 +621,8 @@
 
   .panel.active {
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.12),
-                0 0 0 3px var(--bronze),
-                0 4px 20px rgba(184,147,90,0.35);
+                0 0 0 5px var(--bronze-active),
+                0 4px 24px rgba(205,138,62,0.4);
   }
   /* Lighter than a hard dim — with pass-turn easy to forget, a waiting
      player's life total still needs to stay readable at a glance. */
@@ -651,7 +656,7 @@
   }
   .panel.upkeep-alert { animation: uflash 0.5s ease 4; }
   @keyframes uflash {
-    0%,100% { box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 0 0 3px var(--bronze), 0 4px 20px rgba(184,147,90,0.35); }
+    0%,100% { box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 0 0 5px var(--bronze-active), 0 4px 24px rgba(205,138,62,0.4); }
     50%      { box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 0 0 5px #ffe600, 0 4px 24px rgba(255,230,0,0.5); }
   }
 
@@ -669,6 +674,13 @@
   }
   .upkeep-btn.armed { background: rgba(255,215,0,0.18); border-color: #ffd700; color: #ffd700; }
   .desktop .upkeep-btn { font-size: 16px; padding: 8px 18px; border-radius: 12px; }
+  /* Tablet viewport (real device width, not the manual "Desktop Mode"
+     toggle -- see .desktop above): same bigger sizing as that toggle,
+     since on an actual tablet the base mobile-sized text reads too small
+     without anyone having to remember to tap the toggle. */
+  @media (min-width: 640px) and (max-width: 899.98px) {
+    .upkeep-btn { font-size: 16px; padding: 8px 18px; border-radius: 12px; }
+  }
 
   /* Seat stack — one per panel, rotated to the seat. Holds everything
      the player reads, authored upright so left/right/above are intuitive.
@@ -698,6 +710,9 @@
   }
   .panel.active .player-label { color: var(--bronze); }
   .desktop .player-label { font-size: 20px; }
+  @media (min-width: 640px) and (max-width: 899.98px) {
+    .player-label { font-size: 20px; }
+  }
 
   /* Life row: [−  number  +] */
   .life-row {

@@ -537,21 +537,138 @@
     }
 
     /* ── DESKTOP ── */
+    /* Shared by tablet AND true desktop (no upper bound) -- desktop has no
+       higher-specificity override for any of these, unlike .orbit-field/
+       .nav-tile/.tile-icon/.pip-label below, which desktop redeclares
+       completely under html.is-desktop-pentagon. Those moved into their
+       own tablet-only block (max-width:899.98px) further down so tablet
+       can get its own pentagon-ring layout without touching desktop. */
     @media (min-width: 640px) {
       header { padding: 0.25rem 2rem 0; }
       .logo-wrap { gap: 0.9rem; }
       .logo-pip-ring { width: 60px; height: 60px; }
       h1 { font-size: clamp(2.8rem, 16vw, 4.2rem); }
-      .orbit-field { max-width: 560px; gap: 2.5rem; }
-      .nav-tile .tile-icon { width: 180px; height: 180px; }
-      .pip-label { font-size: 1.5rem; }
-      .nav-tile.is-table { transform: translate(-12px, -15px); }
-      .nav-tile.is-cards { transform: translate(12px, -15px); }
-      .nav-tile.is-tools { transform: translate(-21px, 9px); }
-      .nav-tile.is-stack { transform: translate(21px, 9px); }
       .discord-btn { width: 252px; }
       .discord-section { max-width: 510px; }
       .footer-buttons { max-width: 380px; gap: 1rem; }
+    }
+
+    /* ── TABLET (640-899.98px) ──
+       Same connected-ring pentagon as mobile instead of the old plain
+       2-column grid with a loose static stagger, so tablet actually reads
+       as "the mobile app, bigger" rather than a third distinct layout.
+       Capped at 899.98px so it never reaches real desktop widths; desktop
+       is locked to its own layout via html.is-desktop-pentagon regardless
+       of viewport (see the early <head> script), so in practice this cap
+       is redundant with that specificity, but it keeps this block's scope
+       honest to read rather than relying on that as the only guard.
+       Button stays the shared 180px from the block above (not derived
+       from a --circle var like mobile's, since it doesn't need to shrink
+       for small phones here) -- --half is just its fixed radius (90px). */
+    @media (min-width: 640px) and (max-width: 899.98px) {
+      .orbit-field {
+        --half: 90px;
+        --R: clamp(190px, 27vw, 230px);
+        --pentagon-top: calc(0.8090 * var(--R) + var(--half));
+        position: relative;
+        display: block;
+        max-width: none;
+        gap: 0;
+        padding: 0;
+        margin: 2rem auto 0;
+        height: calc(var(--pentagon-top) + var(--R) + var(--half));
+      }
+
+      .pentagon-ring {
+        display: block;
+        position: absolute;
+        left: 50%;
+        top: var(--pentagon-top);
+        width: calc(var(--R) * 2);
+        height: calc(var(--R) * 2);
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        border: 6px solid var(--bronze);
+        background: #000;
+        pointer-events: none;
+      }
+
+      .pent-watermark {
+        display: block;
+        position: absolute;
+        left: 50%;
+        top: var(--pentagon-top);
+        width: calc(var(--R) * 1.12);
+        height: calc(var(--R) * 1.12);
+        transform: translate(-50%, -50%);
+        opacity: 0.12;
+        pointer-events: none;
+      }
+
+      .nav-tile {
+        position: absolute;
+        left: 50%;
+        top: var(--pentagon-top);
+      }
+      .nav-tile.is-table {
+        transform: translate(calc(-50% + (-0.5878 * var(--R))), calc((-1 * var(--half)) + (-0.8090 * var(--R))));
+      }
+      .nav-tile.is-cards {
+        transform: translate(calc(-50% + ( 0.5878 * var(--R))), calc((-1 * var(--half)) + (-0.8090 * var(--R))));
+      }
+      .nav-tile.is-stack {
+        transform: translate(calc(-50% + ( 0.9511 * var(--R))), calc((-1 * var(--half)) + ( 0.3090 * var(--R))));
+      }
+      .nav-tile.is-tools {
+        transform: translate(calc(-50% + (-0.9511 * var(--R))), calc((-1 * var(--half)) + ( 0.3090 * var(--R))));
+      }
+      .nav-tile.is-coffers {
+        transform: translate(-50%, calc((-1 * var(--half)) + (1.0 * var(--R))));
+      }
+
+      .nav-tile .tile-icon { width: 180px; height: 180px; }
+      .pip-label { font-size: 1.5rem; }
+
+      /* "Feeling Lucky?" die, same as mobile's -- sized up a little to
+         match this breakpoint's bigger ring. */
+      .lucky-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        position: absolute;
+        left: 50%;
+        top: var(--pentagon-top);
+        transform: translate(-50%, -50%);
+        padding: 0.5rem;
+        color: var(--bronze);
+        text-decoration: none;
+        -webkit-tap-highlight-color: transparent;
+        transition: color 0.2s, transform 0.15s;
+      }
+      .lucky-die { width: 48px; height: 48px; display: block; }
+      .lucky-text {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-weight: 900;
+        font-size: 1.2rem;
+        line-height: 1;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        text-align: center;
+      }
+      .lucky-btn:hover,
+      .lucky-btn:focus-visible {
+        color: #d8b27a;
+        transform: translate(-50%, -50%) scale(1.06);
+      }
+      .lucky-btn:active {
+        transform: translate(-50%, -50%) scale(0.97);
+      }
+      .lucky-btn:focus-visible {
+        outline: 2px solid var(--bronze);
+        outline-offset: 2px;
+      }
     }
 
     /* ── PENTAGON (wide desktop) ──

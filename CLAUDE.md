@@ -25,22 +25,33 @@ not just legal positioning.
   root. Five section pips: Table, Cards, Tools, Stack, Coffers. Flat DOM on
   purpose (the desktop CSS-only hover reveal needs the pips + center to be
   literal siblings).
-- Three breakpoints:
-  - Mobile (< 640px): connected PENTAGON RING. Whole layout derives from one
-    knob, --circle (pip diameter, clamp(104px, 31vw, 138px)); --half =
-    circle/2 and --R = 1.02 * circle set the ring radius so pips never
-    overlap or overflow. Same unit-circle coefficients as the desktop
-    pentagon. Nudge feel via those two values (circle size, --R multiplier).
-  - Tablet (640-899px): plain two-column grid.
-  - Desktop (900px+): full pentagon with a hover-reveal center (social
-    cluster + per-pip descriptions).
+- Three breakpoints, all a connected PENTAGON RING now (2026-07 tablet
+  redesign dropped the old plain two-column grid):
+  - Mobile (< 640px): --circle (pip diameter, clamp(104px, 31vw, 138px))
+    sets button size; --half = circle/2. --R (ring radius, clamp(129px,
+    33vw, 178px)) is its own independent knob now, not derived from
+    --circle -- nudge ring size and button size separately.
+  - Tablet (640-899.98px): same ring, fixed 180px buttons (not a
+    --circle var -- this breakpoint's buttons don't need to shrink for
+    small phones), --half is just the fixed 90px half-button-size
+    constant, --R is its own clamp(190px, 27vw, 230px). Has its own
+    "Feeling Lucky?" die like mobile, but the desktop hover-reveal
+    center (.pent-center) stays off -- see the desktop bullet.
+  - Desktop (900px+): full pentagon, flat --R (currently 224px, not
+    viewport-scaled -- see the .orbit-field comment in index.html for
+    why), with a hover-reveal center (social cluster + per-pip
+    descriptions) instead of the "Feeling Lucky?" die mobile/tablet use.
 - All mobile-specific rules live in a single @media (max-width: 639.98px)
-  block. Keep tablet/desktop untouched when editing it.
-- "Feeling Lucky?" button (mobile only): a floating d6 die + label at the
-  ring center that jumps to a random page. Destinations are a commented
-  array in the inline <script> at the bottom of index.html (edit freely);
-  href="/cards/" is the no-JS fallback. Hidden on tablet/desktop via the
-  shared base display:none.
+  block; tablet's own pentagon rules live in a single @media
+  (min-width: 640px) and (max-width: 899.98px) block right after it.
+  Keep desktop (the html.is-desktop-pentagon block) untouched when
+  editing either.
+- "Feeling Lucky?" button (mobile + tablet, not desktop): a floating d6
+  die + label at the ring center that jumps to a random page.
+  Destinations are a commented array in the inline <script> at the
+  bottom of index.html (edit freely); href="/cards/" is the no-JS
+  fallback. Hidden on desktop via the shared base display:none (only
+  html.is-desktop-pentagon re-enables .pent-center there instead).
 - Screenshot workflow for homepage/font-accurate renders: the headless
   browser can't reach Google Fonts through the proxy, so fetch the Barlow /
   Barlow Condensed woff2 files with curl, swap the @import for a local
