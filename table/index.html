@@ -30,6 +30,12 @@
 <link href="/fonts/fonts.css" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  /* Kill the default blue/gray tap-highlight flash on every touch press --
+     every interactive element here already has its own pressed-state
+     visual (scale, color, box-shadow), so the browser's own overlay is
+     pure noise on top of it. Two existing per-element instances of this
+     property (.logo-home, .setup-seat) are now redundant but harmless. */
+  * { -webkit-tap-highlight-color: transparent; }
 
   :root {
     --bg:         #1e1728;
