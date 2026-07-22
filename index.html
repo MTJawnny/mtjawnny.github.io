@@ -368,15 +368,22 @@
            artwork's own independent size). --half is still half of
            --circle -- it's the mobile analogue of desktop's fixed
            87.5px, used to seat each button's own center on the ring
-           regardless of the ring's radius. R's floor (128px) is chosen
-           so 0.9511*R + half still stays inside 50vw at a 360px
-           viewport -- relaxed from the previous 320px assumption (the
-           last phones that narrow are effectively extinct now) to buy
-           room to push the ring out further without overflowing on any
-           screen actually in use. */
+           regardless of the ring's radius.
+           R's floor and vw coefficient are both tuned against the same
+           hard limit: 0.9511*R + half must stay inside 50vw at a 360px
+           viewport (the narrowest width still worth guarding -- true
+           320px phones are extinct, but 360px is a mainstream Android
+           CSS width, not a rare edge case, so it's not being relaxed
+           further). At vw=360 that caps R at ~130.6px, which is why the
+           floor only moved 128->129px even though this is a "push the
+           ring out more" pass -- there simply isn't more room at the
+           narrow end. The vw coefficient (32->33) and cap (165->178px)
+           did move though, since those only affect wider phones where
+           the 360px constraint doesn't bind, so that's where this pass's
+           push is actually visible. */
         --circle: clamp(104px, 31vw, 138px);
         --half: calc(var(--circle) / 2);
-        --R: clamp(128px, 32vw, 165px);
+        --R: clamp(129px, 33vw, 178px);
         --pentagon-top: calc(0.8090 * var(--R) + var(--half));
         position: relative;
         display: block;
@@ -569,24 +576,18 @@
       }
 
       .orbit-field {
-        /* R pulled in from 248px on purpose, to bring the outer pips in
-           close enough that their inner edge touches the tip of the
-           watermark ring behind them (see .pent-watermark below, which
-           scales 1:1 with R -- that's what makes the touch hold): pip
-           inner edge = R - 87.5 (87.5 is half the 175px button, unrelated
-           to R); watermark's outer edge sits at ~0.56*R. Setting those
-           equal solves to R=198.86, rounded to 200. Flat px now instead
-           of max(floor, min(20vw,22vh)) -- that vw/vh scaling would have
-           pulled R (and so the touch point) back out again on wide
-           windows, which defeats the point of tuning it to touch in the
-           first place. 900px+ desktop windows are in no danger of this
-           overflowing, so a fixed value doesn't need a viewport guard the
-           way mobile's --R does. Note this number is well under the old
-           223.75px floor .pent-center used to need (0.56*R covering the
-           125.3px social-button cluster) -- that requirement didn't go
-           away, .pent-center just isn't sized off R anymore (see its own
-           rule below) precisely so it wouldn't drag this number back up. */
-        --R: 200px;
+        /* R was tuned to 200px so the pips' inner edge exactly touched
+           the watermark's tip (R - 87.5 = 0.56*R); pushed back out to
+           224px here to open the buttons up again -- no longer an exact
+           touch, just a bit more breathing room around the watermark.
+           Flat px, not max(floor, min(20vw,22vh)) like the old
+           viewport-scaled version: 900px+ desktop windows have no
+           overflow risk worth guarding against here, and a flat value
+           keeps this number from drifting on wide windows. Still well
+           under the 223.75px .pent-center used to need before its
+           sizing was decoupled from R (see its own rule below) -- that
+           decoupling is what let R drop this low in the first place. */
+        --R: 224px;
         --pentagon-top: calc(0.8090 * var(--R) + 87.5px);
         position: relative;
         display: block;
