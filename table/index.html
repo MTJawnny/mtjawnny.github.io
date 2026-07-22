@@ -1871,7 +1871,7 @@ function freshState() {
     life: [],
     desktopMode: detectDesktop(),
     cmdOn: false,
-    cmdMiniOn: false, // whether the per-panel CMD damage mini-map button shows at all
+    cmdMiniOn: true, // whether the per-panel CMD damage mini-map button shows at all -- on by default, matches the default 4-player count (see cmdMiniSetByUser)
     cmdDmg: [],   // cmdDmg[receiver][source] — damage taken FROM each opponent
     trackersOn: { poison: false, exp: false, energy: false },
     trackerVals: { poison: [], exp: [], energy: [] },
@@ -1885,6 +1885,11 @@ let S = freshState();
 // session, so selP() knows not to clobber that choice on a later player-count
 // switch -- it should only apply its own sensible default before that happens.
 let lifeSetByUser = false;
+// Same idea for Commander Damage: defaults on for 4-player games (the
+// format it's actually built for) and off otherwise, but only until the
+// player explicitly flips it themselves (flipCmdMini/flipMaster) --
+// after that, switching player count must not silently overwrite their choice.
+let cmdMiniSetByUser = false;
 // Tracks whether the player has ever tapped a setup-preview seat this
 // session -- once true, the "TAP" hint stops rendering so it doesn't keep
 // competing with the life total for attention after it's done its job.
@@ -1999,6 +2004,9 @@ function selP(n) {
   // this itself when it runs, but once lifeSetByUser is true that call is
   // skipped, and the squares would otherwise keep showing the old count.
   else buildColorMap();
+  // Same auto-default idea for Commander Damage: on for 4-player, off
+  // otherwise, unless the player has already flipped it themselves.
+  if (!cmdMiniSetByUser) S.cmdMiniOn = (n === 4);
 }
 function selDir(d) {
   S.dir = d;
@@ -2144,13 +2152,14 @@ function checkKO() {
 
 function startGame() {
   const pc = S.playerCount, dir = S.dir, sl = S.startLife, tc = S.tileColors.slice();
-  const layout3 = S.setupLayout3;
+  const layout3 = S.setupLayout3, cmi = S.cmdMiniOn;
   S = freshState();
   S.playerCount = pc;
   S.dir = dir;
   S.startLife = sl;
   S.tileColors = tc;
   S.setupLayout3 = layout3; // carry the Rotate Seats choice into the real grid
+  S.cmdMiniOn = cmi; // carry the setup-phase Commander Damage default (see selP) into the real game
   S.phase = 'choose';
   S.upkeep = Array(pc).fill(false);
   S.ko     = Array(pc).fill(false);
@@ -2910,6 +2919,7 @@ function flipMaster() {
   const target = !allTogglesOn();
   S.lifeOn = target;
   S.cmdMiniOn = target;
+  cmdMiniSetByUser = true;
   if (!target) S.cmdOn = false;
   TRACKER_DEFS.forEach(t => S.trackersOn[t.key] = target);
   buildTrackerRows();
@@ -2925,6 +2935,7 @@ function flipLife(el) {
 }
 function flipCmdMini(el) {
   S.cmdMiniOn = !S.cmdMiniOn;
+  cmdMiniSetByUser = true;
   if (!S.cmdMiniOn) S.cmdOn = false; // close the damage overlay if it was open
   el.classList.toggle('on', S.cmdMiniOn);
   syncMaster();
