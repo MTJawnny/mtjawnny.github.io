@@ -363,19 +363,20 @@
         /* --circle (the pip *button* diameter) and --R (the ring radius)
            used to be locked together (R = 1.02 * circle) -- now split
            apart on purpose: the button circles went back to their
-           original smaller size, but the ring itself stays at the larger
-           radius from the "make it bigger" pass (see the .tile-icon img
-           override below for the same split on the icon artwork). --half
-           is still half of --circle -- it's the mobile analogue of
-           desktop's fixed 87.5px, used to seat each button's own center
-           on the ring regardless of the ring's radius. R's floor (112px,
-           down slightly from the bigger pass's 118.32px) is chosen so
-           0.9511*R + half still stays inside 50vw at a 320px viewport --
-           the widest ring this layout can carry before it would overflow
-           the screen edge on the smallest phones still worth supporting. */
+           original smaller size, but the ring itself was pushed further
+           out (see the .tile-icon img override below for the icon
+           artwork's own independent size). --half is still half of
+           --circle -- it's the mobile analogue of desktop's fixed
+           87.5px, used to seat each button's own center on the ring
+           regardless of the ring's radius. R's floor (128px) is chosen
+           so 0.9511*R + half still stays inside 50vw at a 360px
+           viewport -- relaxed from the previous 320px assumption (the
+           last phones that narrow are effectively extinct now) to buy
+           room to push the ring out further without overflowing on any
+           screen actually in use. */
         --circle: clamp(104px, 31vw, 138px);
         --half: calc(var(--circle) / 2);
-        --R: clamp(112px, 30vw, 145px);
+        --R: clamp(128px, 32vw, 165px);
         --pentagon-top: calc(0.8090 * var(--R) + var(--half));
         position: relative;
         display: block;
@@ -568,38 +569,24 @@
       }
 
       .orbit-field {
-        /* Deliberately tight -- and this time actually computed right.
-           Adjacent pentagon vertices (Table-Cards, Cards-Stack,
-           Stack-Coffers, Coffers-Tools, Tools-Table) are 72° apart; their
-           true chord distance is 2*R*sin(36°) = 1.1756*R, NOT the 0.691
-           this comment used to claim (that was only the Y-delta between a
-           mid-row pip and the apex, not an actual chord -- it ignored the
-           X-delta entirely and made the floor far more conservative than
-           it needed to be). Zero-overlap for the pip buttons' own 175px
-           circles alone is where 1.1756*R = 175, i.e. R=148.8px -- BUT the
-           real floor here is higher than that: the three fixed-size
-           .pent-social-btn circles (112px, at a 69.3px triangle radius)
-           reach 125.3px from center, and that has to stay inside the main
-           ring's own inner edge (R - 87.5) or the inner cluster visibly
-           overlaps the outer pips. That requires R >= 212.8px -- but
-           that's only the "doesn't visibly overlap" floor. The
-           .pent-center hover backdrop (sized 1.12*R, see below) also
-           needs to fully cover that same 125.3px inner-cluster extent so
-           the description reveal doesn't leave the three buttons' edges
-           peeking out from behind it; that needs 0.56*R >= 125.3, i.e.
-           R >= 223.75px, which is the actual binding constraint (it has
-           no button-size term, so it's unaffected by the buttons having
-           shrunk back down). 248px both covers that with a margin and
-           deliberately overshoots it further still -- the buttons went
-           back to their original 175px, but the ring itself was kept at
-           the larger radius from the "make it bigger" pass rather than
-           reverting alongside them. Go lower than 223.75px and the
-           backdrop stops fully hiding the inner three on hover, even
-           though the pips themselves are still fine. vw/vh caps dropped
-           low on purpose too, so the floor wins on almost any real window
-           instead of the pentagon spreading out on big screens like it
-           used to. */
-        --R: max(248px, min(20vw, 22vh));
+        /* R pulled in from 248px on purpose, to bring the outer pips in
+           close enough that their inner edge touches the tip of the
+           watermark ring behind them (see .pent-watermark below, which
+           scales 1:1 with R -- that's what makes the touch hold): pip
+           inner edge = R - 87.5 (87.5 is half the 175px button, unrelated
+           to R); watermark's outer edge sits at ~0.56*R. Setting those
+           equal solves to R=198.86, rounded to 200. Flat px now instead
+           of max(floor, min(20vw,22vh)) -- that vw/vh scaling would have
+           pulled R (and so the touch point) back out again on wide
+           windows, which defeats the point of tuning it to touch in the
+           first place. 900px+ desktop windows are in no danger of this
+           overflowing, so a fixed value doesn't need a viewport guard the
+           way mobile's --R does. Note this number is well under the old
+           223.75px floor .pent-center used to need (0.56*R covering the
+           125.3px social-button cluster) -- that requirement didn't go
+           away, .pent-center just isn't sized off R anymore (see its own
+           rule below) precisely so it wouldn't drag this number back up. */
+        --R: 200px;
         --pentagon-top: calc(0.8090 * var(--R) + 87.5px);
         position: relative;
         display: block;
@@ -624,17 +611,18 @@
         height: calc(var(--R) * 2);
         transform: translate(-50%, -50%);
         border-radius: 50%;
-        border: 7px solid var(--bronze);
+        border: 11px solid var(--bronze);
         background: #000;
         pointer-events: none;
       }
 
       /* Faded echo of the header's pip-ring mark, sitting in the open
-         interior behind the three social buttons -- same footprint as
-         the hover backdrop above it (.pent-center, sized 1.12*R for the
-         same reason) so it never peeks past the ring. Decorative only
-         (aria-hidden, no pointer-events); the opaque .pent-desc
-         backgrounds already cover it during hover. */
+         interior behind the three social buttons. Sized 1.12*R -- same
+         ratio .pent-center used to share with it -- specifically because
+         that's the math that makes its outer edge meet the pips' inner
+         edge now that R is tuned for the touch (see .orbit-field above).
+         Decorative only (aria-hidden, no pointer-events); the opaque
+         .pent-desc backgrounds already cover it during hover. */
       .pent-watermark {
         display: block;
         position: absolute;
@@ -709,13 +697,20 @@
          description. The social links are real, focusable content (not
          decorative), so .pent-center itself is not aria-hidden -- only the
          redundant .pent-desc preview text is. */
+      /* Fixed 270px instead of 1.12*R -- decoupled from R once R got
+         pulled in to 200px for the pip/watermark touch (see .orbit-field
+         above), since 1.12*200=224px is no longer enough to cover the
+         three .pent-social-btn circles (they reach 125.3px from center;
+         .pent-desc, sized off this box below, needs a radius comfortably
+         past that so its hover backdrop doesn't leave their edges
+         peeking out). 270px gives it a 135px radius, ~10px of margin. */
       .pent-center {
         display: block;
         position: absolute;
         left: 50%;
         top: var(--pentagon-top);
-        width: calc(var(--R) * 1.12);
-        height: calc(var(--R) * 1.12);
+        width: 270px;
+        height: 270px;
         transform: translate(-50%, -50%);
         pointer-events: none;
       }
