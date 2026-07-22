@@ -112,6 +112,7 @@
 
     .pentagon-ring,
     .pent-center,
+    .pent-watermark,
     .lucky-btn {
       display: none;
     }
@@ -399,6 +400,22 @@
         pointer-events: none;
       }
 
+      /* Faded echo of the header's pip-ring mark, filling the ring's open
+         interior behind the "Feeling Lucky?" button -- same idea as the
+         desktop version behind the social buttons (see the other
+         .pent-watermark rule below). Decorative only. */
+      .pent-watermark {
+        display: block;
+        position: absolute;
+        left: 50%;
+        top: var(--pentagon-top);
+        width: calc(var(--R) * 1.12);
+        height: calc(var(--R) * 1.12);
+        transform: translate(-50%, -50%);
+        opacity: 0.12;
+        pointer-events: none;
+      }
+
       .nav-tile {
         position: absolute;
         left: 50%;
@@ -589,6 +606,24 @@
         border-radius: 50%;
         border: 7px solid var(--bronze);
         background: #000;
+        pointer-events: none;
+      }
+
+      /* Faded echo of the header's pip-ring mark, sitting in the open
+         interior behind the three social buttons -- same footprint as
+         the hover backdrop above it (.pent-center, sized 1.12*R for the
+         same reason) so it never peeks past the ring. Decorative only
+         (aria-hidden, no pointer-events); the opaque .pent-desc
+         backgrounds already cover it during hover. */
+      .pent-watermark {
+        display: block;
+        position: absolute;
+        left: 50%;
+        top: var(--pentagon-top);
+        width: calc(var(--R) * 1.12);
+        height: calc(var(--R) * 1.12);
+        transform: translate(-50%, -50%);
+        opacity: 0.12;
         pointer-events: none;
       }
 
@@ -838,6 +873,15 @@
        display to be literal siblings for the sibling combinator to work. -->
   <nav class="orbit-field" aria-label="Site sections">
     <div class="pentagon-ring" aria-hidden="true"></div>
+    <svg class="pent-watermark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="24" cy="24" r="23" stroke="#b8935a" stroke-width="1.5"/>
+      <circle cx="24" cy="24" r="15" stroke="#b8935a" stroke-width="1.8" fill="none"/>
+      <circle cx="24" cy="9" r="4" fill="#f0ead0" stroke="#b8935a" stroke-width="1.2"/>
+      <circle cx="10.5" cy="19" r="4" fill="#5aab6e" stroke="#b8935a" stroke-width="1.2"/>
+      <circle cx="37.5" cy="19" r="4" fill="#6aaee0" stroke="#b8935a" stroke-width="1.2"/>
+      <circle cx="14" cy="36" r="4" fill="#e06060" stroke="#b8935a" stroke-width="1.2"/>
+      <circle cx="34" cy="36" r="4" fill="#a09ab0" stroke="#b8935a" stroke-width="1.2"/>
+    </svg>
 
     <a class="nav-tile is-table" href="/table" aria-label="Table. Game Utilities">
       <span class="tile-icon">
