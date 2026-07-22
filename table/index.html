@@ -2233,8 +2233,15 @@ function buildGrid(container) {
     // 3p is handled separately: the wide seat can span either axis
     // depending on which edge Rotate Seats left it on, so a single
     // hardcoded row/column assumption doesn't hold — see seat3Shift().
+    // 2p's panels are a full half-screen tall/wide (not a quadrant), so
+    // this same fixed 34px nudge toward the pass button overshoots
+    // straight into it instead of stopping short. Push the opposite way
+    // instead (away from mid-line) -- the natural centered spot (no
+    // shift at all) still let the upkeep chip's edge touch the button;
+    // 26px clears it with a clean gap on both panels.
     const towardMid = (n === 4 && i < 2) ? 1 : -1; // +1 = screen-down
-    const topShift = n === 3 ? seat3Shift(rot, seat.col, seat.row)
+    const topShift = n === 2 ? 'transform:translateY(26px)'
+                   : n === 3 ? seat3Shift(rot, seat.col, seat.row)
                    : rot === 90  ? `transform:translateX(${34 * towardMid}px)`
                    : rot === 270 ? `transform:translateX(${-34 * towardMid}px)`
                    : `transform:translateY(-34px)`;
