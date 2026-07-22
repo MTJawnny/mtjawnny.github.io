@@ -352,7 +352,7 @@
 
     /* ── MOBILE PENTAGON (phones, < 640px) ──
        Ports the desktop pentagon down to phone scale: identical unit-circle
-       coefficients, a smaller --R, and 96px circles (vs 195px). The
+       coefficients, a smaller --R, and 96px circles (vs 175px). The
        connective ring threads through all five icon centers exactly as it
        does on desktop. The pentagon interior stays empty on mobile -- the
        social cluster keeps living in .discord-section/footer below, not
@@ -360,18 +360,22 @@
        the desktop pentagon (>=900px) are untouched. */
     @media (max-width: 639.98px) {
       .orbit-field {
-        /* Middle ground between the airy first pass and the near-touching
-           rosette. Everything derives from one knob, --circle (the pip
-           diameter, viewport-scaled with px floor/cap): --half is half of
-           it, and --R is 1.02 * --circle, which opens a comfortable ~25px
-           gap between neighbouring pips (vs ~8px when R = 0.90 * circle)
-           while keeping the center hole modest. Because R tracks the circle
-           size, the span 0.9511*R + half stays well inside 50vw, so it
-           never overflows at any width. --half is the mobile analogue of
-           desktop's fixed 97.5px. */
-        --circle: clamp(116px, 31vw, 153px);
+        /* --circle (the pip *button* diameter) and --R (the ring radius)
+           used to be locked together (R = 1.02 * circle) -- now split
+           apart on purpose: the button circles went back to their
+           original smaller size, but the ring itself stays at the larger
+           radius from the "make it bigger" pass (see the .tile-icon img
+           override below for the same split on the icon artwork). --half
+           is still half of --circle -- it's the mobile analogue of
+           desktop's fixed 87.5px, used to seat each button's own center
+           on the ring regardless of the ring's radius. R's floor (112px,
+           down slightly from the bigger pass's 118.32px) is chosen so
+           0.9511*R + half still stays inside 50vw at a 320px viewport --
+           the widest ring this layout can carry before it would overflow
+           the screen edge on the smallest phones still worth supporting. */
+        --circle: clamp(104px, 31vw, 138px);
         --half: calc(var(--circle) / 2);
-        --R: calc(var(--circle) * 1.02);
+        --R: clamp(112px, 30vw, 145px);
         --pentagon-top: calc(0.8090 * var(--R) + var(--half));
         position: relative;
         display: block;
@@ -444,6 +448,16 @@
         width: var(--circle);
         height: var(--circle);
         border-width: 4px;
+      }
+
+      /* Artwork stays at the "make it bigger" pass's size (46% of the
+         bigger --circle that pass used, clamp(116px,31vw,153px)) even
+         though the button behind it shrunk back down -- overrides the
+         base rule's 46%-of-container sizing with that fixed figure so
+         shrinking --circle above doesn't shrink the icon with it. */
+      .nav-tile .tile-icon img {
+        width: clamp(53px, 14.26vw, 70px);
+        height: clamp(53px, 14.26vw, 70px);
       }
 
       .pip-label {
@@ -561,33 +575,38 @@
            this comment used to claim (that was only the Y-delta between a
            mid-row pip and the apex, not an actual chord -- it ignored the
            X-delta entirely and made the floor far more conservative than
-           it needed to be). Zero-overlap for 195px circles alone is where
-           1.1756*R = 195, i.e. R=165.9px -- BUT the real floor here is
-           higher than that: the three fixed-size .pent-social-btn circles
-           (112px, at a 69.3px triangle radius) reach 125.3px from center,
-           and that has to stay inside the main ring's own inner edge
-           (R - 97.5) or the inner cluster visibly overlaps the outer pips.
-           That requires R >= 222.8px -- but that's only the "doesn't
-           visibly overlap" floor. The .pent-center hover backdrop (sized
-           1.12*R, see below) also needs to fully cover that same 125.3px
-           inner-cluster extent so the description reveal doesn't leave
-           the three buttons' edges peeking out from behind it; that needs
-           0.56*R >= 125.3, i.e. R >= 223.75px, which is still the actual
-           binding constraint even after the pip icons grew (that math has
-           no icon-size term). 248px covers it with a small margin. Go
-           lower and the backdrop stops fully hiding the inner three on
-           hover, even though the pips themselves are still fine. vw/vh
-           caps dropped low on purpose too, so the floor wins on almost any
-           real window instead of the pentagon spreading out on big
-           screens like it used to. */
+           it needed to be). Zero-overlap for the pip buttons' own 175px
+           circles alone is where 1.1756*R = 175, i.e. R=148.8px -- BUT the
+           real floor here is higher than that: the three fixed-size
+           .pent-social-btn circles (112px, at a 69.3px triangle radius)
+           reach 125.3px from center, and that has to stay inside the main
+           ring's own inner edge (R - 87.5) or the inner cluster visibly
+           overlaps the outer pips. That requires R >= 212.8px -- but
+           that's only the "doesn't visibly overlap" floor. The
+           .pent-center hover backdrop (sized 1.12*R, see below) also
+           needs to fully cover that same 125.3px inner-cluster extent so
+           the description reveal doesn't leave the three buttons' edges
+           peeking out from behind it; that needs 0.56*R >= 125.3, i.e.
+           R >= 223.75px, which is the actual binding constraint (it has
+           no button-size term, so it's unaffected by the buttons having
+           shrunk back down). 248px both covers that with a margin and
+           deliberately overshoots it further still -- the buttons went
+           back to their original 175px, but the ring itself was kept at
+           the larger radius from the "make it bigger" pass rather than
+           reverting alongside them. Go lower than 223.75px and the
+           backdrop stops fully hiding the inner three on hover, even
+           though the pips themselves are still fine. vw/vh caps dropped
+           low on purpose too, so the floor wins on almost any real window
+           instead of the pentagon spreading out on big screens like it
+           used to. */
         --R: max(248px, min(20vw, 22vh));
-        --pentagon-top: calc(0.8090 * var(--R) + 97.5px);
+        --pentagon-top: calc(0.8090 * var(--R) + 87.5px);
         position: relative;
         display: block;
         max-width: none;
         padding: 0;
         margin-top: 2rem;
-        height: calc(var(--pentagon-top) + var(--R) + 97.5px);
+        height: calc(var(--pentagon-top) + var(--R) + 87.5px);
       }
 
       /* Connective ring, same idea as the footer's .mtjnav-bg .connect
@@ -635,19 +654,19 @@
       }
 
       .nav-tile.is-table {
-        transform: translate(calc(-50% + (-0.5878 * var(--R))), calc(-97.5px + (-0.8090 * var(--R))));
+        transform: translate(calc(-50% + (-0.5878 * var(--R))), calc(-87.5px + (-0.8090 * var(--R))));
       }
       .nav-tile.is-cards {
-        transform: translate(calc(-50% + ( 0.5878 * var(--R))), calc(-97.5px + (-0.8090 * var(--R))));
+        transform: translate(calc(-50% + ( 0.5878 * var(--R))), calc(-87.5px + (-0.8090 * var(--R))));
       }
       .nav-tile.is-stack {
-        transform: translate(calc(-50% + ( 0.9511 * var(--R))), calc(-97.5px + ( 0.3090 * var(--R))));
+        transform: translate(calc(-50% + ( 0.9511 * var(--R))), calc(-87.5px + ( 0.3090 * var(--R))));
       }
       .nav-tile.is-tools {
-        transform: translate(calc(-50% + (-0.9511 * var(--R))), calc(-97.5px + ( 0.3090 * var(--R))));
+        transform: translate(calc(-50% + (-0.9511 * var(--R))), calc(-87.5px + ( 0.3090 * var(--R))));
       }
       .nav-tile.is-coffers {
-        transform: translate(-50%, calc(-97.5px + (1.0 * var(--R))));
+        transform: translate(-50%, calc(-87.5px + (1.0 * var(--R))));
       }
 
       /* Circle size + fill are independent of the mobile/tablet grid here
@@ -661,14 +680,18 @@
          decouples the two -- changing mobile's numbers again won't move
          desktop's, and vice versa. */
       .nav-tile .tile-icon {
-        width: 195px;
-        height: 195px;
+        width: 175px;
+        height: 175px;
         background: var(--surface);
       }
 
+      /* Fixed px instead of a % of the container -- the button went back
+         to 175px above, but the artwork stays at the "make it bigger"
+         pass's size (50% of that pass's 195px container = 97.5px) rather
+         than shrinking along with it. */
       .nav-tile .tile-icon img {
-        width: 50%;
-        height: 50%;
+        width: 97.5px;
+        height: 97.5px;
       }
 
       .pip-label {
