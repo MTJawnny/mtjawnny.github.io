@@ -1803,9 +1803,19 @@
 
 <script>
 // ══ CONSTANTS ═════════════════════════════════════════
-const MANA = ['white', 'blue', 'black', 'green'];        // default tile colors
+const MANA = ['red', 'black', 'blue', 'green'];        // default tile colors
 const COLOR_ORDER = ['white', 'blue', 'black', 'red', 'green',
                      'orange', 'teal', 'pink', 'skyblue']; // cycle order
+/* Default tile colors per player count -- "black" reads as purple and
+   "white" as the peachy khaki tone in this palette (see .panel[data-mana]
+   below), not literal black/white. Applied by selP() (see
+   tileColorsSetByUser) whenever the player hasn't already customized a
+   seat's color themselves. */
+const DEFAULT_TILE_COLORS = {
+  2: ['red', 'blue'],
+  3: ['red', 'black', 'white'],
+  4: ['red', 'black', 'blue', 'green'],
+};
 /* Which side of the seat-id group the CMD mini-map sits on, per seat.
    (Was color-keyed; now seat-keyed so custom colors don't move it.) */
 const MINI_SIDE = {
@@ -1870,7 +1880,7 @@ function freshState() {
     playerCount: 4,
     dir: 'cw',
     startLife: 40,
-    tileColors: ['white', 'blue', 'black', 'green'],
+    tileColors: ['red', 'black', 'blue', 'green'],
     setupLayout3: 0, // 3-player setup preview only: which edge the wide tile is on (0=top,1=right,2=bottom,3=left)
     phase: 'setup',   // setup | choose | playing
     active: -1,
@@ -1902,6 +1912,10 @@ let lifeSetByUser = false;
 // player explicitly flips it themselves (flipCmdMini/flipMaster) --
 // after that, switching player count must not silently overwrite their choice.
 let cmdMiniSetByUser = false;
+// Same idea for tile colors: selP() applies DEFAULT_TILE_COLORS[n] on
+// every player-count switch until the player cycles a seat's color
+// themselves (cycleColor()), same as the two flags above.
+let tileColorsSetByUser = false;
 // Tracks whether the player has ever tapped a setup-preview seat this
 // session -- once true, the "TAP" hint stops rendering so it doesn't keep
 // competing with the life total for attention after it's done its job.
@@ -1923,7 +1937,7 @@ function load() {
     delete S.trackersOn.cmdr;
     delete S.trackerVals.cmdr;
     if (!Array.isArray(S.tileColors) || S.tileColors.length !== 4)
-      S.tileColors = ['white', 'blue', 'black', 'green'];
+      S.tileColors = ['red', 'black', 'blue', 'green'];
     if (!Array.isArray(S.ko) || S.ko.length !== S.playerCount)
       S.ko = Array.from({ length: S.playerCount }, (_, i) => !!koCause(i));
     return S.phase !== 'setup';
@@ -2008,6 +2022,13 @@ function selP(n) {
   const rb = document.getElementById('rotate-btn');
   if (rb) rb.style.display = n === 3 ? 'flex' : 'none';
   S.setupLayout3 = 0; // Rotate Seats always starts fresh with the wide seat on top
+  // Same auto-default idea for tile colors: DEFAULT_TILE_COLORS[n] until
+  // the player cycles a seat's color themselves. Slots beyond n are kept
+  // as-is (harmless -- unused until the player count grows again).
+  if (!tileColorsSetByUser) {
+    const def = DEFAULT_TILE_COLORS[n];
+    S.tileColors = def.concat(S.tileColors.slice(def.length));
+  }
   // Sensible default only until the player explicitly picks a life total --
   // after that, switching player count must not silently overwrite their choice.
   if (!lifeSetByUser) selLife(n === 2 ? 20 : 40, true);
@@ -2112,6 +2133,7 @@ function seatKeydown(e, i) {
 function cycleColor(i) {
   const idx = COLOR_ORDER.indexOf(S.tileColors[i]);
   S.tileColors[i] = COLOR_ORDER[(idx + 1) % COLOR_ORDER.length];
+  tileColorsSetByUser = true;
   seatHintLearned = true;
   buildColorMap();
 }
