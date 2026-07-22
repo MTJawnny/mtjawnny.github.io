@@ -572,7 +572,7 @@
          on purpose -- a deliberate visual overshoot, not a sizing mistake. */
       .tagline {
         font-size: 1.75rem;
-        margin-top: 1rem;
+        margin-top: 0.75rem;
       }
 
       .orbit-field {
@@ -593,7 +593,7 @@
         display: block;
         max-width: none;
         padding: 0;
-        margin-top: 2rem;
+        margin-top: 1.25rem;
         height: calc(var(--pentagon-top) + var(--R) + 87.5px);
       }
 
@@ -851,6 +851,22 @@
       .discord-section,
       footer .footer-buttons {
         display: none;
+      }
+
+      /* Tightened from the shared base rules (footer: 0.75rem/1.5rem
+         top/bottom; .legal-note: 0.85rem margin-top) -- desktop-only, so
+         mobile/tablet keep their original spacing. Trimmed together with
+         .tagline/.orbit-field's margins above to try to keep the legal
+         link inside the viewport on common laptop screen heights without
+         touching the pentagon's own size. */
+      footer {
+        padding: 0.25rem 1.5rem 0.5rem;
+      }
+      .legal-note {
+        margin-top: 0.25rem;
+      }
+      header {
+        padding-top: 0.1rem;
       }
     }
     .legal-note { margin-top: 0.85rem; text-align: center; font-size: 0.76rem; color: var(--muted, var(--text-dim, #8a7d99)); line-height: 1.4; }
