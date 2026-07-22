@@ -2193,6 +2193,7 @@ function enterGameUI() {
   document.getElementById('pass-wrap').style.display = 'block';
   document.getElementById('bottom-nav').classList.add('show');
   acquireWake();
+  armBackGuard(); // both entry points (startGame() and the saved-game boot resume) go through here
   render();
 }
 
@@ -3345,6 +3346,24 @@ function doReset() {
   // restore setup button highlights (selLife() re-renders the diagram)
   selP(S.playerCount); selDir(S.dir); selLife(S.startLife);
 }
+
+// ══ BACK BUTTON / EDGE-SWIPE GUARD ════════════════════
+/* Browser back and Android's edge swipe-back gesture both just fire
+   popstate -- same event either way, so trapping one traps both. Pushes a
+   throwaway history entry whenever a game is active (see enterGameUI());
+   popstate firing while one is active means the player just tried to
+   leave, so it's swallowed (immediately re-armed) and turned into the
+   same "Reset the game?" prompt the Reset button shows, instead of
+   silently discarding their game. Once phase is back to 'setup' (no game
+   to lose) this stops re-arming and back navigates normally again. */
+function armBackGuard() {
+  history.pushState({ tablekeepGuard: true }, '', location.href);
+}
+window.addEventListener('popstate', () => {
+  if (S.phase === 'setup') return;
+  armBackGuard();
+  confirmReset();
+});
 
 // ══ KEYBOARD — spacebar passes turn ═══════════════════
 document.addEventListener('keydown', e => {
