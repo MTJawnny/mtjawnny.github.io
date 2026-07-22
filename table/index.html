@@ -823,6 +823,18 @@
   .cmd-mini-cell[data-c="pink"]    { background: #cf5a95; }
   .cmd-mini-cell[data-c="skyblue"] { background: #5aa7dd; }
   .cmd-mini-cell.own { opacity: 0.4; }
+  /* Tablet viewport only: the commander-damage mini-map button (doubles as
+     the overlay's open/close trigger) reads too small at this size on an
+     actual tablet -- scaled up roughly 1.5x, same ratio used elsewhere on
+     this breakpoint (.upkeep-btn/.player-label). Grid sizes itself off
+     .cmd-mini-cell's own width/height (see the JS that fills it in --
+     gridTemplateColumns/Rows use fr units, not fixed px), so bumping the
+     cell is enough to grow the whole widget consistently. */
+  @media (min-width: 640px) and (max-width: 899.98px) {
+    .cmd-mini-in { gap: 3px; padding: 5px; border-radius: 12px; border-width: 2px; }
+    .cmd-mini-cell { width: 26px; height: 26px; border-radius: 6px; }
+    .cmd-mini-cell span { font-size: 15px; }
+  }
 
   /* Tracker badges — row under the life row inside the stack */
   .badge-col {
