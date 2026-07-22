@@ -406,7 +406,9 @@
     .tile-fallback .fb-name { font-size: 1.15rem; }
     .tile-fallback .fb-pip { width: 32px; height: 32px; }
   }
-  .legal-note { margin-top: 0.85rem; text-align: center; font-size: 0.76rem; color: var(--muted, var(--text-dim, #8a7d99)); line-height: 1.4; }
+  .legal-note { text-align: center; font-size: 0.76rem; color: var(--muted, var(--text-dim, #8a7d99)); line-height: 1.4; }
+  .footer-buttons { margin-top: 0.85rem; }
+  .footer-suggest-btn { display: inline-flex; margin-top: 0.85rem; }
   .legal-note a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
   .legal-note a:hover { color: var(--bronze); }
 </style>
@@ -514,6 +516,7 @@ const SUBMISSION_URL = "https://tally.so/r/b5AQB2";
 
 
   <footer>
+    <div class="legal-note"><a href="/legal">Legal &amp; Privacy</a> · Fan content, not affiliated with Wizards of the Coast</div>
     <div class="footer-buttons">
       <a class="footer-btn" href="https://ko-fi.com/mtjawnny" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" style="fill:#f85555" stroke="#f85555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5 C12 20.5 4 14.5 4 9.5 C4 6.6 6.4 4.5 9 4.5 C10.4 4.5 11.5 5.2 12 6.1 C12.5 5.2 13.6 4.5 15 4.5 C17.6 4.5 20 6.6 20 9.5 C20 14.5 12 20.5 12 20.5 Z"/></svg>
@@ -526,7 +529,12 @@ const SUBMISSION_URL = "https://tally.so/r/b5AQB2";
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
       </a>
     </div>
-      <div class="legal-note"><a href="/legal">Legal &amp; Privacy</a> · Fan content, not affiliated with Wizards of the Coast</div>
+    <a class="suggest-btn footer-suggest-btn" id="footerSuggestLink" href="#">
+      Suggest a card
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/>
+      </svg>
+    </a>
 </footer>
 
 </div>
@@ -543,6 +551,7 @@ const SUBMISSION_URL = "https://tally.so/r/b5AQB2";
   const statusEl    = document.getElementById('status');
 
   suggestLink.href = SUBMISSION_URL;
+  document.getElementById('footerSuggestLink').href = SUBMISSION_URL;
 
   // Small inline pip-ring for the missing-art fallback
   const PIP_SVG =
