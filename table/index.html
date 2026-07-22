@@ -751,7 +751,7 @@
   }
   .life-delta.pos { color: #6fd67f; }
   .life-delta.neg { color: var(--red-bright); }
-  .life-delta.show { animation: lifeDeltaPop 1.3s ease-out; }
+  .life-delta.show { animation: lifeDeltaPop 2.2s ease-out; }
   @keyframes lifeDeltaPop {
     0%   { opacity: 0; transform: translateX(-50%) translateY(6px) scale(0.85); }
     18%  { opacity: 1; transform: translateX(-50%) translateY(-8px) scale(1); }
@@ -2362,7 +2362,7 @@ function popLifeDelta(i, d) {
   const burst = deltaBurst[i] ?? (deltaBurst[i] = { total: 0, timer: null });
   burst.total += d;
   clearTimeout(burst.timer);
-  burst.timer = setTimeout(() => { burst.total = 0; }, 1300);
+  burst.timer = setTimeout(() => { burst.total = 0; }, 2200); // matches lifeDeltaPop's duration above
 
   const total = burst.total;
   el.textContent = (total >= 0 ? '+' : '−') + Math.abs(total);
