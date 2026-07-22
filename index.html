@@ -458,14 +458,16 @@
         border-width: 4px;
       }
 
-      /* Artwork stays at the "make it bigger" pass's size (46% of the
-         bigger --circle that pass used, clamp(116px,31vw,153px)) even
-         though the button behind it shrunk back down -- overrides the
-         base rule's 46%-of-container sizing with that fixed figure so
-         shrinking --circle above doesn't shrink the icon with it. */
+      /* Independent of --circle (the button size) on purpose -- overrides
+         the base rule's 46%-of-container sizing with a fixed figure so
+         resizing the button above never resizes the icon with it. Bumped
+         again here (was clamp(53px,14.26vw,70px)) for a bigger-icons-only
+         pass; still nowhere near touching the button's border at either
+         end of the button's own clamp(104px,31vw,138px) range -- ~20px
+         of clearance on each side at the floor, ~27px at the cap. */
       .nav-tile .tile-icon img {
-        width: clamp(53px, 14.26vw, 70px);
-        height: clamp(53px, 14.26vw, 70px);
+        width: clamp(64px, 17vw, 84px);
+        height: clamp(64px, 17vw, 84px);
       }
 
       .pip-label {
