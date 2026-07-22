@@ -1803,7 +1803,7 @@
 
 <script>
 // ══ CONSTANTS ═════════════════════════════════════════
-const MANA = ['blue', 'black', 'red', 'teal'];        // default tile colors
+const MANA = ['blue', 'black', 'red', 'white'];        // default tile colors
 const COLOR_ORDER = ['white', 'blue', 'black', 'red', 'green',
                      'orange', 'teal', 'pink', 'skyblue']; // cycle order
 /* Default tile colors per player count -- "black" reads as purple and
@@ -1814,7 +1814,7 @@ const COLOR_ORDER = ['white', 'blue', 'black', 'red', 'green',
 const DEFAULT_TILE_COLORS = {
   2: ['blue', 'red'],
   3: ['red', 'black', 'white'],
-  4: ['blue', 'black', 'red', 'teal'],
+  4: ['blue', 'black', 'red', 'white'],
 };
 /* Which side of the seat-id group the CMD mini-map sits on, per seat.
    (Was color-keyed; now seat-keyed so custom colors don't move it.) */
@@ -1880,7 +1880,7 @@ function freshState() {
     playerCount: 4,
     dir: 'cw',
     startLife: 40,
-    tileColors: ['blue', 'black', 'red', 'teal'],
+    tileColors: ['blue', 'black', 'red', 'white'],
     setupLayout3: 0, // 3-player setup preview only: which edge the wide tile is on (0=top,1=right,2=bottom,3=left)
     phase: 'setup',   // setup | choose | playing
     active: -1,
@@ -1933,7 +1933,7 @@ function load() {
     delete S.trackersOn.cmdr;
     delete S.trackerVals.cmdr;
     if (!Array.isArray(S.tileColors) || S.tileColors.length !== 4)
-      S.tileColors = ['blue', 'black', 'red', 'teal'];
+      S.tileColors = ['blue', 'black', 'red', 'white'];
     if (!Array.isArray(S.ko) || S.ko.length !== S.playerCount)
       S.ko = Array.from({ length: S.playerCount }, (_, i) => !!koCause(i));
     return S.phase !== 'setup';
