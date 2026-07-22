@@ -1916,10 +1916,6 @@ let cmdMiniSetByUser = false;
 // every player-count switch until the player cycles a seat's color
 // themselves (cycleColor()), same as the two flags above.
 let tileColorsSetByUser = false;
-// Tracks whether the player has ever tapped a setup-preview seat this
-// session -- once true, the "TAP" hint stops rendering so it doesn't keep
-// competing with the life total for attention after it's done its job.
-let seatHintLearned = false;
 
 // ══ PERSISTENCE (safe — never throws) ═════════════════
 function save() {
@@ -2088,7 +2084,7 @@ function buildColorMap() {
   if (!map) return;
   const n = S.playerCount;
   map.className = 'setup-seat-grid n' + n;
-  const hint = seatHintLearned ? '' : '<span class="setup-seat-hint">TAP</span>';
+  const hint = '<span class="setup-seat-hint">TAP</span>';
 
   if (n === 3) {
     const layout = LAYOUT3[S.setupLayout3];
@@ -2134,7 +2130,6 @@ function cycleColor(i) {
   const idx = COLOR_ORDER.indexOf(S.tileColors[i]);
   S.tileColors[i] = COLOR_ORDER[(idx + 1) % COLOR_ORDER.length];
   tileColorsSetByUser = true;
-  seatHintLearned = true;
   buildColorMap();
 }
 /* 3-player only: cycles which edge of the table the wide tile sits on
