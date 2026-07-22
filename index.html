@@ -352,7 +352,7 @@
 
     /* ── MOBILE PENTAGON (phones, < 640px) ──
        Ports the desktop pentagon down to phone scale: identical unit-circle
-       coefficients, a smaller --R, and 96px circles (vs 175px). The
+       coefficients, a smaller --R, and 96px circles (vs 195px). The
        connective ring threads through all five icon centers exactly as it
        does on desktop. The pentagon interior stays empty on mobile -- the
        social cluster keeps living in .discord-section/footer below, not
@@ -368,8 +368,8 @@
            while keeping the center hole modest. Because R tracks the circle
            size, the span 0.9511*R + half stays well inside 50vw, so it
            never overflows at any width. --half is the mobile analogue of
-           desktop's fixed 87.5px. */
-        --circle: clamp(104px, 31vw, 138px);
+           desktop's fixed 97.5px. */
+        --circle: clamp(116px, 31vw, 153px);
         --half: calc(var(--circle) / 2);
         --R: calc(var(--circle) * 1.02);
         --pentagon-top: calc(0.8090 * var(--R) + var(--half));
@@ -561,32 +561,33 @@
            this comment used to claim (that was only the Y-delta between a
            mid-row pip and the apex, not an actual chord -- it ignored the
            X-delta entirely and made the floor far more conservative than
-           it needed to be). Zero-overlap for 175px circles alone is where
-           1.1756*R = 175, i.e. R=148.8px -- BUT the real floor here is
+           it needed to be). Zero-overlap for 195px circles alone is where
+           1.1756*R = 195, i.e. R=165.9px -- BUT the real floor here is
            higher than that: the three fixed-size .pent-social-btn circles
            (112px, at a 69.3px triangle radius) reach 125.3px from center,
            and that has to stay inside the main ring's own inner edge
-           (R - 87.5) or the inner cluster visibly overlaps the outer pips.
-           That requires R >= 212.8px -- but that's only the "doesn't
+           (R - 97.5) or the inner cluster visibly overlaps the outer pips.
+           That requires R >= 222.8px -- but that's only the "doesn't
            visibly overlap" floor. The .pent-center hover backdrop (sized
            1.12*R, see below) also needs to fully cover that same 125.3px
            inner-cluster extent so the description reveal doesn't leave
            the three buttons' edges peeking out from behind it; that needs
-           0.56*R >= 125.3, i.e. R >= 223.75px, which is the actual
-           binding constraint. 228px covers it with a small margin. Go
+           0.56*R >= 125.3, i.e. R >= 223.75px, which is still the actual
+           binding constraint even after the pip icons grew (that math has
+           no icon-size term). 248px covers it with a small margin. Go
            lower and the backdrop stops fully hiding the inner three on
            hover, even though the pips themselves are still fine. vw/vh
            caps dropped low on purpose too, so the floor wins on almost any
            real window instead of the pentagon spreading out on big
            screens like it used to. */
-        --R: max(228px, min(20vw, 22vh));
-        --pentagon-top: calc(0.8090 * var(--R) + 87.5px);
+        --R: max(248px, min(20vw, 22vh));
+        --pentagon-top: calc(0.8090 * var(--R) + 97.5px);
         position: relative;
         display: block;
         max-width: none;
         padding: 0;
         margin-top: 2rem;
-        height: calc(var(--pentagon-top) + var(--R) + 87.5px);
+        height: calc(var(--pentagon-top) + var(--R) + 97.5px);
       }
 
       /* Connective ring, same idea as the footer's .mtjnav-bg .connect
@@ -634,19 +635,19 @@
       }
 
       .nav-tile.is-table {
-        transform: translate(calc(-50% + (-0.5878 * var(--R))), calc(-87.5px + (-0.8090 * var(--R))));
+        transform: translate(calc(-50% + (-0.5878 * var(--R))), calc(-97.5px + (-0.8090 * var(--R))));
       }
       .nav-tile.is-cards {
-        transform: translate(calc(-50% + ( 0.5878 * var(--R))), calc(-87.5px + (-0.8090 * var(--R))));
+        transform: translate(calc(-50% + ( 0.5878 * var(--R))), calc(-97.5px + (-0.8090 * var(--R))));
       }
       .nav-tile.is-stack {
-        transform: translate(calc(-50% + ( 0.9511 * var(--R))), calc(-87.5px + ( 0.3090 * var(--R))));
+        transform: translate(calc(-50% + ( 0.9511 * var(--R))), calc(-97.5px + ( 0.3090 * var(--R))));
       }
       .nav-tile.is-tools {
-        transform: translate(calc(-50% + (-0.9511 * var(--R))), calc(-87.5px + ( 0.3090 * var(--R))));
+        transform: translate(calc(-50% + (-0.9511 * var(--R))), calc(-97.5px + ( 0.3090 * var(--R))));
       }
       .nav-tile.is-coffers {
-        transform: translate(-50%, calc(-87.5px + (1.0 * var(--R))));
+        transform: translate(-50%, calc(-97.5px + (1.0 * var(--R))));
       }
 
       /* Circle size + fill are independent of the mobile/tablet grid here
@@ -660,8 +661,8 @@
          decouples the two -- changing mobile's numbers again won't move
          desktop's, and vice versa. */
       .nav-tile .tile-icon {
-        width: 175px;
-        height: 175px;
+        width: 195px;
+        height: 195px;
         background: var(--surface);
       }
 
