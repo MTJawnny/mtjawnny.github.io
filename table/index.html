@@ -2263,8 +2263,9 @@ function buildGrid(container) {
     // shift at all) still let the upkeep chip's edge touch the button;
     // 26px clears it with a clean gap on both panels.
     const towardMid = (n === 4 && i < 2) ? 1 : -1; // +1 = screen-down
+    const isWide3 = n === 3 && (seat.col.includes('/') || seat.row.includes('/'));
     const topShift = n === 2 ? 'transform:translateY(26px)'
-                   : n === 3 ? seat3Shift(rot, seat.col, seat.row)
+                   : n === 3 ? seat3Shift(rot, seat.col, seat.row, isWide3)
                    : rot === 90  ? `transform:translateX(${34 * towardMid}px)`
                    : rot === 270 ? `transform:translateX(${-34 * towardMid}px)`
                    : `transform:translateY(-34px)`;
@@ -2355,14 +2356,20 @@ function lifeZonePos(rot) {
    rotated back into the seat's own local frame, since this transform lives
    inside the already-rotated .seat-top element. Values are always exact
    0/±34 -- rot is always a multiple of 90°, so cos/sin never leave
-   {0, 1, -1} and there's no sub-pixel drift to round away. */
-function seat3Shift(rot, col, row) {
+   {0, 1, -1} and there's no sub-pixel drift to round away.
+   The two narrow seats are quadrant-sized (same as 4p), so pushing them
+   toward mid is safe. The wide seat spans two quadrants -- same
+   half-screen geometry as a 2p panel -- so the same nudge overshoots
+   into the pass button there too (see the n===2 case above); away=true
+   flips the sign for that one seat instead of a second bespoke branch. */
+function seat3Shift(rot, col, row, away) {
   const spansRows = row.includes('/');
   const sx = spansRows ? (col.trim().startsWith('1') ? 34 : -34) : 0;
   const sy = spansRows ? 0 : (row.trim().startsWith('1') ? 34 : -34);
   const rad = rot * Math.PI / 180;
-  const x = sx * Math.cos(rad) + sy * Math.sin(rad);
-  const y = -sx * Math.sin(rad) + sy * Math.cos(rad);
+  let x = sx * Math.cos(rad) + sy * Math.sin(rad);
+  let y = -sx * Math.sin(rad) + sy * Math.cos(rad);
+  if (away) { x = -x; y = -y; }
   return `transform:translate(${x}px,${y}px)`;
 }
 
