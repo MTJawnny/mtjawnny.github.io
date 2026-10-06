@@ -1,7 +1,7 @@
 # Naming & Copy Consistency Pass
 
 **Date:** 2026-10-06  
-**Status:** READY FOR SURGICAL APPLICATION  
+**Status:** APPLIED ON `site/personality-consistency-2026-10-06`; awaiting review/merge  
 **Parent direction:** `docs/site/SITE-PERSONALITY-AND-CONSISTENCY-2026-10-06.md`
 
 ## Scope
