@@ -17,10 +17,6 @@ ROOT = Path(__file__).resolve().parents[2]
 REPLACEMENTS = {
     "index.html": [
         ("<title>MTJawnny</title>", "<title>MTJawnny — Free MTG Toolbox</title>"),
-        (
-            '<p class="tagline">Your Free Magic: The Gathering Toolbox!</p>',
-            '<p class="tagline">Your free Magic: The Gathering toolbox.</p>',
-        ),
     ],
     "cards/index.html": [
         (
@@ -29,19 +25,19 @@ REPLACEMENTS = {
         ),
         (
             '<p class="tagline">When reading the card does NOT explain the card!</p>',
-            '<p class="tagline">When reading the card still doesn\'t explain the card.</p>',
+            '<p class="tagline">When reading the card still doesn\'t explain the card!</p>',
         ),
     ],
     "stack/index.html": [
         (
             '<p class="tagline">Split Second Game Info!</p>',
-            '<p class="tagline">Split-second game info.</p>',
+            '<p class="tagline">Split-second game info!</p>',
         ),
     ],
     "tools/index.html": [
         (
             '<p class="tagline">Research, Proxy, Print. Free Browser & Desktop Tools.</p>',
-            '<p class="tagline">Research, proxy, print. Free browser &amp; desktop tools.</p>',
+            '<p class="tagline">Research, proxy, print. Free browser & desktop tools!</p>',
         ),
     ],
     "coffers/index.html": [
@@ -58,12 +54,14 @@ CLAUDE_ANCHOR = (
 CLAUDE_ADDITION = """- Naming/copy hierarchy (2026-10): homepage/footer navigation uses the plain category names
   `Table`, `Cards`, `Tools`, `Stack`, `Coffers`; destination H1/product names are
   `Tablekeep`, `Cardex`, `Deck Tech`, `Stack It Up`, `Coffers`. Preserve both layers;
-  do not casually substitute one for the other. Product/section names take no terminal
-  punctuation. Descriptive hub taglines are normally sentence case with no exclamation
-  mark; reserve exclamation marks for deliberate jokes, celebrations, surprises, or
-  first-person enthusiasm. Avoid ALL-CAPS emphasis in ordinary descriptive taglines.
-  Hub browser-title pattern is `<Product Name> — MTJawnny`; OG/social titles may add a
-  plain-English purpose. Full direction: `docs/site/SITE-PERSONALITY-AND-CONSISTENCY-2026-10-06.md`.
+  do not casually substitute one for the other. Product/section names themselves take
+  no terminal punctuation. Main hub taglines intentionally use exclamation marks as part
+  of MTJawnny's enthusiastic voice; keep that punctuation consistent across hubs. Avoid
+  accidental ALL-CAPS emphasis in ordinary descriptive taglines unless it is a deliberate
+  joke. Article/rules/tool-detail subtitles do not automatically inherit the hub exclamation
+  rule. Hub browser-title pattern is `<Product Name> — MTJawnny`; OG/social titles may add
+  a plain-English purpose. Full direction:
+  `docs/site/SITE-PERSONALITY-AND-CONSISTENCY-2026-10-06.md`.
 """
 
 PASS_DOC = ROOT / "docs/site/SITE-PERSONALITY-AND-CONSISTENCY-2026-10-06.md"
@@ -124,11 +122,11 @@ def main() -> int:
     expected = {
         "index.html": [
             "<title>MTJawnny — Free MTG Toolbox</title>",
-            "Your free Magic: The Gathering toolbox.",
+            "Your Free Magic: The Gathering Toolbox!",
         ],
-        "cards/index.html": ["When reading the card still doesn't explain the card."],
-        "stack/index.html": ["Split-second game info."],
-        "tools/index.html": ["Research, proxy, print. Free browser &amp; desktop tools."],
+        "cards/index.html": ["When reading the card still doesn't explain the card!"],
+        "stack/index.html": ["Split-second game info!"],
+        "tools/index.html": ["Research, proxy, print. Free browser & desktop tools!"],
         "coffers/index.html": ["<title>Coffers — MTJawnny</title>"],
     }
     for rel, needles in expected.items():
@@ -141,10 +139,12 @@ def main() -> int:
 
     print("PASS: bounded naming/copy replacements applied.")
     print("Changed:")
-    subprocess.run(
-        ["git", "diff", "--name-only"], cwd=ROOT, check=True
+    subprocess.run(["git", "diff", "--name-only"], cwd=ROOT, check=True)
+    print(
+        "\nReview with: git diff -- index.html cards/index.html stack/index.html "
+        "tools/index.html coffers/index.html CLAUDE.md "
+        "docs/site/SITE-PERSONALITY-AND-CONSISTENCY-2026-10-06.md"
     )
-    print("\nReview with: git diff -- index.html cards/index.html stack/index.html tools/index.html coffers/index.html CLAUDE.md docs/site/SITE-PERSONALITY-AND-CONSISTENCY-2026-10-06.md")
     return 0
 
 
