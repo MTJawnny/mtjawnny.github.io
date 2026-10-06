@@ -36,13 +36,13 @@ The two layers are intentional. Do not flatten them into one naming system.
 
 ## Copy conventions
 
-1. Product/section names do not take terminal punctuation.
-2. Descriptive hub taglines are normally sentence case and do not use exclamation marks.
-3. Exclamation marks remain appropriate for deliberate jokes, surprises, celebrations, or first-person enthusiasm.
-4. Avoid ALL-CAPS emphasis in ordinary descriptive taglines.
+1. Product/section names themselves do not take terminal punctuation.
+2. **Main hub taglines are intentionally enthusiastic and should use an exclamation mark consistently.** This is part of MTJawnny's voice, not punctuation noise to be normalized away.
+3. Keep hub copy conversational and playful rather than corporate.
+4. Avoid ALL-CAPS word emphasis in ordinary descriptive taglines unless the capitalization itself is the joke.
 5. Browser hub-title pattern: `<Product Name> — MTJawnny`.
 6. OG/social titles may remain more descriptive because they must make sense out of site context.
-7. Existing article/card/tool title structures are not being normalized in this pass unless a concrete inconsistency is identified.
+7. Article/card/tool subtitles do not automatically inherit the hub exclamation rule. They may be categorical or explanatory and should be edited only when a concrete inconsistency exists.
 
 ## Exact first-pass edits
 
@@ -55,10 +55,9 @@ Browser title:
 
 Homepage tagline:
 
-- CURRENT: `Your Free Magic: The Gathering Toolbox!`
-- TARGET: `Your free Magic: The Gathering toolbox.`
+- KEEP: `Your Free Magic: The Gathering Toolbox!`
 
-Reason: the OG title already uses the descriptive form. The visible tagline should read as normal descriptive copy rather than an accidental shout.
+Reason: this is already on-brand and already follows the enthusiastic hub convention.
 
 ### `cards/index.html`
 
@@ -70,27 +69,27 @@ Meta description punctuation:
 Visible tagline:
 
 - CURRENT: `When reading the card does NOT explain the card!`
-- TARGET: `When reading the card still doesn't explain the card.`
+- TARGET: `When reading the card still doesn't explain the card!`
 
-Reason: preserves the joke/idea while removing ALL-CAPS emphasis and a non-deliberate exclamation.
+Reason: keep the enthusiasm, but remove ALL-CAPS emphasis and make the joke read more naturally.
 
 ### `stack/index.html`
 
 Visible tagline:
 
 - CURRENT: `Split Second Game Info!`
-- TARGET: `Split-second game info.`
+- TARGET: `Split-second game info!`
 
-Reason: normal sentence case; `split-second` is acting adjectivally here.
+Reason: keep the exclamation while normalizing the phrase as descriptive sentence-style copy; `split-second` is adjectival here.
 
 ### `tools/index.html`
 
 Visible tagline:
 
 - CURRENT: `Research, Proxy, Print. Free Browser & Desktop Tools.`
-- TARGET: `Research, proxy, print. Free browser & desktop tools.`
+- TARGET: `Research, proxy, print. Free browser & desktop tools!`
 
-Reason: preserve the clipped cadence while moving descriptive words to sentence case. Keep `&` because it functions as compact UI copy and is already part of the site's tool vocabulary.
+Reason: preserve the clipped cadence, normalize descriptive capitalization, and bring the hub into the shared enthusiastic punctuation style.
 
 ### `coffers/index.html`
 
@@ -103,11 +102,15 @@ OG title remains:
 
 - `Coffers — Free MTG Proxy Assets`
 
-Reason: hub browser titles should follow the same product-name pattern while OG/social copy carries the descriptive purpose.
+Visible section copy:
+
+- KEEP: `Free stuff from me to you!`
+
+Reason: this is already the clearest example of the intended personal, enthusiastic voice.
 
 ### `table/index.html`
 
-No visible-copy change in this pass.
+No visible-copy change in this pass unless a later audit identifies a missing hub tagline.
 
 Current naming and metadata already fit the intended hierarchy:
 
@@ -121,10 +124,15 @@ Current naming and metadata already fit the intended hierarchy:
 - homepage navigation labels remain `Table`, `Cards`, `Tools`, `Stack`, `Coffers`;
 - shared footer/pip navigation remains category-oriented;
 - product H1s remain `Tablekeep`, `Cardex`, `Deck Tech`, `Stack It Up`, `Coffers`;
-- `Coffers` section copy `Free stuff from me to you!` keeps its exclamation because it is deliberate first-person enthusiasm;
-- individual Stack article subtitles are not being mechanically sentence-cased because many function as categorical labels rather than prose sentences;
-- format-guide taglines such as `Constructed · Eternal` are categorical labels and therefore outside this sentence-case rule;
-- tool-specific taglines such as QR Coder's `Turn any link into a scannable code.` already fit the convention.
+- individual Stack article subtitles are not mechanically changed because many function as categorical labels rather than hub taglines;
+- format-guide taglines such as `Constructed · Eternal` are categorical labels and therefore outside the hub exclamation rule;
+- tool-specific taglines such as QR Coder's `Turn any link into a scannable code.` are explanatory tool copy, not top-level hub slogans, and therefore do not need forced exclamation marks.
+
+## Style principle
+
+The goal is **consistent enthusiasm**, not punctuation minimalism.
+
+A hub should feel like an invitation into a part of MTJawnny. Reference/article/tool-detail copy can remain calmer when clarity benefits from it.
 
 ## Next pass after application
 
