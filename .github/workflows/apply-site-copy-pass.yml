@@ -1,0 +1,55 @@
+name: Apply site copy consistency pass
+
+on:
+  push:
+    branches:
+      - site/personality-consistency-2026-10-06
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.event.head_commit.message == 'chore: execute corrected site copy consistency pass'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: site/personality-consistency-2026-10-06
+          fetch-depth: 0
+
+      - name: Apply bounded exact-string pass
+        run: python3 scripts/maintenance/apply_site_copy_consistency_pass.py
+
+      - name: Validate intended copy
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          grep -Fq '<title>MTJawnny — Free MTG Toolbox</title>' index.html
+          grep -Fq 'Your Free Magic: The Gathering Toolbox!' index.html
+          grep -Fq "When reading the card still doesn't explain the card!" cards/index.html
+          grep -Fq 'Split-second game info!' stack/index.html
+          grep -Fq 'Research, proxy, print. Free browser & desktop tools!' tools/index.html
+          grep -Fq '<title>Coffers — MTJawnny</title>' coffers/index.html
+          ! grep -Fq 'does NOT explain' cards/index.html
+
+      - name: Remove one-time execution artifacts
+        shell: bash
+        run: |
+          rm -f .github/workflows/site-pass-smoke.yml
+          rm -f .github/workflows/apply-site-copy-pass.yml
+          rm -f docs/site/.site-pass-smoke-trigger
+          rm -f docs/site/.apply-copy-pass-trigger
+          rm -f scripts/maintenance/apply_site_copy_consistency_pass.py
+
+      - name: Commit bounded pass
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'MTJawnny'
+          git config user.email 'mtjawnny@gmail.com'
+          git add -A
+          git diff --cached --check
+          git commit -m 'site: apply naming and copy consistency pass'
+          git push origin HEAD:site/personality-consistency-2026-10-06
