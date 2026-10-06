@@ -1,0 +1,15 @@
+name: Site pass smoke
+
+on:
+  push:
+    branches:
+      - site/personality-consistency-2026-10-06
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "site pass smoke ok"
