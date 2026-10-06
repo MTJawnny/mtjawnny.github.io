@@ -145,14 +145,15 @@ Canonical navigation/category names:
 
 Do not casually substitute one system for the other in UI labels.
 
-### 6.2 Punctuation
+### 6.2 Punctuation and energy
 
-- Product/section names: no terminal punctuation.
-- Descriptive taglines/subtitles: normally sentence case and no exclamation mark.
-- Exclamation marks are reserved for actual jokes, celebrations, surprises, or deliberately enthusiastic first-person copy.
-- Avoid ALL-CAPS word emphasis in ordinary descriptive taglines.
+- Product/section names themselves do not take terminal punctuation.
+- **Main hub taglines should use exclamation marks consistently.** Enthusiasm is part of MTJawnny's personality, not something to flatten out.
+- Hub taglines should read like invitations into that section, not corporate descriptors.
+- Avoid ALL-CAPS word emphasis in ordinary descriptive taglines unless the capitalization itself is a deliberate joke.
+- Article, rules-reference, format-guide, and tool-detail subtitles do not automatically inherit the hub exclamation rule. They may remain calmer or categorical when that improves clarity.
 
-The objective is not to remove excitement. It is to make excitement intentional.
+The objective is **consistent enthusiasm**, not punctuation minimalism.
 
 ### 6.3 Browser and social titles
 
@@ -198,7 +199,8 @@ Work through these as separate bounded passes rather than one large redesign.
 
 - inventory the five main hubs and shared navigation language;
 - formalize category vs product-name usage;
-- normalize tagline punctuation and tone;
+- make main hub taglines consistently enthusiastic, including `!`;
+- remove accidental shoutiness such as unnecessary ALL-CAPS emphasis while preserving playful energy;
 - normalize browser/social title patterns where they drift;
 - document editorial rules so they do not drift again;
 - no layout redesign and no new features.
