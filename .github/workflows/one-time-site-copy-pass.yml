@@ -1,0 +1,155 @@
+name: One-time site naming and copy consistency pass
+
+on:
+  push:
+    branches:
+      - site/personality-consistency-2026-10-06
+
+permissions:
+  contents: write
+
+jobs:
+  apply-copy-pass:
+    if: github.event.head_commit.message == 'chore: run bounded site naming and copy consistency pass'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: site/personality-consistency-2026-10-06
+          fetch-depth: 0
+
+      - name: Apply exact bounded replacements
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              "index.html": [
+                  ("<title>MTJawnny</title>", "<title>MTJawnny — Free MTG Toolbox</title>"),
+                  ("<p class=\"tagline\">Your Free Magic: The Gathering Toolbox!</p>",
+                   "<p class=\"tagline\">Your free Magic: The Gathering toolbox.</p>"),
+              ],
+              "cards/index.html": [
+                  ("Search MTJawnny's card explainers: rulings, interactions and common misconceptions, one card at a time.",
+                   "Search MTJawnny's card explainers: rulings, interactions, and common misconceptions, one card at a time."),
+                  ("<p class=\"tagline\">When reading the card does NOT explain the card!</p>",
+                   "<p class=\"tagline\">When reading the card still doesn't explain the card.</p>"),
+              ],
+              "stack/index.html": [
+                  ("<p class=\"tagline\">Split Second Game Info!</p>",
+                   "<p class=\"tagline\">Split-second game info.</p>"),
+              ],
+              "tools/index.html": [
+                  ("<p class=\"tagline\">Research, Proxy, Print. Free Browser & Desktop Tools.</p>",
+                   "<p class=\"tagline\">Research, proxy, print. Free browser &amp; desktop tools.</p>"),
+              ],
+              "coffers/index.html": [
+                  ("<title>Coffers — Free MTG Proxy Assets — MTJawnny</title>",
+                   "<title>Coffers — MTJawnny</title>"),
+              ],
+          }
+
+          for filename, pairs in replacements.items():
+              path = Path(filename)
+              text = path.read_text(encoding="utf-8")
+              for old, new in pairs:
+                  count = text.count(old)
+                  if count != 1:
+                      raise SystemExit(f"{filename}: expected exactly one occurrence of {old!r}, found {count}")
+                  text = text.replace(old, new, 1)
+              path.write_text(text, encoding="utf-8")
+
+          claude = Path("CLAUDE.md")
+          text = claude.read_text(encoding="utf-8")
+          anchor = "- No auto-open help panels — button-only (?), no localStorage first-visit logic\n"
+          addition = """- Naming/copy hierarchy (2026-10): homepage/footer navigation uses the plain category names\n  `Table`, `Cards`, `Tools`, `Stack`, `Coffers`; destination H1/product names are\n  `Tablekeep`, `Cardex`, `Deck Tech`, `Stack It Up`, `Coffers`. Preserve both layers;\n  do not casually substitute one for the other. Product/section names take no terminal\n  punctuation. Descriptive hub taglines are normally sentence case with no exclamation\n  mark; reserve exclamation marks for deliberate jokes, celebrations, surprises, or\n  first-person enthusiasm. Avoid ALL-CAPS emphasis in ordinary descriptive taglines.\n  Hub browser-title pattern is `<Product Name> — MTJawnny`; OG/social titles may add a\n  plain-English purpose. Full direction: `docs/site/SITE-PERSONALITY-AND-CONSISTENCY-2026-10-06.md`.\n"""
+          if addition not in text:
+              if text.count(anchor) != 1:
+                  raise SystemExit("CLAUDE.md: naming/copy insertion anchor missing or duplicated")
+              text = text.replace(anchor, anchor + addition, 1)
+              claude.write_text(text, encoding="utf-8")
+
+          plan = Path("docs/site/SITE-PERSONALITY-AND-CONSISTENCY-2026-10-06.md")
+          text = plan.read_text(encoding="utf-8")
+          status_anchor = "### Pass 1 — Naming & copy consistency\n\n"
+          status_line = "**Applied on branch `site/personality-consistency-2026-10-06` on 2026-10-06.**\n\n"
+          if status_line not in text:
+              if text.count(status_anchor) != 1:
+                  raise SystemExit("site direction doc: Pass 1 anchor missing or duplicated")
+              text = text.replace(status_anchor, status_anchor + status_line, 1)
+              plan.write_text(text, encoding="utf-8")
+          PY
+
+      - name: Validate bounded changes
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          import re
+
+          class Balance(HTMLParser):
+              void = {"area","base","br","col","embed","hr","img","input","link","meta","param","source","track","wbr"}
+              def __init__(self):
+                  super().__init__()
+                  self.stack = []
+              def handle_starttag(self, tag, attrs):
+                  if tag not in self.void:
+                      self.stack.append(tag)
+              def handle_startendtag(self, tag, attrs):
+                  pass
+              def handle_endtag(self, tag):
+                  if tag in self.void:
+                      return
+                  if tag in self.stack:
+                      i = len(self.stack) - 1 - self.stack[::-1].index(tag)
+                      self.stack = self.stack[:i]
+
+          files = ["index.html", "cards/index.html", "stack/index.html", "tools/index.html", "coffers/index.html"]
+          for name in files:
+              text = Path(name).read_text(encoding="utf-8")
+              parser = Balance()
+              parser.feed(text)
+              if text.count("G-WKH3Y62H5H") < 1:
+                  raise SystemExit(f"{name}: GA4 tag missing")
+
+          expected = {
+              "index.html": ["<title>MTJawnny — Free MTG Toolbox</title>", "Your free Magic: The Gathering toolbox."],
+              "cards/index.html": ["When reading the card still doesn't explain the card."],
+              "stack/index.html": ["Split-second game info."],
+              "tools/index.html": ["Research, proxy, print. Free browser &amp; desktop tools."],
+              "coffers/index.html": ["<title>Coffers — MTJawnny</title>"],
+          }
+          for name, needles in expected.items():
+              text = Path(name).read_text(encoding="utf-8")
+              for needle in needles:
+                  if needle not in text:
+                      raise SystemExit(f"{name}: expected text missing: {needle}")
+          PY
+
+          # No JS behavior was changed, but still syntax-check every inline script
+          # in the five touched HTML files using a tiny extractor.
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, subprocess, tempfile
+          files = ["index.html", "cards/index.html", "stack/index.html", "tools/index.html", "coffers/index.html"]
+          for name in files:
+              text = Path(name).read_text(encoding="utf-8")
+              blocks = re.findall(r"<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>", text, flags=re.I|re.S)
+              for i, block in enumerate(blocks):
+                  with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as f:
+                      f.write(block)
+                      temp = f.name
+                  subprocess.run(["node", "--check", temp], check=True, stdout=subprocess.DEVNULL)
+          PY
+
+      - name: Commit changes and remove one-time workflow
+        shell: bash
+        run: |
+          git rm .github/workflows/one-time-site-copy-pass.yml
+          git config user.name "MTJawnny Site Maintenance"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html cards/index.html stack/index.html tools/index.html coffers/index.html CLAUDE.md docs/site/SITE-PERSONALITY-AND-CONSISTENCY-2026-10-06.md
+          git commit -m "site: normalize hub naming and copy conventions"
+          git push origin HEAD:site/personality-consistency-2026-10-06
