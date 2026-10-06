@@ -1,0 +1,226 @@
+name: Build Cardex midgame prototype
+
+on:
+  push:
+    branches:
+      - site/cardex-midgame-prototype-2026-10-06
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: site/cardex-midgame-prototype-2026-10-06
+          fetch-depth: 0
+
+      - name: Apply prototype redesign
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          CSS = r'''
+          /* ══ CARDEX MID-GAME PROTOTYPE ══ */
+          .card-hero > .readout { order: 1; }
+          .card-hero > .quick-answer { order: 2; }
+          .card-hero > .card-img-wrap { order: 3; margin-top: 0.15rem; }
+          .card-hero > .card-img-wrap .card-img { max-height: 46vh; }
+
+          .quick-answer {
+            background: #2b2138;
+            border: 2px solid var(--bronze);
+            border-radius: 14px;
+            padding: 1rem 1.05rem 1.05rem;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.22);
+          }
+          .quick-kicker {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 800;
+            font-size: 0.82rem;
+            letter-spacing: 0.11em;
+            text-transform: uppercase;
+            color: var(--bronze);
+            margin-bottom: 0.18rem;
+          }
+          .quick-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 900;
+            font-size: 1.62rem;
+            line-height: 1.05;
+            text-transform: uppercase;
+            letter-spacing: 0.035em;
+            color: var(--white);
+            margin-bottom: 0.55rem;
+          }
+          .quick-lede {
+            color: var(--white);
+            font-size: 1.16rem;
+            font-weight: 650;
+            line-height: 1.38;
+            margin-bottom: 0.9rem;
+          }
+          .quick-grid { display: grid; gap: 0.62rem; }
+          .quick-point {
+            background: var(--bg);
+            border: 1px solid rgba(184,147,90,0.42);
+            border-left: 3px solid var(--bronze);
+            border-radius: 8px;
+            padding: 0.66rem 0.72rem;
+          }
+          .quick-point strong {
+            display: block;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 800;
+            font-size: 0.82rem;
+            letter-spacing: 0.075em;
+            text-transform: uppercase;
+            color: var(--bronze);
+            margin-bottom: 0.16rem;
+          }
+          .quick-point span {
+            display: block;
+            color: var(--white);
+            font-size: 1.04rem;
+            line-height: 1.36;
+          }
+          .quick-point.alert {
+            border-color: rgba(224,96,96,0.68);
+            border-left-color: var(--red);
+            background: rgba(224,96,96,0.075);
+          }
+          .quick-point.alert strong { color: #f3b3aa; }
+
+          .deep-dive-break {
+            margin: 2.15rem 0 0.1rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid var(--bronze-dim);
+            text-align: center;
+          }
+          .deep-dive-break .deep-kicker {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 900;
+            font-size: 1.45rem;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--bronze);
+          }
+          .deep-dive-break p {
+            color: var(--text-dim);
+            font-size: 1rem;
+            line-height: 1.4;
+            margin: 0.25rem auto 0;
+            max-width: 39ch;
+          }
+          /* ══ END CARDEX MID-GAME PROTOTYPE ══ */
+
+          '''
+
+          pages = {
+            'moon.html': {
+              'quick': '''      <section class="quick-answer" aria-label="Quick answer for Blood Moon">
+        <div class="quick-kicker">Mid-game answer</div>
+        <div class="quick-title">Quick Answer</div>
+        <p class="quick-lede">Every nonbasic land on the battlefield becomes a Mountain while Blood Moon is on the battlefield.</p>
+        <div class="quick-grid">
+          <div class="quick-point"><strong>It loses</strong><span>Its printed abilities and its other land types.</span></div>
+          <div class="quick-point"><strong>It keeps</strong><span>Its name and supertypes such as legendary or snow. It also stays nonbasic.</span></div>
+          <div class="quick-point"><strong>It gains</strong><span>The Mountain mana ability: tap it to add one red mana.</span></div>
+          <div class="quick-point"><strong>At the table</strong><span>Fetchlands already in play cannot fetch. Basic lands are untouched.</span></div>
+        </div>
+      </section>''',
+              'old_sub': '      <p class="visual-sub">Every nonbasic land on the battlefield becomes a Mountain. It loses its old land types and every ability from its own text, then gains only "tap for red." That ranges from a quiet loss of color to shutting a whole engine off.</p>',
+              'new_sub': '      <p class="visual-sub">These examples show what the type change does to common nonbasic lands.</p>',
+            },
+            'chains.html': {
+              'quick': '''      <section class="quick-answer" aria-label="Quick answer for Chains of Mephistopheles">
+        <div class="quick-kicker">Mid-game answer</div>
+        <div class="quick-title">Quick Answer</div>
+        <p class="quick-lede">Ignore the first card you draw in your draw step. Every other draw is replaced.</p>
+        <div class="quick-grid">
+          <div class="quick-point"><strong>Cards in hand?</strong><span>Discard one card, then draw one card.</span></div>
+          <div class="quick-point"><strong>Empty hand?</strong><span>Mill one card instead. You draw nothing.</span></div>
+          <div class="quick-point"><strong>Drawing several?</strong><span>Handle each draw one at a time and recheck your hand before each one.</span></div>
+          <div class="quick-point alert"><strong>Can you respond?</strong><span>No trigger goes on the stack. Chains is a replacement effect, so once the draw event begins there is no response window inside it.</span></div>
+        </div>
+      </section>''',
+              'old_sub': '      <p class="visual-sub">Run every draw through this in order. A "draw three" is three separate trips, and your hand is rechecked each time.</p>',
+              'new_sub': '      <p class="visual-sub">Each draw is handled separately; recheck your hand every time.</p>',
+            },
+            'tef.html': {
+              'quick': '''      <section class="quick-answer" aria-label="Quick answer for Teferi's Protection">
+        <div class="quick-kicker">Mid-game answer</div>
+        <div class="quick-title">Quick Answer</div>
+        <p class="quick-lede">Until your next turn, your life total cannot change, you have protection from everything, and your permanents phase out.</p>
+        <div class="quick-grid">
+          <div class="quick-point"><strong>Targets</strong><span>You cannot be targeted. Your phased-out permanents are treated as though they do not exist.</span></div>
+          <div class="quick-point"><strong>Damage</strong><span>Damage to you is prevented unless an effect says that damage cannot be prevented.</span></div>
+          <div class="quick-point"><strong>Life total</strong><span>You cannot gain life, lose life, or pay life while the effect lasts.</span></div>
+          <div class="quick-point alert"><strong>Still gets through</strong><span>"You lose the game" effects still work. If damage cannot be prevented, its side effects can still happen even though your life total does not move.</span></div>
+        </div>
+      </section>''',
+              'old_sub': '      <p class="visual-sub">Each row is aimed at you or your board on the turn after you cast it. Prevention stops damage, your frozen life total stops the rest, and your phased-out board cannot be touched. A few things still slip past.</p>',
+              'new_sub': '      <p class="visual-sub">These are the common effects players ask about after Teferi\'s Protection resolves.</p>',
+            },
+          }
+
+          css_anchor = '  /* ══ HOW-IT-WORKS VISUAL'
+          end_readout = '      </div>\n    </div>\n    <!-- ══ END READ-OUT ══ -->'
+          deep_anchor = '    <div class="oracle-source">Oracle Text · From Gatherer</div>\n\n    <!-- ════════ HOW IT WORKS'
+          deep_insert = '''    <div class="oracle-source">Oracle Text · From Gatherer</div>
+
+    <div class="deep-dive-break" aria-label="Deep dive begins here">
+      <div class="deep-kicker">Deep Dive</div>
+      <p>The fast answer is above. Everything below explains why it works, the edge cases, and the underlying rules.</p>
+    </div>
+
+    <!-- ════════ HOW IT WORKS'''
+
+          for path, cfg in pages.items():
+            p = Path(path)
+            text = p.read_text()
+            assert 'CARDEX MID-GAME PROTOTYPE' not in text, path
+            assert text.count(css_anchor) == 1, (path, 'css anchor')
+            text = text.replace(css_anchor, CSS + css_anchor, 1)
+
+            # Increase secondary-text contrast without turning metadata into primary copy.
+            text = text.replace('--text-dim:    #9b8fb0;', '--text-dim:    #c8bfd2;', 1)
+            text = text.replace('--muted:       #6b5f7a;', '--muted:       #968aa3;', 1)
+
+            assert text.count(end_readout) == 1, (path, 'readout anchor')
+            text = text.replace(end_readout, '      </div>\n\n' + cfg['quick'] + '\n    </div>\n    <!-- ══ END READ-OUT ══ -->', 1)
+
+            assert text.count(deep_anchor) == 1, (path, 'deep anchor')
+            text = text.replace(deep_anchor, deep_insert, 1)
+
+            assert text.count(cfg['old_sub']) == 1, (path, 'visual sub')
+            text = text.replace(cfg['old_sub'], cfg['new_sub'], 1)
+
+            p.write_text(text)
+
+          print('Prototype applied to:', ', '.join(pages))
+          PY
+
+          git diff --check
+          grep -Fq 'Mid-game answer' moon.html
+          grep -Fq 'Every nonbasic land on the battlefield becomes a Mountain' moon.html
+          grep -Fq 'Every other draw is replaced.' chains.html
+          grep -Fq 'Still gets through' tef.html
+          grep -Fq 'Deep Dive' moon.html
+          grep -Fq 'Deep Dive' chains.html
+          grep -Fq 'Deep Dive' tef.html
+
+      - name: Remove one-time workflow and commit prototype
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/cardex-midgame-prototype.yml
+          git config user.name 'MTJawnny'
+          git config user.email 'mtjawnny@gmail.com'
+          git add -A
+          git diff --cached --check
+          git commit -m 'prototype: prioritize midgame answers on card pages'
+          git push origin HEAD:site/cardex-midgame-prototype-2026-10-06
