@@ -197,6 +197,8 @@ Work through these as separate bounded passes rather than one large redesign.
 
 ### Pass 1 — Naming & copy consistency
 
+**Applied on branch `site/personality-consistency-2026-10-06` on 2026-10-06.**
+
 - inventory the five main hubs and shared navigation language;
 - formalize category vs product-name usage;
 - make main hub taglines consistently enthusiastic, including `!`;
