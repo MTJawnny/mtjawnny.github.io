@@ -87,7 +87,7 @@ Reason: keep the exclamation while normalizing the phrase as descriptive sentenc
 Visible tagline:
 
 - CURRENT: `Research, Proxy, Print. Free Browser & Desktop Tools.`
-- TARGET: `Research, proxy, print. Free browser & desktop tools!`
+- TARGET: `Research, proxy, print. Free browser tools & desktop apps!`
 
 Reason: preserve the clipped cadence, normalize descriptive capitalization, and bring the hub into the shared enthusiastic punctuation style.
 
