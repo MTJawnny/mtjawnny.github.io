@@ -114,6 +114,17 @@ not just legal positioning.
   tools/index.html. Coffers has no page-level tagline; its equivalent is
   `.section-head .sub` under "Free stuff from me to you!", same 1.2rem.
 - No auto-open help panels — button-only (?), no localStorage first-visit logic
+- Naming/copy hierarchy (2026-10): homepage/footer navigation uses the plain category names
+  `Table`, `Cards`, `Tools`, `Stack`, `Coffers`; destination H1/product names are
+  `Tablekeep`, `Cardex`, `Deck Tech`, `Stack It Up`, `Coffers`. Preserve both layers;
+  do not casually substitute one for the other. Product/section names themselves take
+  no terminal punctuation. Main hub taglines intentionally use exclamation marks as part
+  of MTJawnny's enthusiastic voice; keep that punctuation consistent across hubs. Avoid
+  accidental ALL-CAPS emphasis in ordinary descriptive taglines unless it is a deliberate
+  joke. Article/rules/tool-detail subtitles do not automatically inherit the hub exclamation
+  rule. Hub browser-title pattern is `<Product Name> — MTJawnny`; OG/social titles may add
+  a plain-English purpose. Full direction:
+  `docs/site/SITE-PERSONALITY-AND-CONSISTENCY-2026-10-06.md`.
 
 ## Hard rules
 - Em-dash banned in body copy. Permitted only in <title> tags, CSS and inline script comments,
