@@ -10,7 +10,6 @@ permissions:
 
 jobs:
   apply:
-    if: github.event.head_commit.message == 'chore: execute corrected site copy consistency pass'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,7 +31,7 @@ jobs:
           grep -Fq 'Split-second game info!' stack/index.html
           grep -Fq 'Research, proxy, print. Free browser & desktop tools!' tools/index.html
           grep -Fq '<title>Coffers — MTJawnny</title>' coffers/index.html
-          ! grep -Fq 'does NOT explain' cards/index.html
+          if grep -Fq 'does NOT explain' cards/index.html; then exit 1; fi
 
       - name: Remove one-time execution artifacts
         shell: bash
